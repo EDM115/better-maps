@@ -1,0 +1,78 @@
+/* @use "vuetify/settings" with (
+  $color-pack: false
+);
+
+:root {
+  --fc-border-color: rgb(var(--v-theme-text));
+} */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  font-family: "Nunito", serif;
+}
+
+iframe {
+  background-color: transparent;
+  border: none;
+}
+
+input {
+  background: transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus
+input:-webkit-autofill:active {
+  border: 1px solid transparent;
+  -webkit-background-clip: text;
+  -webkit-box-shadow: 0 0 0px 1000px #00000000 inset !important;
+  box-shadow: 0 0 0px 1000px #00000000 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* .link-color {
+  color: rgb(var(--v-theme-accent));
+  transition: color 0.3s;
+}
+.link-color:hover {
+  color: rgb(var(--v-theme-success));
+}
+
+.v-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.v-btn:hover {
+  transform: scale(1.05);
+}
+
+.v-theme--light {
+  --v-medium-emphasis-opacity: 1 !important;
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #070B1A;
+  }
+}
+
+.v-theme--dark {
+  --v-medium-emphasis-opacity: 1 !important;
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #F8F8F2;
+  }
+}
+
+.v-btn__prepend {
+  margin-right: 0.5rem !important;
+} */

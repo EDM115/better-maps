@@ -1,6 +1,12 @@
+lockfileIncludeTarballUrl: true
+nodeLinker: hoisted
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
   - sharp
   - unrs-resolver
   - vue-demi
+resolutionMode: highest
+savePrefix: ''
+shamefullyHoist: true
+virtualStoreDirMaxLength: 1024
