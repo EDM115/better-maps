@@ -32,7 +32,7 @@
   "eslint.useFlatConfig": true,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "app.vue": "app.config.*, error.vue, nuxt.config.*, tsconfig.json",
+    "nuxt.config.*": "app.config.*, error.vue, tsconfig.json",
     "eslint.config.ts": ".oxlintrc.json, .eslintcache",
     "package.json": "package-lock.json, pnpm*",
     "README.md": "LICENSE, .gitignore, renovate.json",

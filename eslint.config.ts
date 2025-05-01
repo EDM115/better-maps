@@ -15,7 +15,7 @@ import { createTypeScriptImportResolver } from "eslint-import-resolver-typescrip
 
 export default withNuxt(
   {
-    ignores: [ "**/.nuxt/", "**/.output", "**/dist/", "**/node_modules/" ]
+    ignores: [ "**/.nuxt/", "**/.output", "**/dist/", "**/node_modules/" ],
   },
   js.configs.all,
   ...tseslint.configs.recommended as any,
@@ -25,36 +25,36 @@ export default withNuxt(
   {
     files: [ "**/*.{js,ts,vue}" ],
     linterOptions: {
-      reportUnusedDisableDirectives: true
+      reportUnusedDisableDirectives: true,
     },
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
       },
       parserOptions: {
         ecmaVersion: "latest",
         extraFileExtensions: [ ".vue" ],
         parser: tsParser,
-        tsconfigRootDir: import.meta.dirname
-      }
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
-      "@stylistic": stylistic
+      "@stylistic": stylistic,
     },
     settings: {
       "import-x/parsers": {
         "@typescript-eslint/parser": [ ".ts" ],
-        "vue-eslint-parser": [ ".vue" ]
+        "vue-eslint-parser": [ ".vue" ],
       },
       "import-x/resolver-next": [
         createTypeScriptImportResolver({
           alwaysTryTypes: false,
-          project: "tsconfig.json"
-        })
-      ]
+          project: "tsconfig.json",
+        }),
+      ],
     },
     rules: {
       "@typescript-eslint/no-unused-vars": [
@@ -64,8 +64,8 @@ export default withNuxt(
           destructuredArrayIgnorePattern: "^_",
           ignoreRestSiblings: true,
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_"
-        }
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
       "@stylistic/array-bracket-newline": [ "error", { multiline: true }],
       "@stylistic/array-bracket-spacing": [ "error", "always", { objectsInArrays: false, arraysInArrays: false }],
@@ -74,7 +74,7 @@ export default withNuxt(
       "@stylistic/arrow-spacing": [ "error", { before: true, after: true }],
       "@stylistic/block-spacing": [ "error", "always" ],
       "@stylistic/brace-style": [ "error", "1tbs", { allowSingleLine: true }],
-      "@stylistic/comma-dangle": [ "error", "never" ],
+      "@stylistic/comma-dangle": [ "error", "always-multiline" ],
       "@stylistic/comma-spacing": [ "error", { before: false, after: true }],
       "@stylistic/comma-style": [ "error", "last" ],
       "@stylistic/computed-property-spacing": [ "error", "never" ],
@@ -115,7 +115,7 @@ export default withNuxt(
         { blankLine: "always", prev: "*", next: [ "throw", "return" ] },
         { blankLine: "always", prev: [ "const", "let", "var" ], next: "*" },
         { blankLine: "any", prev: [ "const", "let", "var" ], next: [ "const", "let", "var" ] },
-        { blankLine: "always", prev: "*", next: [ "if", "for", "function", "class", "switch", "while", "with" ] }
+        { blankLine: "always", prev: "*", next: [ "if", "for", "function", "class", "switch", "while", "with" ] },
       ],
       "@stylistic/quote-props": [ "error", "consistent-as-needed" ],
       "@stylistic/quotes": [ "error", "double" ],
@@ -149,8 +149,8 @@ export default withNuxt(
       "prefer-named-capture-group": "off",
       "require-unicode-regexp": "off",
       "vue/multi-word-component-names": "off",
-      "vue/no-mutating-props": "off"
-    }
+      "vue/no-mutating-props": "off",
+    },
   },
-  ...oxlint.configs["flat/all"]
+  ...oxlint.configs["flat/all"],
 )

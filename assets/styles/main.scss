@@ -1,10 +1,10 @@
-/* @use "vuetify/settings" with (
+@use "vuetify/settings" with (
   $color-pack: false
 );
 
 :root {
   --fc-border-color: rgb(var(--v-theme-text));
-} */
+}
 
 a {
   text-decoration: none;
@@ -35,7 +35,7 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* .link-color {
+.link-color {
   color: rgb(var(--v-theme-accent));
   transition: color 0.3s;
 }
@@ -75,4 +75,4 @@ input:-webkit-autofill:active {
 
 .v-btn__prepend {
   margin-right: 0.5rem !important;
-} */
+}
