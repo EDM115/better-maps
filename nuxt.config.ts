@@ -18,6 +18,10 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
   css: [ "~/assets/styles/main.scss" ],
+  ignore: [
+    "init/**",
+    "db/**",
+  ],
   sourcemap: {
     client: false,
     server: false,

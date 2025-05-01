@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      <NuxtRouteAnnouncer />
       <LayoutNavBar />
       <NuxtPage />
     </v-main>

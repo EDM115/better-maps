@@ -12,6 +12,7 @@
     "@nuxt/scripts": "~0.11.6",
     "@unhead/vue": "~2.0.8",
     "bcryptjs": "~3.0.2",
+    "better-sqlite3": "~11.9.1",
     "cookiejs": "~2.1.3",
     "jsonwebtoken": "~9.0.2",
     "nuxt": "~3.17.1",
@@ -29,6 +30,9 @@
     "@pinia/nuxt": "~0.11.0",
     "@stylistic/eslint-plugin": "~4.2.0",
     "@tsconfig/node22": "~22.0.1",
+    "@types/better-sqlite3": "~7.6.13",
+    "@types/google.maps": "~3.58.1",
+    "@types/jsonwebtoken": "~9.0.9",
     "@types/node": "^22.15.3",
     "@typescript-eslint/parser": "~8.31.1",
     "eslint": "~9.25.1",
@@ -70,5 +74,5 @@
     "typecheck": "nuxi typecheck"
   },
   "type": "module",
-  "version": "0.2.0"
+  "version": "0.3.0"
 }

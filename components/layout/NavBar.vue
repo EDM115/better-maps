@@ -31,12 +31,12 @@
       </NuxtLink>
     </v-app-bar-title>
     <v-spacer />
-    <!-- <v-btn
+    <v-btn
       :prepend-icon="accountIcon"
-      :text="accountText"
+      :text="smAndUp ? accountText : ''"
       variant="tonal"
       @click="handleConnect"
-    /> -->
+    />
     <v-btn
       id="animateTheme"
       :icon="iconTheme"
@@ -55,16 +55,16 @@ const store = useMainStore()
 const vuetifyTheme = useTheme()
 
 const accountIcon = ref("mdi-login")
-// const accountText = computed(() => (store.getUser ? "Déconnexion" : "Connexion"))
-// const connected = computed(() => store.getUser)
+const accountText = computed(() => (store.isUserEmpty ? "Connexion" : "Déconnexion"))
+const connected = computed(() => !store.isUserEmpty)
 const theme = ref(store.getTheme)
 const iconTheme = computed(() => (vuetifyTheme.name.value === "light" ? "mdi-weather-night" : "mdi-weather-sunny"))
 
 const { smAndUp } = useDisplay()
 
-/* watch(connected, (value) => {
+watch(connected, (value) => {
   accountIcon.value = value ? "mdi-logout" : "mdi-login"
-}) */
+})
 
 function toggleTheme() {
   theme.value = theme.value === "dark" ? "light" : "dark"
@@ -77,14 +77,16 @@ onMounted(() => {
   vuetifyTheme.global.name.value = store.getTheme
 })
 
-/* function handleConnect() {
+function handleConnect() {
   if (connected.value) {
     store.logout()
-    router.push("/")
+    // router.push("/")
+    console.log("User disconnected")
   } else {
-    router.push("/login")
+    // router.push("/login")
+    console.log("User already connected")
   }
-} */
+}
 </script>
 
 <style scoped>
