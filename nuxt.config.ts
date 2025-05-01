@@ -18,10 +18,6 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
   css: [ "~/assets/styles/main.scss" ],
-  ignore: [
-    "init/**",
-    "db/**",
-  ],
   sourcemap: {
     client: false,
     server: false,
@@ -48,9 +44,8 @@ export default defineNuxtConfig({
     sharedPrerenderData: true,
     typedPages: true,
     viewTransition: true,
-    writeEarlyHints: true,
   },
-  compatibilityDate: "2024-11-01",
+  compatibilityDate: "2025-05-01",
   nitro: {
     compressPublicAssets: {
       brotli: true,

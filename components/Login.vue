@@ -59,6 +59,7 @@
 import { useMainStore } from "~/stores/main"
 import { onMounted, ref, reactive } from "vue"
 
+const router = useRouter()
 const store = useMainStore()
 
 const errorMessage = ref("")
@@ -97,11 +98,7 @@ async function login(event: any) {
     })
 
     store.setUser(result.body.user)
-
-    console.log("User connected :", result)
-    messageColor.value = "success"
-    errorMessage.value = "Connecté"
-    issueMessage.value = JSON.stringify(result, null, 2)
+    router.push("/map")
   } catch (error) {
     handleError(error)
   }
@@ -115,7 +112,7 @@ async function submit() {
 
 onMounted(async () => {
   if (!store.isUserEmpty) {
-    console.log("User already connected :", store.getUser)
+    router.push("/map")
   }
 })
 </script>

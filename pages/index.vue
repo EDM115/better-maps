@@ -15,6 +15,7 @@
           :width="smAndUp ? '500px' : Math.floor(width * 0.7) + 'px'"
           :height="smAndUp ? '500px' : Math.floor(width * 0.7) + 'px'"
           alt="Better Maps"
+          :draggable="false"
           preload
         />
       </v-col>

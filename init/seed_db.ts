@@ -1,52 +1,75 @@
-// run this script with node --experimental-strip-types seed_db.ts. create the db directory first
+// run this script with node --experimental-strip-types init/seed_db.ts
 
-import Database from "better-sqlite3"
+import "dotenv/config"
+
 import bcrypt from "bcryptjs"
+import Database from "better-sqlite3"
 
-const DB_PATH = "../db/data.db"
+import { mkdirSync } from "fs"
+import { dirname, resolve } from "path"
+import { fileURLToPath } from "url"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const DB_PATH = resolve(__dirname, "../db/data.db")
 const SALT_ROUNDS = 10
 
 function initDatabase() {
+  mkdirSync(dirname(DB_PATH), { recursive: true })
+
   const db = new Database(DB_PATH)
 
   db.pragma("journal_mode = WAL")
 
-  // create User table
   db.prepare(`
     CREATE TABLE IF NOT EXISTS User (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      password TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user'
     );
   `).run()
 
   return db
 }
 
-function seedUsers(db: Database.Database) {
-  // change the values
-  const users = [{ username: "test", password: "test" }]
+async function seedUsers(db: Database.Database) {
+  const raw = process.env.SEED_USERS
+    ?.replace("\\'", "'")
+    // eslint-disable-next-line @stylistic/quotes
+    .replace('\\"', '"') || "[]"
+  let users: Array<{ username: string, password: string, role: string }>
+
+  try {
+    users = JSON.parse(raw)
+  } catch (e) {
+    console.error("❌ failed to parse SEED_USERS :", e)
+    users = []
+  }
 
   const insert = db.prepare(`
-    INSERT OR IGNORE INTO User (username, password)
-    VALUES (?, ?)
+    INSERT OR IGNORE INTO User (username, password, role)
+    VALUES (?, ?, ?)
   `)
 
-  for (const { username, password } of users) {
-    const hashed = bcrypt.hashSync(password, SALT_ROUNDS)
+  for (const { username, password, role } of users) {
+    const hashed = await bcrypt.hash(password, SALT_ROUNDS)
 
-    insert.run(username, hashed)
+    insert.run(username, hashed, role)
     console.log(`Seeded user : ${username}`)
   }
 }
 
-function main() {
-  const db = initDatabase()
+async function main() {
+  if (process.env.SEED === "true") {
+    const db = initDatabase()
 
-  seedUsers(db)
-  db.close()
-  console.log("✅ Database initialized and seeded.")
+    await seedUsers(db)
+    db.close()
+    console.log("✅ Database initialized and seeded.")
+  } else {
+    console.log("❌ Skipping database initialization.")
+  }
 }
 
-// uncomment this. it is commented because Nuxt wants to run this file in dev mode
-// main()
+main()

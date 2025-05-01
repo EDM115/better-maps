@@ -11,14 +11,13 @@
         to="/"
         class="flex items-center"
       >
-        <v-img
+        <NuxtImg
           src="/images/logo.webp"
           alt="Better Maps"
           :draggable="false"
-          min-height="40"
-          max-height="40"
-          min-width="40"
-          max-width="40"
+          height="40px"
+          width="40px"
+          preload
         />
       </NuxtLink>
     </template>
@@ -32,8 +31,9 @@
     </v-app-bar-title>
     <v-spacer />
     <v-btn
-      :prepend-icon="accountIcon"
-      :text="smAndUp ? accountText : ''"
+      :prepend-icon="smAndUp ? accountIcon : undefined"
+      :icon="smAndUp ? undefined : accountIcon"
+      :text="smAndUp ? accountText : undefined"
       variant="tonal"
       @click="handleConnect"
     />
@@ -80,12 +80,8 @@ onMounted(() => {
 function handleConnect() {
   if (connected.value) {
     store.logout()
-    // router.push("/")
-    console.log("User disconnected")
-  } else {
-    // router.push("/login")
-    console.log("User already connected")
   }
+  router.push("/")
 }
 </script>
 

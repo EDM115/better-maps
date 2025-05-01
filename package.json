@@ -35,6 +35,8 @@
     "@types/jsonwebtoken": "~9.0.9",
     "@types/node": "^22.15.3",
     "@typescript-eslint/parser": "~8.31.1",
+    "dotenv": "~16.5.0",
+    "dotenv-cli": "~8.0.0",
     "eslint": "~9.25.1",
     "eslint-import-resolver-typescript": "~4.3.4",
     "eslint-plugin-import-x": "~4.11.0",
@@ -58,10 +60,10 @@
     "url": "git+https://github.com/EDM115/better-maps.git"
   },
   "scripts": {
-    "analyze": "nuxi analyze",
-    "build": "nuxi build",
+    "analyze": "dotenv -- nuxi analyze",
+    "build": "dotenv -- nuxi build",
     "dev": "nuxi dev --no-clear --open",
-    "generate": "nuxi generate",
+    "generate": "dotenv -- nuxi generate",
     "lint": "pnpm lint:oxlint && pnpm lint:eslint",
     "lint:fix": "pnpm lint:fix:oxlint && pnpm lint:fix:eslint",
     "lint:eslint": "eslint . --cache --cache-location .eslintcache",
@@ -69,10 +71,10 @@
     "lint:fix:eslint": "eslint . --fix",
     "lint:fix:oxlint": "oxlint . --fix --ignore-path .gitignore",
     "lint:no-cache:eslint": "eslint .",
-    "preview": "nuxi preview --port 88",
-    "start": "node .output/server/index.mjs",
+    "preview": "dotenv -- nuxi preview --port 88",
+    "start": "dotenv -- node .output/server/index.mjs",
     "typecheck": "nuxi typecheck"
   },
   "type": "module",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

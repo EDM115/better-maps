@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
   const { username, password }: { username: string, password: string } = await readBody(event)
 
   const stmt = db.prepare(`
-    SELECT id, username, password
+    SELECT id, username, password, role
     FROM User
     WHERE username = ?
   `)
-  const user = stmt.get(username) as { id: number; username: string; password: string } | undefined
+  const user = stmt.get(username) as { id: number; username: string; password: string; role: string } | undefined
 
   if (!user) {
     throw createError({ status: 401, message: "L'utilisateur n'existe pas" })
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     status: 200,
     body: {
       success: "Utilisateur connecté",
-      user: { id: user.id, username: user.username, token },
+      user: { id: user.id, username: user.username, token, role: user.role },
     },
   }
 })
