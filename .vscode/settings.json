@@ -66,5 +66,6 @@
   "vue.inlayHints.inlineHandlerLeading": true,
   "vue.inlayHints.missingProps": true,
   "vue.inlayHints.optionsWrapper": true,
-  "vue.inlayHints.vBindShorthand": true
+  "vue.inlayHints.vBindShorthand": true,
+  "yaml.keyOrdering": false
 }
