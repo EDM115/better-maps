@@ -20,8 +20,8 @@ pnpm dev
 
 ## Build and run
 ```pwsh
-docker build -t edm115/better-maps .
-docker run -d -p 27400:27400 --name better-maps edm115/better-maps
+docker build --network=host -t edm115/better-maps .
+docker run -d -p 27400:27400 --env-file .env --name better-maps edm115/better-maps
 ```
 
 ## DB Scheme
