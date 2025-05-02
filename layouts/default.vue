@@ -9,6 +9,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useMainStore } from "~/stores/main"
+import { onMounted } from "vue"
+import { useTheme } from "vuetify"
+
 useHead({
   title: "Better Maps",
   meta: [
@@ -17,6 +21,14 @@ useHead({
     { name: "description", content: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf" },
   ],
   link: [{ rel: "icon", type: "image/png", href: "/images/logo.png" }],
+})
+
+const store = useMainStore()
+const vuetifyTheme = useTheme()
+
+onMounted(() => {
+  store.initStore()
+  vuetifyTheme.global.name.value = store.getTheme
 })
 </script>
 

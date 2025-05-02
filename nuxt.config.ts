@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/scripts",
     "@pinia/nuxt",
+    "@vueuse/nuxt",
     "vuetify-nuxt-module",
   ],
   ssr: false,
