@@ -11,6 +11,7 @@
       :key="index"
       :options="{ position: pin }"
     />
+    <v-list :items="listPins" />
   </div>
 </template>
 
@@ -25,8 +26,15 @@ interface Props {
 
 const props = defineProps<Props>()
 const pins = ref<Array<{ lat: number; lng: number }>>([])
+const listPins = ref<Array<{ title: string; value: number }>>(
+  pins.value.map((pin) => ({
+    title: pin.lat.toString(),
+    value: pin.lng,
+  }))
+)
 
 const addPin = (event: google.maps.MapMouseEvent) => {
+  console.log("🚀 ~ addPin ~ event :", event)
   if (event.latLng) {
     pins.value.push({
       lat: event.latLng.lat(),
