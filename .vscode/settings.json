@@ -34,7 +34,7 @@
   "explorer.fileNesting.patterns": {
     "nuxt.config.*": "app.config.*, error.vue, tsconfig.json, .env, .nuxtignore",
     "Dockerfile": ".dockerignore",
-    "eslint.config.ts": ".oxlintrc.json, .eslintcache",
+    "eslint.config.ts": ".oxlintrc.json, .eslintcache, eslint.*.config.ts",
     "package.json": "package-lock.json, pnpm*",
     "README.md": "LICENSE, .gitignore, renovate.json",
     "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo, *.d.ts, *.d.mts"

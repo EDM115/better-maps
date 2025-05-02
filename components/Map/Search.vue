@@ -1,3 +1,12 @@
+<template>
+  <input
+    ref="searchInput"
+    type="text"
+    class="search-input"
+    placeholder="Search places..."
+  >
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 
@@ -25,7 +34,7 @@ onMounted(() => {
       return
     }
 
-    const place = places[0]
+    const [ place ] = places
 
     if (!place.geometry || !place.geometry.location) {
       return
@@ -40,15 +49,6 @@ onMounted(() => {
   })
 })
 </script>
-
-<template>
-  <input
-    ref="searchInput"
-    type="text"
-    class="search-input"
-    placeholder="Search places..."
-  >
-</template>
 
 <style scoped>
 .search-input {

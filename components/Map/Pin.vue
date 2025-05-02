@@ -1,3 +1,19 @@
+<template>
+  <div>
+    <v-btn
+      color="primary"
+      @click="() => props.map?.addListener('click', addPin)"
+    >
+      Add Pins
+    </v-btn>
+    <AdvancedMarker
+      v-for="(pin, index) in pins"
+      :key="index"
+      :options="{ position: pin }"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from "vue"
 import { AdvancedMarker } from "vue3-google-map"
@@ -19,19 +35,3 @@ const addPin = (event: google.maps.MapMouseEvent) => {
   }
 }
 </script>
-
-<template>
-  <div>
-    <v-btn
-      color="primary"
-      @click="() => props.map?.addListener('click', addPin)"
-    >
-      Add Pins
-    </v-btn>
-    <AdvancedMarker
-      v-for="(pin, index) in pins"
-      :key="index"
-      :options="{ position: pin }"
-    />
-  </div>
-</template>

@@ -1,3 +1,12 @@
+<template>
+  <v-switch
+    v-model="showTransit"
+    label="Show Public Transport"
+    color="primary"
+    class="mt-4"
+  />
+</template>
+
 <script setup lang="ts">
 import { ref, watch } from "vue"
 
@@ -18,13 +27,4 @@ watch(showTransit, (show) => {
   }
 })
 </script>
-
-<template>
-  <v-switch
-    v-model="showTransit"
-    label="Show Public Transport"
-    color="primary"
-    class="mt-4"
-  />
-</template>
 

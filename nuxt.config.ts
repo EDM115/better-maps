@@ -19,6 +19,11 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
   css: [ "~/assets/styles/main.scss" ],
+  runtimeConfig: {
+    public: {
+      startingPoint: process.env.STARTING_POINT,
+    },
+  },
   sourcemap: {
     client: false,
     server: false,
