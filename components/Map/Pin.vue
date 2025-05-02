@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, inject, type Ref } from "vue"
+import { ref } from "vue"
 import { AdvancedMarker } from "vue3-google-map"
 
-interface MapRef {
-  map: google.maps.Map
+interface Props {
+  map?: google.maps.Map
+  center?: { lat: number; lng: number }
 }
 
+const props = defineProps<Props>()
 const pins = ref<Array<{ lat: number; lng: number }>>([])
-const mapRef = inject<Ref<MapRef>>("map")
-const center = inject<Ref<{ lat: number; lng: number }>>("center")
 
 const addPin = (event: google.maps.MapMouseEvent) => {
   if (event.latLng) {
@@ -18,14 +18,13 @@ const addPin = (event: google.maps.MapMouseEvent) => {
     })
   }
 }
-
 </script>
 
 <template>
   <div>
     <v-btn
       color="primary"
-      @click="() => mapRef?.map?.addListener('click', addPin)"
+      @click="() => props.map?.addListener('click', addPin)"
     >
       Add Pins
     </v-btn>

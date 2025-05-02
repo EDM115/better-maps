@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, inject, watch, type Ref } from "vue"
+import { ref, watch } from "vue"
 
-interface MapRef {
-  map: google.maps.Map
+interface Props {
+  map?: google.maps.Map
 }
 
-const mapRef = inject<Ref<MapRef>>("map")
+const props = defineProps<Props>()
 const showTransit = ref(false)
 
 watch(showTransit, (show) => {
-  if (mapRef?.value?.map) {
-    mapRef.value.map.setOptions({
+  if (props.map) {
+    props.map.setOptions({
       styles: show
         ? []
         : [{ featureType: "transit", stylers: [{ visibility: "off" }] }],
