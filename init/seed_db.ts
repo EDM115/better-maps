@@ -52,12 +52,12 @@ async function seedUsers(db: Database.Database) {
     VALUES (?, ?, ?)
   `)
 
-  for (const { username, password, role } of users) {
+  await Promise.all(users.map(async ({ username, password, role }) => {
     const hashed = await bcrypt.hash(password, SALT_ROUNDS)
 
     insert.run(username, hashed, role)
     console.log(`Seeded user : ${username}`)
-  }
+  }))
 }
 
 async function main() {
