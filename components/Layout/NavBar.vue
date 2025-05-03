@@ -34,7 +34,7 @@
       :prepend-icon="smAndUp ? accountIcon : undefined"
       :icon="smAndUp ? undefined : accountIcon"
       :text="smAndUp ? accountText : undefined"
-      variant="tonal"
+      variant="outlined"
       @click="handleConnect"
     />
     <v-btn

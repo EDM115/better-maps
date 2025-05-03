@@ -89,14 +89,14 @@ docker run -d -p 27400:27400 --env-file .env --name better-maps edm115/better-ma
 | visible     | bool   | Not Null, default true      |
 
 ## Dev left to do
-- [ ] **Mobile first**
+- [x] **Mobile first**
 - [ ] Use volumes for the DB file
 - [ ] Small add user button for admin
 - [x] Add a map with Nuxt Scripts and use the Maps JS API/SDK
 - [ ] Ability to add and save a point on the map
-  - [ ] Name (autocomplete/bare address if not found)
-  - [ ] Description (optional)
-  - [ ] Color + Icon (house, caddie, book, handbag, pizza, ...)
+  - [x] Name (autocomplete/bare address if not found)
+  - [x] Description (optional)
+  - [x] Color + Icon (house, caddie, book, handbag, pizza, ...)
 - [ ] Ability to add public transportation lines
 - [ ] Show/hide any point/line
 - [ ] On load : show an overview of the area

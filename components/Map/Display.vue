@@ -50,16 +50,14 @@
           <MapSearch
             :map="mapRef?.map"
             :center="center"
+            @add-marker="(details) => mapPinRef?.addPin(details)"
           />
+        </v-list-item>
+        <v-list-item>
+          <MapPinsList :pins="mapPinRef?.pins || []" />
         </v-list-item>
         <v-list-item>
           <MapTransportation :map="mapRef?.map" />
-        </v-list-item>
-        <v-list-item>
-          <MapPin
-            :map="mapRef?.map"
-            :center="center"
-          />
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -69,12 +67,18 @@
         v-if="hasApiKey"
         ref="mapRef"
         :api-key="GOOGLE_MAPS_API_KEY ?? ''"
+        :map-id="mapId"
         :center="center"
         :zoom="zoom"
-        :map-id="mapId"
         style="width: 100%; height: 90vh"
         @map-loaded="mapRef = $event"
-      />
+      >
+        <MapPin
+          ref="mapPinRef"
+          :map="mapRef?.map"
+          :center="center"
+        />
+      </GoogleMap>
       <v-btn
         icon="mdi-menu"
         class="floating-btn"
