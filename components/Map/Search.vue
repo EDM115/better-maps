@@ -257,11 +257,9 @@ watch(searchDebounced, (search) => {
 watch(selectedPlace, (place) => {
   if (place) {
     placeDetails.value = {
+      ...placeDetails.value,
       name: place.name,
-      description: "",
       formatted_address: place.formatted_address,
-      icon: "mdi-home-outline",
-      color: "",
       position: {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),

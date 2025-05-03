@@ -23,6 +23,7 @@
         />
         <v-btn
           icon="mdi-delete"
+          color="error"
           :disabled="editMode"
           @click="() => showDeleteDialog(pin)"
         />
@@ -44,7 +45,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          color="red"
+          color="error"
           text
           @click="confirmDelete"
         >

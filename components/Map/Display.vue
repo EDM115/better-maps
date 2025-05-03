@@ -28,6 +28,7 @@
           :map="mapRef?.map"
           :center="center"
           @add-marker="(details) => mapPinRef?.addPin(details)"
+          @update-marker="(details) => mapPinRef?.editPin(details)"
         />
         <MapPinsList 
           :pins="mapPinRef?.pins || []"

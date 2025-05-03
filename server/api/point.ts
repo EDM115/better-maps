@@ -42,7 +42,6 @@ export default defineEventHandler(async (event) => {
           },
         }
       } else {
-        console.log("1", map_id)
         const points = db.prepare(`
           SELECT * FROM Point
           WHERE map_id = ?
@@ -58,7 +57,6 @@ export default defineEventHandler(async (event) => {
           map_id: number
           visible: number
         }[]
-        console.log("🚀 ~ defineEventHandler ~ points :", points)
 
         return {
           status: 200,
