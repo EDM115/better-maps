@@ -3,9 +3,9 @@
     <v-col cols="8">
       <v-card>
         <GoogleMap
-          v-if="GOOGLE_MAPS_API_KEY"
+          v-if="hasApiKey"
           ref="mapRef"
-          :api-key="GOOGLE_MAPS_API_KEY"
+          :api-key="GOOGLE_MAPS_API_KEY ?? ''"
           :map-id="mapId"
           :center="center"
           :zoom="zoom"
@@ -66,9 +66,9 @@
 
     <v-card class="flex-grow-1">
       <GoogleMap
-        v-if="GOOGLE_MAPS_API_KEY"
+        v-if="hasApiKey"
         ref="mapRef"
-        :api-key="GOOGLE_MAPS_API_KEY"
+        :api-key="GOOGLE_MAPS_API_KEY ?? ''"
         :center="center"
         :zoom="zoom"
         :map-id="mapId"
@@ -86,7 +86,6 @@
 
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
-import { computedAsync } from "@vueuse/core"
 import { computed, onMounted, ref, watch } from "vue"
 import { useDisplay } from "vuetify"
 import { GoogleMap } from "vue3-google-map"
@@ -121,15 +120,33 @@ watch(drawer, val => {
 
 const user = computed(() => store.getUser)
 
-const GOOGLE_MAPS_API_KEY = computedAsync(async () => {
+const hasApiKey = ref(false)
+const GOOGLE_MAPS_API_KEY = ref<string | null>(null)
+
+const fetchGoogleMapsApiKey = async (token: string) => {
   const response = await $fetch("/api/googleMaps", {
-    headers: { Authorization: `Bearer ${user.value.token}` },
+    headers: { Authorization: `Bearer ${token}` },
   })
 
-  return response.body.apiKey
-})
+  GOOGLE_MAPS_API_KEY.value = response.body.apiKey
+  hasApiKey.value = true
+}
 
-onMounted(() => {
+watch(
+  () => user.value,
+  async (newUser) => {
+    if (newUser && newUser.token) {
+      fetchGoogleMapsApiKey(newUser.token)
+    }
+  },
+  { immediate: true }
+)
+
+onMounted(async () => {
+  if (!store.isUserEmpty) {
+    await fetchGoogleMapsApiKey(store.getUser.token ?? "")
+  }
+
   if (props.setHasLoaded) {
     props.setHasLoaded(true)
   }
