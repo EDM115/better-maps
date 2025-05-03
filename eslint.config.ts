@@ -69,6 +69,7 @@ export default withNuxt(
         },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
+      "camelcase": "off",
       "capitalized-comments": "off",
       "curly": [ "warn", "all" ],
       "id-length": "off",

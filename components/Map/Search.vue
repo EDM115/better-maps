@@ -5,10 +5,19 @@
     :loading="loading"
     placeholder="Search places..."
     item-title="name"
+    item-value="place_id"
     return-object
     clearable
     @update:search="handleSearch"
-  />
+  >
+    <template #item="{ item }">
+      <v-list-item
+        :title="item.raw.name"
+        :subtitle="item.raw.formatted_address"
+        @click="selectedPlace = item.raw"
+      />
+    </template>
+  </v-autocomplete>
 
   <v-form
     v-if="selectedPlace"
@@ -17,6 +26,11 @@
     <v-text-field
       v-model="placeDetails.name"
       label="Name"
+      readonly
+    />
+    <v-text-field
+      v-model="placeDetails.formatted_address"
+      label="Address"
       readonly
     />
     <v-textarea
@@ -31,14 +45,13 @@
       item-title="label"
       item-value="value"
     >
-      <template #item="{ item }">
+      <template #prepend>
         <v-icon
-          :color="getIconColor(item.raw.value)"
+          :color="getIconColor(placeDetails.icon)"
           class="mr-2"
         >
-          {{ item.raw.value }}
+          {{ placeDetails.icon }}
         </v-icon>
-        {{ item.raw.label }}
       </template>
     </v-select>
     <v-btn
@@ -62,6 +75,8 @@ interface Props {
 
 interface Place {
   name: string
+  formatted_address: string
+  place_id: string
   geometry: {
     location: {
       lat: () => number
@@ -73,6 +88,7 @@ interface Place {
 interface PlaceDetails {
   name: string
   description: string
+  formatted_address: string
   icon: string
   position: {
     lat: number
@@ -90,12 +106,10 @@ const searchResults = ref<Place[]>([])
 const selectedPlace = ref<Place | null>(null)
 const placeService = ref<google.maps.places.PlacesService>()
 
-const searchInput = ref<HTMLInputElement | null>(null)
-const searchBox = ref<google.maps.places.SearchBox | null>(null)
-
 const placeDetails = ref<PlaceDetails>({
   name: "",
   description: "",
+  formatted_address: "",
   icon: "mdi-home-outline",
   position: { lat: 0, lng: 0 }
 })
@@ -117,17 +131,28 @@ const addPin = () => {
 }
 
 const handleSearch = (search: string) => {
-  if (!searchBox.value || !props.map) return
+  if (!props.map || !placeService.value || !search) return
+  
   loading.value = true
-  searchBox.value.setBounds(props.map.getBounds()!)
-  searchBox.value.set("input", search)
-  placeService.value!.getDetails({ placeId: search }, (place, status) => {
+  const request = {
+    query: search,
+    bounds: props.map.getBounds()
+  }
+
+  placeService.value.textSearch(request, (results, status) => {
     loading.value = false
-    if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-      searchResults.value = [{
+    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+      searchResults.value = results.map(place => ({
         name: place.name || "",
-        geometry: place.geometry as { location: { lat: () => number; lng: () => number; } }
-      }]
+        formatted_address: place.formatted_address || "",
+        place_id: place.place_id || "",
+        geometry: {
+          location: {
+            lat: () => place.geometry?.location?.lat() || 0,
+            lng: () => place.geometry?.location?.lng() || 0
+          }
+        }
+      }))
     } else {
       searchResults.value = []
     }
@@ -139,6 +164,7 @@ watch(selectedPlace, (place) => {
     placeDetails.value = {
       name: place.name,
       description: "",
+      formatted_address: place.formatted_address,
       icon: "mdi-home-outline",
       position: {
         lat: place.geometry.location.lat(),
@@ -151,35 +177,5 @@ watch(selectedPlace, (place) => {
 onMounted(() => {
   if (!props.map) return
   placeService.value = new google.maps.places.PlacesService(props.map)
-})
-
-onMounted(() => {
-  if (!props.map) {
-    return
-  }
-
-  searchBox.value = new google.maps.places.SearchBox(searchInput.value!)
-  props.map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput.value!)
-
-  searchBox.value.addListener("places_changed", () => {
-    const places = searchBox.value!.getPlaces()
-
-    if (!places || places.length === 0) {
-      return
-    }
-
-    const [ place ] = places
-
-    if (!place.geometry || !place.geometry.location) {
-      return
-    }
-
-    props.map!.setCenter(place.geometry.location)
-
-    if (props.center) {
-      props.center.lat = place.geometry.location.lat()
-      props.center.lng = place.geometry.location.lng()
-    }
-  })
 })
 </script>
