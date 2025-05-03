@@ -1,9 +1,12 @@
 <template>
   <div>
     <AdvancedMarker 
-      v-for="(pin, index) in pins"
+      v-for="(pin, index) in [...pins, dummyPin]"
       :key="index"
-      :options="{ position: pin.position, map: props.map }"
+      :options="{ 
+        position: pin.position,
+        map: index < pins.length ? props.map : null
+      }"
     >
       <div class="pin-content">
         <v-icon 
@@ -37,6 +40,14 @@ interface Pin {
 
 const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
+
+const dummyPin: Pin = {
+  name: "",
+  description: "",
+  formatted_address: "",
+  icon: "mdi-home-outline",
+  position: { lat: 0, lng: 0 }
+}
 
 const iconColors = {
   'mdi-home-outline': '#4CAF50',
