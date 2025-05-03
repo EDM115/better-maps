@@ -37,7 +37,7 @@
     v-else
     class="d-flex"
   >
-    <v-navigation-drawer 
+    <v-navigation-drawer
       v-model="drawer"
       location="right"
       temporary
@@ -99,7 +99,7 @@ interface MapRef {
 }
 
 type Props = {
-  setHasLoaded?: (loaded: boolean) => void
+  setHasLoaded?: (loaded: boolean)=> void
 }
 
 const props = defineProps<Props>()
@@ -118,8 +118,8 @@ const zoom = ref(zoomLevel)
 const mapId = "MAP_ID"
 const translateX = ref("80vw")
 
-watch(drawer, val => {
-  translateX.value = val ? '0' : '80vw'
+watch(drawer, (val) => {
+  translateX.value = val ? "0" : "80vw"
 })
 
 const user = computed(() => store.getUser)
@@ -143,7 +143,7 @@ watch(
       fetchGoogleMapsApiKey(newUser.token)
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onMounted(async () => {

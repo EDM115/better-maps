@@ -85,8 +85,8 @@ interface Place {
   place_id: string
   geometry: {
     location: {
-      lat: () => number
-      lng: () => number
+      lat: ()=> number
+      lng: ()=> number
     }
   }
 }
@@ -120,7 +120,7 @@ const placeDetails = ref<PlaceDetails>({
   description: "",
   formatted_address: "",
   icon: "mdi-home-outline",
-  position: { lat: 0, lng: 0 }
+  position: { lat: 0, lng: 0 },
 })
 
 const iconOptions = [
@@ -128,27 +128,27 @@ const iconOptions = [
   { label: "Cart", value: "mdi-cart-outline", color: "#2196F3" },
   { label: "Book", value: "mdi-book-open-variant-outline", color: "#9C27B0" },
   { label: "Bag", value: "mdi-bag-personal-outline", color: "#FF9800" },
-  { label: "Food", value: "mdi-food-outline", color: "#F44336" }
+  { label: "Food", value: "mdi-food-outline", color: "#F44336" },
 ]
 
-const getIconColor = (icon: string) => iconOptions.find(option => option.value === icon)?.color || "#000000"
+const getIconColor = (icon: string) => iconOptions.find((option) => option.value === icon)?.color || "#000000"
 
 const addPin = () => {
   if (!selectedPlace.value || !placeDetails.value.icon) return
 
   const pinData = {
     ...placeDetails.value,
-    formatted_address: selectedPlace.value.formatted_address
+    formatted_address: selectedPlace.value.formatted_address,
   }
-  
-  emit('add-marker', pinData)
+
+  emit("add-marker", pinData)
   selectedPlace.value = null
   placeDetails.value = {
     name: "",
     description: "",
     formatted_address: "",
     icon: "mdi-home-outline",
-    position: { lat: 0, lng: 0 }
+    position: { lat: 0, lng: 0 },
   }
   searchResults.value = []
 }
@@ -161,31 +161,32 @@ const handleSearch = (search: string) => {
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
     locationBias: props.map?.getBounds() || undefined,
-    componentRestrictions: { country: 'fr' }
+    componentRestrictions: { country: "fr" },
   }
 
   autocompleteService.value?.getPlacePredictions(request, (predictions, status) => {
     loading.value = false
+
     if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-      searchResults.value = predictions.map(prediction => ({
+      searchResults.value = predictions.map((prediction) => ({
         name: prediction.structured_formatting.main_text || prediction.description,
         formatted_address: prediction.structured_formatting.secondary_text || "",
         place_id: prediction.place_id,
         geometry: {
           location: {
             lat: () => 0,
-            lng: () => 0
-          }
-        }
+            lng: () => 0,
+          },
+        },
       }))
-      searchResults.value.forEach(result => {
+      searchResults.value.forEach((result) => {
         placeService.value?.getDetails({ placeId: result.place_id }, (detail, detailStatus) => {
           if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && detail.geometry) {
-            result.geometry.location.lat = () => detail.geometry?.location?.lat() ?? 0;
-            result.geometry.location.lng = () => detail.geometry?.location?.lng() ?? 0;
+            result.geometry.location.lat = () => detail.geometry?.location?.lat() ?? 0
+            result.geometry.location.lng = () => detail.geometry?.location?.lng() ?? 0
           }
-        });
-      });
+        })
+      })
     } else {
       searchResults.value = []
     }
@@ -205,8 +206,8 @@ watch(selectedPlace, (place) => {
       icon: "mdi-home-outline",
       position: {
         lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng()
-      }
+        lng: place.geometry.location.lng(),
+      },
     }
   }
 })
