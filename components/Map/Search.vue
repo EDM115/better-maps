@@ -58,14 +58,23 @@
         </v-icon>
       </template>
     </v-select>
-    <v-btn
-      color="primary"
-      class="mt-4"
-      block
-      @click="editMode ? updatePin() : addPin()"
-    >
-      {{ editMode ? 'Update Pin' : 'Add Pin' }}
-    </v-btn>
+    <div class="d-flex flex-column gap-2 mt-4">
+      <v-btn
+        v-if="editMode"
+        color="grey"
+        block
+        @click="cancelEdit"
+      >
+        Cancel
+      </v-btn>
+      <v-btn
+        color="primary"
+        block
+        @click="editMode ? updatePin() : addPin()"
+      >
+        {{ editMode ? 'Update Pin' : 'Add Pin' }}
+      </v-btn>
+    </div>
   </v-form>
 </template>
 
@@ -127,6 +136,18 @@ const placeDetails = ref<PlaceDetails>({
   position: { lat: 0, lng: 0 },
 })
 
+function resetPlace() {
+  selectedPlace.value = null
+  placeDetails.value = {
+    name: "",
+    description: "",
+    formatted_address: "",
+    icon: "mdi-home-outline",
+    color: "",
+    position: { lat: 0, lng: 0 },
+  }
+}
+
 const iconOptions = [
   { label: "House", value: "mdi-home-outline", color: "#4CAF50" },
   { label: "Cart", value: "mdi-cart-outline", color: "#2196F3" },
@@ -146,15 +167,7 @@ const addPin = () => {
   }
 
   emit("add-marker", pinData)
-  selectedPlace.value = null
-  placeDetails.value = {
-    name: "",
-    description: "",
-    formatted_address: "",
-    icon: "mdi-home-outline",
-    color: "",
-    position: { lat: 0, lng: 0 },
-  }
+  resetPlace()
   searchResults.value = []
 }
 
@@ -168,18 +181,16 @@ const updatePin = () => {
   }
 
   emit("update-marker", updatedPin)
-  selectedPlace.value = null
   editingPin.value = null
   editMode.value = false
-  placeDetails.value = {
-    name: "",
-    description: "",
-    formatted_address: "",
-    icon: "mdi-home-outline",
-    color: "",
-    position: { lat: 0, lng: 0 },
-  }
+  resetPlace()
   searchResults.value = []
+}
+
+const cancelEdit = () => {
+  editMode.value = false
+  editingPin.value = null
+  resetPlace()
 }
 
 const startEditing = (pin: PlaceDetails) => {
@@ -266,6 +277,7 @@ onMounted(() => {
 })
 
 defineExpose({
-  startEditing
+  startEditing,
+  editMode
 })
 </script>

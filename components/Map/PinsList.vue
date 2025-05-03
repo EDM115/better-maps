@@ -18,10 +18,12 @@
       <template #append>
         <v-btn
           icon="mdi-pencil"
+          :disabled="editMode"
           @click="() => emit('edit', pin)"
         />
         <v-btn
           icon="mdi-delete"
+          :disabled="editMode"
           @click="() => showDeleteDialog(pin)"
         />
       </template>
@@ -80,6 +82,7 @@ const emit = defineEmits<{
 
 defineProps<{
   pins: Pin[]
+  editMode?: boolean
 }>()
 
 const iconColors = {

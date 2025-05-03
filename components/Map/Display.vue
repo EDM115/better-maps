@@ -31,6 +31,7 @@
         />
         <MapPinsList 
           :pins="mapPinRef?.pins || []"
+          :edit-mode="mapSearchRef?.editMode"
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
         />

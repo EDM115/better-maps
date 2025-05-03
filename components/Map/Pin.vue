@@ -147,7 +147,9 @@ defineExpose({
   pins,
 })
 
-onMounted(async () => {
+const fetchPins = async () => {
+  if (!props.mapId) return
+
   try {
     const response = await $fetch("/api/point", {
       headers: {
@@ -173,6 +175,18 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error("Failed to fetch pins :", error)
+  }
+}
+
+watch(() => props.mapId, (newMapId) => {
+  if (newMapId) {
+    fetchPins()
+  }
+}, { immediate: true })
+
+onMounted(() => {
+  if (props.mapId) {
+    fetchPins()
   }
 })
 </script>
