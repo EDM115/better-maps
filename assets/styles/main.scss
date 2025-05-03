@@ -80,3 +80,14 @@ input:-webkit-autofill:active {
 .v-input__details {
   display: none !important;
 }
+
+.v-list-item-title {
+  white-space: pre-wrap !important;
+}
+
+.v-list-item-subtitle {
+  white-space: pre-wrap !important;
+  -webkit-line-clamp: none !important;
+  line-clamp: none !important;
+  opacity: 0.8 !important;
+}

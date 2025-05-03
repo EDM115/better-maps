@@ -12,7 +12,9 @@
           :color="getIconColor(pin.icon)"
         />
       </template>
-      {{ pin.description }}
+      <div style="white-space: pre-wrap; font-size: 0.9em;">
+        {{ pin.description }}
+      </div>
     </v-list-item>
   </v-list>
 </template>
