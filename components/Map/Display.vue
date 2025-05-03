@@ -82,6 +82,7 @@
       <v-btn
         icon="mdi-menu"
         class="floating-btn"
+        base-color="primary"
         @click="drawer = !drawer"
       />
     </v-card>
@@ -105,17 +106,14 @@ type Props = {
 const props = defineProps<Props>()
 
 const store = useMainStore()
-const config = useRuntimeConfig()
 const { smAndUp } = useDisplay()
-
-const [ latitude, longitude, zoomLevel ] = config.public.startingPoint.split(",").map(Number)
 
 const drawer = ref(false)
 const mapRef = ref<MapRef>()
 const mapPinRef = ref()
-const center = ref({ lat: latitude, lng: longitude })
-const zoom = ref(zoomLevel)
-const mapId = "MAP_ID"
+const center = ref({ lat: 0, lng: 0 })
+const zoom = ref(0)
+const mapId = ref(String(0))
 const translateX = ref("80vw")
 
 watch(drawer, (val) => {
@@ -136,11 +134,24 @@ const fetchGoogleMapsApiKey = async (token: string) => {
   hasApiKey.value = true
 }
 
+const fetchMapData = async (userId: number | null) => {
+  const response = await $fetch("/api/map", {
+    headers: { Authorization: `Bearer ${user.value.token}` },
+    query: { user_id: userId },
+  })
+  console.log("🚀 ~ fetchMapData ~ response :", response)
+
+  mapId.value = String(response.body.map.id)
+  center.value = { lat: response.body.map.start_lat, lng: response.body.map.start_lng }
+  zoom.value = response.body.map.start_zoom
+}
+
 watch(
   () => user.value,
   async (newUser) => {
     if (newUser && newUser.token) {
-      fetchGoogleMapsApiKey(newUser.token)
+      await fetchGoogleMapsApiKey(newUser.token)
+      await fetchMapData(newUser.id)
     }
   },
   { immediate: true },
@@ -149,6 +160,7 @@ watch(
 onMounted(async () => {
   if (!store.isUserEmpty) {
     await fetchGoogleMapsApiKey(store.getUser.token ?? "")
+    await fetchMapData(store.getUser.id ?? null)
   }
 
   if (props.setHasLoaded) {

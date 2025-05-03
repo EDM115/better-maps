@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method !== "GET") {
+  if (event.method !== "GET") {
     throw createError({ status: 405, message: "Méthode non autorisée" })
   }
 

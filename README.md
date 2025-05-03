@@ -44,7 +44,7 @@ pnpm dev
 ## Build and run
 ```pwsh
 docker build --network=host -t edm115/better-maps .
-docker run -d -p 27400:27400 --env-file .env --name better-maps edm115/better-maps
+docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name better-maps edm115/better-maps
 ```
 
 ## DB Scheme
@@ -57,13 +57,14 @@ docker run -d -p 27400:27400 --env-file .env --name better-maps edm115/better-ma
 | role     | string | Not Null, "admin" or "user" (default) |
 
 ### Map
-| Column     | Type  | Extra                                  |
-| :--------- | :---- | :------------------------------------- |
-| id         | int   | Primary Key, Autoincrement             |
-| user_id    | int   | Foreign Key, Not Null, can be multiple |
-| start_lat  | float | Not Null                               |
-| start_lng  | float | Not Null                               |
-| start_zoom | int   | Not Null                               |
+| Column     | Type   | Extra                                  |
+| :--------- | :----- | :------------------------------------- |
+| id         | int    | Primary Key, Autoincrement             |
+| name       | string | Not Null, "Default Map" (default)      |
+| user_id    | int    | Foreign Key, Not Null, can be multiple |
+| start_lat  | float  | Not Null                               |
+| start_lng  | float  | Not Null                               |
+| start_zoom | int    | Not Null                               |
 
 ### Point
 | Column      | Type   | Extra                       |
@@ -71,6 +72,7 @@ docker run -d -p 27400:27400 --env-file .env --name better-maps edm115/better-ma
 | id          | int    | Primary Key, Autoincrement  |
 | name        | string | Not Null                    |
 | description | string | Not Null, default ""        |
+| address     | string | Not Null                    |
 | lat         | float  | Not Null                    |
 | lng         | float  | Not Null                    |
 | color       | string | Not Null, default "#FFB86C" |

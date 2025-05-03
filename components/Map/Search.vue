@@ -28,7 +28,6 @@
     <v-text-field
       v-model="placeDetails.name"
       label="Name"
-      readonly
     />
     <v-text-field
       v-model="placeDetails.formatted_address"

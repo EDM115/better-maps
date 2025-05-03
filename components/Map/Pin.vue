@@ -12,6 +12,7 @@
         <v-icon
           :icon="pin.icon"
           :color="getIconColor(pin.icon)"
+          size="large"
         />
       </div>
     </AdvancedMarker>
@@ -72,8 +73,8 @@ defineExpose({
 <style scoped>
 .pin-content {
   background: rgb(var(--v-theme-surface-bright));
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 1em;
+  padding: 0.5em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 </style>

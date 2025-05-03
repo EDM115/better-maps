@@ -76,6 +76,8 @@ COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/db /app/db
 COPY --from=builder /app/.env /app/.env
 
+VOLUME ["/app/db"]
+
 EXPOSE ${PORT}
 
 ENTRYPOINT ["dotenv", "--"]

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 const JWT_SECRET = process.env.JWT_SECRET ?? "secret"
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method !== "POST") {
+  if (event.method !== "POST") {
     throw createError({ status: 405, message: "Méthode non autorisée" })
   }
 

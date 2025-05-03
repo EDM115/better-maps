@@ -32,6 +32,7 @@ function initDatabase() {
   db.prepare(`
     CREATE TABLE IF NOT EXISTS Map (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL DEFAULT 'Default Map',
       start_lat REAL NOT NULL,
       start_lng REAL NOT NULL,
       start_zoom INTEGER NOT NULL
@@ -53,6 +54,7 @@ function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       description TEXT NOT NULL DEFAULT '',
+      address TEXT NOT NULL,
       lat REAL NOT NULL,
       lng REAL NOT NULL,
       color TEXT NOT NULL DEFAULT '#FFB86C',
