@@ -1,6 +1,7 @@
 <template>
   <v-autocomplete
     v-model="selectedPlace"
+    v-model:search="searchQuery"
     :items="searchResults"
     :loading="loading"
     placeholder="Search places..."
@@ -8,7 +9,8 @@
     item-value="place_id"
     return-object
     clearable
-    @update:search="handleSearch"
+    hide-no-data
+    @update:search="searchQuery && searchQuery.length > 0 ? loading = true : loading = false"
   >
     <template #item="{ item }">
       <v-list-item
@@ -31,11 +33,13 @@
     <v-text-field
       v-model="placeDetails.formatted_address"
       label="Address"
+      class="mt-2"
       readonly
     />
     <v-textarea
       v-model="placeDetails.description"
       label="Description"
+      class="mt-2"
       rows="2"
     />
     <v-select
@@ -44,6 +48,7 @@
       label="Icon"
       item-title="label"
       item-value="value"
+      class="mt-2"
     >
       <template #prepend>
         <v-icon
@@ -66,7 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { refDebounced } from "@vueuse/core"
+import { ref, watch } from "vue"
 
 interface Props {
   map?: google.maps.Map
@@ -105,6 +111,9 @@ const loading = ref(false)
 const searchResults = ref<Place[]>([])
 const selectedPlace = ref<Place | null>(null)
 const placeService = ref<google.maps.places.PlacesService>()
+const autocompleteService = ref<google.maps.places.AutocompleteService>()
+const searchQuery = ref("")
+const searchDebounced = refDebounced(searchQuery, 500, { maxWait: 1500 })
 
 const placeDetails = ref<PlaceDetails>({
   name: "",
@@ -145,33 +154,47 @@ const addPin = () => {
 }
 
 const handleSearch = (search: string) => {
-  if (!props.map || !placeService.value || !search) return
-  
+  if (!autocompleteService.value || !search) return
+  searchQuery.value = search
+
   loading.value = true
-  const request = {
-    query: search,
-    bounds: props.map.getBounds()
+  const request: google.maps.places.AutocompletionRequest = {
+    input: search,
+    locationBias: props.map?.getBounds() || undefined,
+    componentRestrictions: { country: 'fr' }
   }
 
-  placeService.value.textSearch(request, (results, status) => {
+  autocompleteService.value?.getPlacePredictions(request, (predictions, status) => {
     loading.value = false
-    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-      searchResults.value = results.map(place => ({
-        name: place.name || "",
-        formatted_address: place.formatted_address || "",
-        place_id: place.place_id || "",
+    if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+      searchResults.value = predictions.map(prediction => ({
+        name: prediction.structured_formatting.main_text || prediction.description,
+        formatted_address: prediction.structured_formatting.secondary_text || "",
+        place_id: prediction.place_id,
         geometry: {
           location: {
-            lat: () => place.geometry?.location?.lat() || 0,
-            lng: () => place.geometry?.location?.lng() || 0
+            lat: () => 0,
+            lng: () => 0
           }
         }
       }))
+      searchResults.value.forEach(result => {
+        placeService.value?.getDetails({ placeId: result.place_id }, (detail, detailStatus) => {
+          if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && detail.geometry) {
+            result.geometry.location.lat = () => detail.geometry?.location?.lat() ?? 0;
+            result.geometry.location.lng = () => detail.geometry?.location?.lng() ?? 0;
+          }
+        });
+      });
     } else {
       searchResults.value = []
     }
   })
 }
+
+watch(searchDebounced, (search) => {
+  handleSearch(search)
+})
 
 watch(selectedPlace, (place) => {
   if (place) {
@@ -191,5 +214,6 @@ watch(selectedPlace, (place) => {
 onMounted(() => {
   if (!props.map) return
   placeService.value = new google.maps.places.PlacesService(props.map)
+  autocompleteService.value = new google.maps.places.AutocompleteService()
 })
 </script>
