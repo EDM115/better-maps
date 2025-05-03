@@ -1,17 +1,32 @@
 <template>
   <div>
-    <v-btn
-      color="primary"
-      @click="() => props.map?.addListener('click', addPin)"
-    >
-      Add Pins
-    </v-btn>
     <AdvancedMarker
       v-for="(pin, index) in pins"
       :key="index"
-      :options="{ position: pin }"
-    />
-    <v-list :items="listPins" />
+      :options="{ position: pin.position }"
+    >
+      <div class="pin-content">
+        <v-icon 
+          :icon="pin.icon"
+          :color="getIconColor(pin.icon)"
+        />
+      </div>
+    </AdvancedMarker>
+    <v-list>
+      <v-list-item
+        v-for="(pin, index) in pins"
+        :key="index"
+        :title="pin.name"
+        :subtitle="pin.description"
+      >
+        <template #prepend>
+          <v-icon 
+            :icon="pin.icon"
+            :color="getIconColor(pin.icon)"
+          />
+        </template>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 
@@ -24,21 +39,43 @@ interface Props {
   center?: { lat: number; lng: number }
 }
 
-const props = defineProps<Props>()
-const pins = ref<Array<{ lat: number; lng: number }>>([])
-const listPins = ref<Array<{ title: string; value: number }>>(pins.value.map((pin) => ({
-  title: pin.lat.toString(),
-  value: pin.lng,
-})))
-
-const addPin = (event: google.maps.MapMouseEvent) => {
-  console.log("🚀 ~ addPin ~ event :", event)
-
-  if (event.latLng) {
-    pins.value.push({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-    })
+interface Pin {
+  name: string
+  description: string
+  icon: string
+  position: {
+    lat: number
+    lng: number
   }
 }
+
+const props = defineProps<Props>()
+const pins = ref<Pin[]>([])
+
+const iconColors = {
+  'mdi-home-outline': '#4CAF50',
+  'mdi-cart-outline': '#2196F3',
+  'mdi-book-open-variant-outline': '#9C27B0',
+  'mdi-bag-personal-outline': '#FF9800',
+  'mdi-food-outline': '#F44336'
+}
+
+const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || '#000000'
+
+const addPin = (pin: Pin) => {
+  pins.value.push(pin)
+}
+
+defineExpose({
+  addPin
+})
 </script>
+
+<style scoped>
+.pin-content {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+</style>

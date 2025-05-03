@@ -20,6 +20,8 @@
     "vue.volar",
     "wix.vscode-import-cost",
     "yoavbls.pretty-ts-errors",
-    "zignd.html-css-class-completion"
+    "zignd.html-css-class-completion",
+    "silverfletcherr.vuetify-gotodocs",
+    "vuetifyjs.vuetify-vscode"
   ]
 }

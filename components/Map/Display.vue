@@ -21,6 +21,12 @@
         <MapSearch
           :map="mapRef?.map"
           :center="center"
+          @add-marker="(details) => mapPinRef?.addPin(details)"
+        />
+        <MapPin
+          ref="mapPinRef"
+          :map="mapRef?.map"
+          :center="center"
         />
         <MapTransportation :map="mapRef?.map" />
         <MapPin
@@ -35,10 +41,13 @@
     v-else
     class="d-flex"
   >
-    <v-navigation-drawer
+    <v-navigation-drawer 
       v-model="drawer"
       location="right"
       temporary
+      floating
+      mobile
+      :style="{ width: '80vw', transform: 'translateX(' + translateX + ')' }"
     >
       <v-list>
         <v-list-item>
@@ -82,13 +91,19 @@
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
 import { computedAsync } from "@vueuse/core"
-import { computed, ref } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 import { useDisplay } from "vuetify"
 import { GoogleMap } from "vue3-google-map"
 
 interface MapRef {
   map: google.maps.Map
 }
+
+type Props = {
+  setHasLoaded?: (loaded: boolean) => void
+}
+
+const props = defineProps<Props>()
 
 const store = useMainStore()
 const config = useRuntimeConfig()
@@ -98,9 +113,15 @@ const [ latitude, longitude, zoomLevel ] = config.public.startingPoint.split(","
 
 const drawer = ref(false)
 const mapRef = ref<MapRef>()
+const mapPinRef = ref()
 const center = ref({ lat: latitude, lng: longitude })
 const zoom = ref(zoomLevel)
 const mapId = "MAP_ID"
+const translateX = ref("80vw")
+
+watch(drawer, val => {
+  translateX.value = val ? '0' : '80vw'
+})
 
 const user = computed(() => store.getUser)
 
@@ -110,6 +131,12 @@ const GOOGLE_MAPS_API_KEY = computedAsync(async () => {
   })
 
   return response.body.apiKey
+})
+
+onMounted(() => {
+  if (props.setHasLoaded) {
+    props.setHasLoaded(true)
+  }
 })
 </script>
 

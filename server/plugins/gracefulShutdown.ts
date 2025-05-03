@@ -5,15 +5,4 @@ export default defineNitroPlugin((nitroApp) => {
     db.close()
     console.log("Database connection closed")
   })
-
-  if (import.meta.dev) {
-    const exitHandler = () => {
-      db.close()
-      console.log("Database connection closed (dev)")
-      process.exit(0)
-    }
-
-    process.once("SIGINT", exitHandler)
-    process.once("SIGTERM", exitHandler)
-  }
 })
