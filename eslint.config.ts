@@ -71,6 +71,7 @@ export default withNuxt(
       "@typescript-eslint/no-explicit-any": "warn",
       "camelcase": "off",
       "capitalized-comments": "off",
+      "complexity": "off",
       "curly": [ "warn", "all" ],
       "id-length": "off",
       "import-x/namespace": "off",

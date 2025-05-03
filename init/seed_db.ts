@@ -57,7 +57,7 @@ function initDatabase() {
       address TEXT NOT NULL,
       lat REAL NOT NULL,
       lng REAL NOT NULL,
-      color TEXT NOT NULL DEFAULT '#FFB86C',
+      color TEXT NOT NULL DEFAULT '',
       icon TEXT NOT NULL DEFAULT 'house',
       map_id INTEGER NOT NULL,
       visible INTEGER NOT NULL DEFAULT 1,

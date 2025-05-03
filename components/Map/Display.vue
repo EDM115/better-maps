@@ -16,6 +16,7 @@
             ref="mapPinRef"
             :map="mapRef?.map"
             :center="center"
+            :map-id="Number(mapId)"
           />
         </GoogleMap>
       </v-card>
@@ -23,11 +24,16 @@
     <v-col cols="4">
       <v-card class="pa-4">
         <MapSearch
+          ref="mapSearchRef"
           :map="mapRef?.map"
           :center="center"
           @add-marker="(details) => mapPinRef?.addPin(details)"
         />
-        <MapPinsList :pins="mapPinRef?.pins || []" />
+        <MapPinsList 
+          :pins="mapPinRef?.pins || []"
+          @edit="(pin) => mapSearchRef?.startEditing(pin)"
+          @delete="(pin) => mapPinRef?.deletePin(pin)"
+        />
         <MapTransportation :map="mapRef?.map" />
       </v-card>
     </v-col>
@@ -111,6 +117,7 @@ const { smAndUp } = useDisplay()
 const drawer = ref(false)
 const mapRef = ref<MapRef>()
 const mapPinRef = ref()
+const mapSearchRef = ref()
 const center = ref({ lat: 0, lng: 0 })
 const zoom = ref(0)
 const mapId = ref(String(0))
@@ -139,7 +146,6 @@ const fetchMapData = async (userId: number | null) => {
     headers: { Authorization: `Bearer ${user.value.token}` },
     query: { user_id: userId },
   })
-  console.log("🚀 ~ fetchMapData ~ response :", response)
 
   mapId.value = String(response.body.map.id)
   center.value = { lat: response.body.map.start_lat, lng: response.body.map.start_lng }

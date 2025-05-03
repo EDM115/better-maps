@@ -62,9 +62,9 @@
       color="primary"
       class="mt-4"
       block
-      @click="addPin"
+      @click="editMode ? updatePin() : addPin()"
     >
-      Add Pin
+      {{ editMode ? 'Update Pin' : 'Add Pin' }}
     </v-btn>
   </v-form>
 </template>
@@ -95,6 +95,7 @@ interface PlaceDetails {
   description: string
   formatted_address: string
   icon: string
+  color: string
   position: {
     lat: number
     lng: number
@@ -104,9 +105,12 @@ interface PlaceDetails {
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: "add-marker", details: PlaceDetails): void
+  (e: "update-marker", details: PlaceDetails): void
 }>()
 
 const loading = ref(false)
+const editMode = ref(false)
+const editingPin = ref<PlaceDetails | null>(null)
 const searchResults = ref<Place[]>([])
 const selectedPlace = ref<Place | null>(null)
 const placeService = ref<google.maps.places.PlacesService>()
@@ -119,6 +123,7 @@ const placeDetails = ref<PlaceDetails>({
   description: "",
   formatted_address: "",
   icon: "mdi-home-outline",
+  color: "",
   position: { lat: 0, lng: 0 },
 })
 
@@ -147,9 +152,51 @@ const addPin = () => {
     description: "",
     formatted_address: "",
     icon: "mdi-home-outline",
+    color: "",
     position: { lat: 0, lng: 0 },
   }
   searchResults.value = []
+}
+
+const updatePin = () => {
+  if (!selectedPlace.value || !placeDetails.value.icon || !editingPin.value) return
+
+  const updatedPin = {
+    ...editingPin.value,
+    ...placeDetails.value,
+    formatted_address: selectedPlace.value.formatted_address,
+  }
+
+  emit("update-marker", updatedPin)
+  selectedPlace.value = null
+  editingPin.value = null
+  editMode.value = false
+  placeDetails.value = {
+    name: "",
+    description: "",
+    formatted_address: "",
+    icon: "mdi-home-outline",
+    color: "",
+    position: { lat: 0, lng: 0 },
+  }
+  searchResults.value = []
+}
+
+const startEditing = (pin: PlaceDetails) => {
+  editMode.value = true
+  editingPin.value = pin
+  placeDetails.value = { ...pin }
+  selectedPlace.value = {
+    name: pin.name,
+    formatted_address: pin.formatted_address,
+    place_id: "",
+    geometry: {
+      location: {
+        lat: () => pin.position.lat,
+        lng: () => pin.position.lng
+      }
+    }
+  }
 }
 
 const handleSearch = (search: string) => {
@@ -203,6 +250,7 @@ watch(selectedPlace, (place) => {
       description: "",
       formatted_address: place.formatted_address,
       icon: "mdi-home-outline",
+      color: "",
       position: {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
@@ -215,5 +263,9 @@ onMounted(() => {
   if (!props.map) return
   placeService.value = new google.maps.places.PlacesService(props.map)
   autocompleteService.value = new google.maps.places.AutocompleteService()
+})
+
+defineExpose({
+  startEditing
 })
 </script>

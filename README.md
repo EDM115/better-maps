@@ -75,7 +75,7 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
 | address     | string | Not Null                    |
 | lat         | float  | Not Null                    |
 | lng         | float  | Not Null                    |
-| color       | string | Not Null, default "#FFB86C" |
+| color       | string | Not Null, default ""        |
 | icon        | string | Not Null, default "house"   |
 | map_id      | int    | Foreign Key, Not Null       |
 | visible     | bool   | Not Null, default true      |
