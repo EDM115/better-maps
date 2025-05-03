@@ -1,29 +1,23 @@
 <template>
-  <div>
-    <AdvancedMarker 
+  <v-list>
+    <v-list-item
       v-for="(pin, index) in pins"
       :key="index"
-      :options="{ position: pin.position, map: props.map }"
+      :title="pin.name"
+      :subtitle="pin.formatted_address"
     >
-      <div class="pin-content">
+      <template #prepend>
         <v-icon 
           :icon="pin.icon"
           :color="getIconColor(pin.icon)"
         />
-      </div>
-    </AdvancedMarker>
-  </div>
+      </template>
+      {{ pin.description }}
+    </v-list-item>
+  </v-list>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-import { AdvancedMarker } from "vue3-google-map"
-
-interface Props {
-  map?: google.maps.Map
-  center?: { lat: number; lng: number }
-}
-
 interface Pin {
   name: string
   description: string
@@ -35,8 +29,9 @@ interface Pin {
   }
 }
 
-const props = defineProps<Props>()
-const pins = ref<Pin[]>([])
+defineProps<{
+  pins: Pin[]
+}>()
 
 const iconColors = {
   'mdi-home-outline': '#4CAF50',
@@ -47,22 +42,4 @@ const iconColors = {
 }
 
 const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || '#000000'
-
-const addPin = (pin: Pin) => {
-  pins.value = [...pins.value, pin]
-}
-
-defineExpose({
-  addPin,
-  pins,
-})
 </script>
-
-<style scoped>
-.pin-content {
-  background: rgb(var(--v-theme-surface-bright));
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-</style>

@@ -21,6 +21,19 @@ useHead({
     { name: "description", content: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf" },
   ],
   link: [{ rel: "icon", type: "image/png", href: "/images/logo.png" }],
+  htmlAttrs: {
+    lang: "fr",
+  },
+})
+
+useSeoMeta({
+  title: "Better Maps",
+  ogTitle: "Better Maps",
+  description: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf",
+  ogDescription: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf",
+  ogImage: "/images/logo.png",
+  ogUrl: "https://maps.edm115.dev",
+  ogLocale: "fr_FR",
 })
 
 const store = useMainStore()

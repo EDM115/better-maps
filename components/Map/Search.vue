@@ -126,8 +126,22 @@ const getIconColor = (icon: string) => iconOptions.find(option => option.value =
 
 const addPin = () => {
   if (!selectedPlace.value || !placeDetails.value.icon) return
-  emit('add-marker', placeDetails.value)
+
+  const pinData = {
+    ...placeDetails.value,
+    formatted_address: selectedPlace.value.formatted_address
+  }
+  
+  emit('add-marker', pinData)
   selectedPlace.value = null
+  placeDetails.value = {
+    name: "",
+    description: "",
+    formatted_address: "",
+    icon: "mdi-home-outline",
+    position: { lat: 0, lng: 0 }
+  }
+  searchResults.value = []
 }
 
 const handleSearch = (search: string) => {

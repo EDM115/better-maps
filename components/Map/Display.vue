@@ -12,7 +12,11 @@
           style="width: 100%; height: 85vh"
           @map-loaded="mapRef = $event"
         >
-          <slot />
+          <MapPin
+            ref="mapPinRef"
+            :map="mapRef?.map"
+            :center="center"
+          />
         </GoogleMap>
       </v-card>
     </v-col>
@@ -23,16 +27,8 @@
           :center="center"
           @add-marker="(details) => mapPinRef?.addPin(details)"
         />
-        <MapPin
-          ref="mapPinRef"
-          :map="mapRef?.map"
-          :center="center"
-        />
+        <MapPinsList :pins="mapPinRef?.pins || []" />
         <MapTransportation :map="mapRef?.map" />
-        <MapPin
-          :map="mapRef?.map"
-          :center="center"
-        />
       </v-card>
     </v-col>
   </v-row>
