@@ -30,7 +30,7 @@
           @add-marker="(details) => mapPinRef?.addPin(details)"
           @update-marker="(details) => mapPinRef?.editPin(details)"
         />
-        <MapPinsList 
+        <MapPinsList
           :pins="mapPinRef?.pins || []"
           :edit-mode="mapSearchRef?.editMode"
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
@@ -64,7 +64,7 @@
           />
         </v-list-item>
         <v-list-item>
-          <MapPinsList 
+          <MapPinsList
             :pins="mapPinRef?.pins || []"
             :edit-mode="mapSearchRef?.editMode"
             @edit="(pin) => mapSearchRef?.startEditing(pin)"

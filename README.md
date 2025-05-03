@@ -28,10 +28,12 @@ SEED_USERS='[{"username": "admin", "password": "admin", "role": "admin"}, {"user
 SEED=true
 GOOGLE_MAPS_API_KEY=Abc-Def123
 STARTING_POINT=48.8566,2.3522,3
+COUNTRY=fr
 ```
 - `JWT_SECRET` : generate with `node -e "import('crypto').then(crypto => console.log(crypto.randomBytes(64).toString('hex')))"`
 - `SEED_USERS` : if any value should contain a quote, write instead `\'` (or `\"`)
 - `STARTING_POINT` : the starting point of the map, in the format `lat,lng,zoom`
+- `COUNTRY` : the base country to "limit" the search results, lowercase country code only
 ```pwsh
 node --experimental-strip-types init/seed_db.ts
 ```

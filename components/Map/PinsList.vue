@@ -37,10 +37,10 @@
   >
     <v-card>
       <v-card-title class="text-h5">
-        Confirm Delete
+        Confirmation de suppression
       </v-card-title>
       <v-card-text>
-        Are you sure you want to delete this pin?
+        Êtes-vous sûr de vouloir supprimer ce pin ?
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -49,13 +49,13 @@
           text
           @click="confirmDelete"
         >
-          Delete
+          Supprimer
         </v-btn>
         <v-btn
           text
           @click="showDialog = false"
         >
-          Cancel
+          Annuler
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -87,14 +87,14 @@ defineProps<{
 }>()
 
 const iconColors = {
-  "mdi-home-outline": "#4CAF50",
-  "mdi-cart-outline": "#2196F3",
-  "mdi-book-open-variant-outline": "#9C27B0",
-  "mdi-bag-personal-outline": "#FF9800",
-  "mdi-food-outline": "#F44336",
+  "mdi-home-outline": "#50FA7B",
+  "mdi-cart-outline": "#8BE9FD",
+  "mdi-book-open-variant-outline": "#6272A4",
+  "mdi-bag-personal-outline": "#BD93F9",
+  "mdi-food-outline": "#FFB86C",
 }
 
-const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#000000"
+const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#FF0000"
 
 const showDialog = ref(false)
 const pinToDelete = ref<Pin | null>(null)
@@ -106,7 +106,7 @@ const showDeleteDialog = (pin: Pin) => {
 
 const confirmDelete = () => {
   if (pinToDelete.value) {
-    emit('delete', pinToDelete.value)
+    emit("delete", pinToDelete.value)
     pinToDelete.value = null
   }
   showDialog.value = false

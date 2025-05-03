@@ -58,14 +58,14 @@ const dummyPin: Pin = {
 }
 
 const iconColors = {
-  "mdi-home-outline": "#4CAF50",
-  "mdi-cart-outline": "#2196F3",
-  "mdi-book-open-variant-outline": "#9C27B0",
-  "mdi-bag-personal-outline": "#FF9800",
-  "mdi-food-outline": "#F44336",
+  "mdi-home-outline": "#50FA7B",
+  "mdi-cart-outline": "#8BE9FD",
+  "mdi-book-open-variant-outline": "#6272A4",
+  "mdi-bag-personal-outline": "#BD93F9",
+  "mdi-food-outline": "#FFB86C",
 }
 
-const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#000000"
+const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#FF0000"
 
 const addPin = async (pin: Pin) => {
   try {
@@ -80,18 +80,18 @@ const addPin = async (pin: Pin) => {
         color: pin.color,
         icon: pin.icon,
         map_id: Number(props.mapId),
-        visible: 1
+        visible: 1,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
       },
     })
-  
+
     if ("id" in response.body) {
-      pins.value = [...pins.value, { ...pin, id: (response.body as { id: number }).id }]
+      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id }]
     }
   } catch (error) {
-    console.error("Failed to add pin :", error)
+    console.error("Échec de l'ajout du pin :", error)
   }
 }
 
@@ -104,9 +104,9 @@ const deletePin = async (pin: Pin) => {
         Authorization: `Bearer ${store.getUser.token}`,
       },
     })
-    pins.value = pins.value.filter(p => p.id !== pin.id)
+    pins.value = pins.value.filter((p) => p.id !== pin.id)
   } catch (error) {
-    console.error("Failed to delete pin :", error)
+    console.error("Échec de la suppression du pin :", error)
   }
 }
 
@@ -124,19 +124,20 @@ const editPin = async (pin: Pin) => {
         color: pin.color,
         icon: pin.icon,
         map_id: Number(props.mapId),
-        visible: 1
+        visible: 1,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
       },
     })
-    
-    const index = pins.value.findIndex(p => p.id === pin.id)
+
+    const index = pins.value.findIndex((p) => p.id === pin.id)
+
     if (index !== -1) {
       pins.value[index] = pin
     }
   } catch (error) {
-    console.error("Failed to edit pin :", error)
+    console.error("Échec de l'édition du pin :", error)
   }
 }
 
@@ -157,9 +158,10 @@ const fetchPins = async () => {
       },
       query: { map_id: props.mapId },
     })
-    
+
     if ("points" in response.body) {
       const { points } = response.body
+
       pins.value = points.map((point: any) => ({
         id: point.id,
         name: point.name,
@@ -169,12 +171,12 @@ const fetchPins = async () => {
         color: point.color,
         position: {
           lat: point.lat,
-          lng: point.lng
-        }
+          lng: point.lng,
+        },
       }))
     }
   } catch (error) {
-    console.error("Failed to fetch pins :", error)
+    console.error("Échec de la récupération des pins :", error)
   }
 }
 

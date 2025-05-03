@@ -1,7 +1,7 @@
 <template>
   <v-switch
     v-model="showTransit"
-    label="Show Public Transport"
+    label="Afficher les transports en commun"
     color="primary"
     class="mt-4"
   />

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const { user_id } = await getQuery(event) as { user_id: string }
 
   if (!user_id) {
-    throw createError({ status: 400, message: "User ID is required" })
+    throw createError({ status: 400, message: "L'ID de l'utilisateur est requis" })
   }
 
   const map = db.prepare(`
@@ -27,15 +27,15 @@ export default defineEventHandler(async (event) => {
   if (!map) {
     throw createError({
       status: 404,
-      message: "Map not found",
+      message: "Carte non trouvée",
     })
   }
 
   return {
-      status: 200,
-      body: {
-        success: "Map retrieved",
-        map,
-      },
-    } 
+    status: 200,
+    body: {
+      success: "Carte récupérée",
+      map,
+    },
+  }
 })

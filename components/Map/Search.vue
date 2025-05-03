@@ -4,7 +4,7 @@
     v-model:search="searchQuery"
     :items="searchResults"
     :loading="loading"
-    placeholder="Search places..."
+    placeholder="Rechercher un lieu, une adresse..."
     item-title="name"
     item-value="place_id"
     return-object
@@ -27,11 +27,11 @@
   >
     <v-text-field
       v-model="placeDetails.name"
-      label="Name"
+      label="Nom"
     />
     <v-text-field
       v-model="placeDetails.formatted_address"
-      label="Address"
+      label="Adresse"
       class="mt-2"
       readonly
     />
@@ -44,18 +44,17 @@
     <v-select
       v-model="placeDetails.icon"
       :items="iconOptions"
-      label="Icon"
+      label="Icône"
       item-title="label"
       item-value="value"
       class="mt-2"
     >
       <template #prepend>
         <v-icon
+          :icon="placeDetails.icon"
           :color="getIconColor(placeDetails.icon)"
           class="mr-2"
-        >
-          {{ placeDetails.icon }}
-        </v-icon>
+        />
       </template>
     </v-select>
     <div class="d-flex flex-column gap-2 mt-4">
@@ -65,14 +64,14 @@
         block
         @click="cancelEdit"
       >
-        Cancel
+        Annuler
       </v-btn>
       <v-btn
         color="primary"
         block
         @click="editMode ? updatePin() : addPin()"
       >
-        {{ editMode ? 'Update Pin' : 'Add Pin' }}
+        {{ editMode ? 'Mettre à jour le pin' : 'Ajouter un pin' }}
       </v-btn>
     </div>
   </v-form>
@@ -116,6 +115,7 @@ const emit = defineEmits<{
   (e: "add-marker", details: PlaceDetails): void
   (e: "update-marker", details: PlaceDetails): void
 }>()
+const config = useRuntimeConfig()
 
 const loading = ref(false)
 const editMode = ref(false)
@@ -149,14 +149,14 @@ function resetPlace() {
 }
 
 const iconOptions = [
-  { label: "House", value: "mdi-home-outline", color: "#4CAF50" },
-  { label: "Cart", value: "mdi-cart-outline", color: "#2196F3" },
-  { label: "Book", value: "mdi-book-open-variant-outline", color: "#9C27B0" },
-  { label: "Bag", value: "mdi-bag-personal-outline", color: "#FF9800" },
-  { label: "Food", value: "mdi-food-outline", color: "#F44336" },
+  { label: "Appart", value: "mdi-home-outline", color: "#50FA7B" },
+  { label: "Courses", value: "mdi-cart-outline", color: "#8BE9FD" },
+  { label: "Écoles", value: "mdi-book-open-variant-outline", color: "#6272A4" },
+  { label: "Travail", value: "mdi-bag-personal-outline", color: "#BD93F9" },
+  { label: "Resto", value: "mdi-food-outline", color: "#FFB86C" },
 ]
 
-const getIconColor = (icon: string) => iconOptions.find((option) => option.value === icon)?.color || "#000000"
+const getIconColor = (icon: string) => iconOptions.find((option) => option.value === icon)?.color || "#FF0000"
 
 const addPin = () => {
   if (!selectedPlace.value || !placeDetails.value.icon) return
@@ -204,9 +204,9 @@ const startEditing = (pin: PlaceDetails) => {
     geometry: {
       location: {
         lat: () => pin.position.lat,
-        lng: () => pin.position.lng
-      }
-    }
+        lng: () => pin.position.lng,
+      },
+    },
   }
 }
 
@@ -218,7 +218,7 @@ const handleSearch = (search: string) => {
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
     locationBias: props.map?.getBounds() || undefined,
-    componentRestrictions: { country: "fr" },
+    componentRestrictions: { country: config.public.country },
   }
 
   autocompleteService.value?.getPlacePredictions(request, (predictions, status) => {
@@ -276,6 +276,6 @@ onMounted(() => {
 
 defineExpose({
   startEditing,
-  editMode
+  editMode,
 })
 </script>

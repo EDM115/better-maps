@@ -1,7 +1,7 @@
 import db from "./db"
 
 export default defineEventHandler(async (event) => {
-  if (!["GET", "POST", "PUT", "DELETE"].includes(event.method)) {
+  if (![ "GET", "POST", "PUT", "DELETE" ].includes(event.method)) {
     throw createError({ status: 405, message: "Méthode non autorisée" })
   }
 
@@ -30,14 +30,14 @@ export default defineEventHandler(async (event) => {
         if (!point) {
           throw createError({
             status: 404,
-            message: "Point not found",
+            message: "Point non trouvé",
           })
         }
 
         return {
           status: 200,
           body: {
-            success: "Point retrieved",
+            success: "Point récupéré",
             point,
           },
         }
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
         return {
           status: 200,
           body: {
-            success: "Points retrieved",
+            success: "Points récupérés",
             points,
           },
         }
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!name || !address || !lat || !lng || !icon || !map_id) {
-        throw createError({ status: 400, message: "Missing required fields" })
+        throw createError({ status: 400, message: "Champs requis manquants" })
       }
 
       const newPoint = db.prepare(`
@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 201,
         body: {
-          success: "Point created",
+          success: "Point créé",
           id: newPoint.lastInsertRowid,
         },
       }
@@ -119,7 +119,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!id || !name || !address || !lat || !lng || !icon) {
-        throw createError({ status: 400, message: "Missing required fields" })
+        throw createError({ status: 400, message: "Champs requis manquants" })
       }
 
       db.prepare(`
@@ -141,14 +141,14 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Point updated",
+          success: "Point mis à jour",
         },
       }
     } case "DELETE": {
       const { id } = await readBody(event) as { id: number }
 
       if (!id) {
-        throw createError({ status: 400, message: "Missing required fields" })
+        throw createError({ status: 400, message: "Champs requis manquants" })
       }
 
       db.prepare(`
@@ -159,7 +159,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Point deleted",
+          success: "Point supprimé",
         },
       }
     } default: {

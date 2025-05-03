@@ -2,7 +2,6 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/eslint",
     "@nuxt/fonts",
-    "@nuxt/icon",
     "@nuxt/image",
     "@pinia/nuxt",
     "@vueuse/nuxt",
@@ -18,6 +17,11 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
   css: [ "~/assets/styles/main.scss" ],
+  runtimeConfig: {
+    public: {
+      country: process.env.COUNTRY,
+    },
+  },
   sourcemap: {
     client: false,
     server: false,
