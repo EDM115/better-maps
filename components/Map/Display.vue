@@ -56,13 +56,20 @@
       <v-list>
         <v-list-item>
           <MapSearch
+            ref="mapSearchRef"
             :map="mapRef?.map"
             :center="center"
             @add-marker="(details) => mapPinRef?.addPin(details)"
+            @update-marker="(details) => mapPinRef?.editPin(details)"
           />
         </v-list-item>
         <v-list-item>
-          <MapPinsList :pins="mapPinRef?.pins || []" />
+          <MapPinsList 
+            :pins="mapPinRef?.pins || []"
+            :edit-mode="mapSearchRef?.editMode"
+            @edit="(pin) => mapSearchRef?.startEditing(pin)"
+            @delete="(pin) => mapPinRef?.deletePin(pin)"
+          />
         </v-list-item>
         <v-list-item>
           <MapTransportation :map="mapRef?.map" />
@@ -85,6 +92,7 @@
           ref="mapPinRef"
           :map="mapRef?.map"
           :center="center"
+          :map-id="Number(mapId)"
         />
       </GoogleMap>
       <v-btn
