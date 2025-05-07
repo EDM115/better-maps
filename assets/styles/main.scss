@@ -6,13 +6,19 @@
   --fc-border-color: rgb(var(--v-theme-text));
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+* {
+  font-family: "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif;
+  font-display: swap;
 }
 
 body {
-  font-family: "Nunito", serif;
+  font-family: "Nunito", "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif;
+  font-display: swap;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 iframe {
@@ -41,6 +47,11 @@ input:-webkit-autofill:active {
 }
 .link-color:hover {
   color: rgb(var(--v-theme-success));
+}
+
+.code {
+  font-family: "Fira Code", "Courier New", monospace;
+  font-display: swap;
 }
 
 .v-btn {
