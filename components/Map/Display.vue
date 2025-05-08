@@ -98,7 +98,7 @@
       <v-btn
         icon="mdi-menu"
         class="floating-btn"
-        base-color="primary"
+        base-color="secondary"
         @click="drawer = !drawer"
       />
     </v-card>

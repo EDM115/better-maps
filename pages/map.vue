@@ -16,21 +16,22 @@
 
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
-import { computed, onMounted, ref } from "vue"
+import { nextTick, onMounted, ref } from "vue"
 
 const store = useMainStore()
 const router = useRouter()
-const isUserLoggedIn = computed(() => !store.isUserEmpty)
 const hasLoaded = ref(false)
 
 const setHasLoaded = (loaded: boolean) => {
   hasLoaded.value = loaded
 }
 
-onMounted(() => {
-  /* if (!isUserLoggedIn.value) {
+onMounted(async () => {
+  await nextTick()
+
+  if (store.isUserEmpty) {
     router.push("/")
-  } */
+  }
 })
 </script>
 

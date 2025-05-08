@@ -11,7 +11,6 @@
     <v-tooltip
       location="top"
       text="Informations supplémentaires"
-      theme="light"
     >
       <template #activator="{ props }">
         <v-btn

@@ -31,6 +31,7 @@
     </v-app-bar-title>
     <v-spacer />
     <v-btn
+      v-if="connected"
       :prepend-icon="smAndUp ? accountIcon : undefined"
       :icon="smAndUp ? undefined : accountIcon"
       :text="smAndUp ? accountText : undefined"

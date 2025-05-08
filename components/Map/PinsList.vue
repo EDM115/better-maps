@@ -5,28 +5,48 @@
       :key="index"
       :title="pin.name"
       :subtitle="pin.formatted_address"
+      style="padding: 0.2em;"
     >
       <template #prepend>
-        <v-icon
-          :icon="pin.icon"
-          :color="getIconColor(pin.icon)"
-        />
+        <div
+          :style="{
+            backgroundColor: isDark ? undefined : darkBackgroundColor,
+            borderRadius: '0.5em',
+            padding: '0.2em',
+            marginRight: '0.5em',
+          }"
+        >
+          <v-icon
+            :icon="pin.icon"
+            :color="getIconColor(pin.icon)"
+          />
+        </div>
       </template>
       <div style="white-space: pre-wrap; font-size: 0.9em;">
         {{ pin.description }}
       </div>
       <template #append>
-        <v-btn
-          icon="mdi-pencil"
-          :disabled="editMode"
-          @click="() => emit('edit', pin)"
-        />
-        <v-btn
-          icon="mdi-delete"
-          color="error"
-          :disabled="editMode"
-          @click="() => showDeleteDialog(pin)"
-        />
+        <v-col>
+          <v-row>
+            <v-btn
+              icon="mdi-pencil"
+              color="primary"
+              size="small"
+              style="margin-bottom: 0.5em;"
+              :disabled="editMode"
+              @click="() => emit('edit', pin)"
+            />
+          </v-row>
+          <v-row>
+            <v-btn
+              icon="mdi-delete"
+              color="error"
+              size="small"
+              :disabled="editMode"
+              @click="() => showDeleteDialog(pin)"
+            />
+          </v-row>
+        </v-col>
       </template>
     </v-list-item>
   </v-list>
@@ -46,35 +66,29 @@
         <v-spacer />
         <v-btn
           color="error"
-          text
+          text="Supprimer"
           @click="confirmDelete"
-        >
-          Supprimer
-        </v-btn>
+        />
         <v-btn
-          text
+          color="secondary"
+          text="Annuler"
           @click="showDialog = false"
-        >
-          Annuler
-        </v-btn>
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-interface Pin {
-  id: number
-  name: string
-  description: string
-  formatted_address: string
-  icon: string
-  color: string
-  position: {
-    lat: number
-    lng: number
-  }
-}
+import { computed, ref } from "vue"
+import { useTheme } from "vuetify"
+
+import { getIconColor, type Pin } from "./consts"
+
+const theme = useTheme()
+
+const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
+const isDark = computed(() => theme.name.value === "dark")
 
 const emit = defineEmits<{
   (e: "edit", pin: Pin): void
@@ -85,16 +99,6 @@ defineProps<{
   pins: Pin[]
   editMode?: boolean
 }>()
-
-const iconColors = {
-  "mdi-home-outline": "#50FA7B",
-  "mdi-cart-outline": "#8BE9FD",
-  "mdi-book-open-variant-outline": "#6272A4",
-  "mdi-bag-personal-outline": "#BD93F9",
-  "mdi-food-outline": "#FFB86C",
-}
-
-const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#FF0000"
 
 const showDialog = ref(false)
 const pinToDelete = ref<Pin | null>(null)

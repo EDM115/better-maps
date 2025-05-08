@@ -10,7 +10,7 @@
     return-object
     clearable
     hide-no-data
-    @update:search="searchQuery && searchQuery.length > 0 ? loading = true : loading = false"
+    @update:search="searchQuery && (searchQuery.length > 0 && !editMode) ? loading = true : loading = false"
   >
     <template #item="{ item }">
       <v-list-item
@@ -33,7 +33,6 @@
       v-model="placeDetails.formatted_address"
       label="Adresse"
       class="mt-2"
-      readonly
     />
     <v-textarea
       v-model="placeDetails.description"
@@ -60,8 +59,9 @@
     <div class="d-flex flex-column gap-2 mt-4">
       <v-btn
         v-if="editMode"
-        color="grey"
+        color="warning"
         block
+        style="margin-bottom: 0.5em;"
         @click="cancelEdit"
       >
         Annuler
@@ -80,6 +80,8 @@
 <script setup lang="ts">
 import { refDebounced } from "@vueuse/core"
 import { ref, watch } from "vue"
+
+import { getIconColor, iconOptions } from "./consts"
 
 interface Props {
   map?: google.maps.Map
@@ -148,18 +150,10 @@ function resetPlace() {
   }
 }
 
-const iconOptions = [
-  { label: "Appart", value: "mdi-home-outline", color: "#50FA7B" },
-  { label: "Courses", value: "mdi-cart-outline", color: "#8BE9FD" },
-  { label: "Écoles", value: "mdi-book-open-variant-outline", color: "#6272A4" },
-  { label: "Travail", value: "mdi-bag-personal-outline", color: "#BD93F9" },
-  { label: "Resto", value: "mdi-food-outline", color: "#FFB86C" },
-]
-
-const getIconColor = (icon: string) => iconOptions.find((option) => option.value === icon)?.color || "#FF0000"
-
 const addPin = () => {
-  if (!selectedPlace.value || !placeDetails.value.icon) return
+  if (!selectedPlace.value || !placeDetails.value.icon) {
+    return
+  }
 
   const pinData = {
     ...placeDetails.value,
@@ -172,7 +166,9 @@ const addPin = () => {
 }
 
 const updatePin = () => {
-  if (!selectedPlace.value || !placeDetails.value.icon || !editingPin.value) return
+  if (!selectedPlace.value || !placeDetails.value.icon || !editingPin.value) {
+    return
+  }
 
   const updatedPin = {
     ...editingPin.value,
@@ -211,7 +207,9 @@ const startEditing = (pin: PlaceDetails) => {
 }
 
 const handleSearch = (search: string) => {
-  if (!autocompleteService.value || !search) return
+  if (!autocompleteService.value || !search) {
+    return
+  }
   searchQuery.value = search
 
   loading.value = true
@@ -269,7 +267,10 @@ watch(selectedPlace, (place) => {
 })
 
 onMounted(() => {
-  if (!props.map) return
+  if (!props.map) {
+    return
+  }
+
   placeService.value = new google.maps.places.PlacesService(props.map)
   autocompleteService.value = new google.maps.places.AutocompleteService()
 })

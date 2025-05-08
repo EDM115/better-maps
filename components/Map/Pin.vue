@@ -8,7 +8,10 @@
         map: index < pins.length ? props.map : null
       }"
     >
-      <div class="pin-content">
+      <div
+        class="pin-content"
+        :style="{ backgroundColor: darkBackgroundColor }"
+      >
         <v-icon
           :icon="pin.icon"
           :color="getIconColor(pin.icon)"
@@ -23,6 +26,9 @@
 import { useMainStore } from "~/stores/main"
 import { onMounted, ref } from "vue"
 import { AdvancedMarker } from "vue3-google-map"
+import { useTheme } from "vuetify"
+
+import { getIconColor, type Pin } from "./consts"
 
 interface Props {
   map?: google.maps.Map
@@ -30,22 +36,23 @@ interface Props {
   mapId?: number
 }
 
-interface Pin {
+type ApiPointResponse = {
   id: number
   name: string
   description: string
-  formatted_address: string
-  icon: string
+  address: string
+  lat: number
+  lng: number
   color: string
-  position: {
-    lat: number
-    lng: number
-  }
+  icon: string
 }
 
 const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
 const store = useMainStore()
+const theme = useTheme()
+
+const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
 
 const dummyPin: Pin = {
   id: -1,
@@ -56,16 +63,6 @@ const dummyPin: Pin = {
   color: "",
   position: { lat: 0, lng: 0 },
 }
-
-const iconColors = {
-  "mdi-home-outline": "#50FA7B",
-  "mdi-cart-outline": "#8BE9FD",
-  "mdi-book-open-variant-outline": "#6272A4",
-  "mdi-bag-personal-outline": "#BD93F9",
-  "mdi-food-outline": "#FFB86C",
-}
-
-const getIconColor = (icon: string) => iconColors[icon as keyof typeof iconColors] || "#FF0000"
 
 const addPin = async (pin: Pin) => {
   try {
@@ -149,7 +146,9 @@ defineExpose({
 })
 
 const fetchPins = async () => {
-  if (!props.mapId) return
+  if (!props.mapId) {
+    return
+  }
 
   try {
     const response = await $fetch("/api/point", {
@@ -162,7 +161,7 @@ const fetchPins = async () => {
     if ("points" in response.body) {
       const { points } = response.body
 
-      pins.value = points.map((point: any) => ({
+      pins.value = points.map((point: ApiPointResponse) => ({
         id: point.id,
         name: point.name,
         description: point.description,
@@ -195,7 +194,6 @@ onMounted(() => {
 
 <style scoped>
 .pin-content {
-  background: rgb(var(--v-theme-surface-bright));
   border-radius: 1em;
   padding: 0.5em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

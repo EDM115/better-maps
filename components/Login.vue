@@ -45,7 +45,7 @@
         class="text-center"
       >
         <v-btn
-          color="accent"
+          color="primary"
           text="Se connecter"
           type="submit"
           variant="elevated"
@@ -57,7 +57,7 @@
 
 <script lang="ts" setup>
 import { useMainStore } from "~/stores/main"
-import { onMounted, ref, reactive } from "vue"
+import { nextTick, onMounted, ref, reactive } from "vue"
 
 const router = useRouter()
 const store = useMainStore()
@@ -111,6 +111,8 @@ async function submit() {
 }
 
 onMounted(async () => {
+  await nextTick()
+
   if (!store.isUserEmpty) {
     router.push("/map")
   }

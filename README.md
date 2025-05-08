@@ -94,10 +94,13 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
 
 ## Dev left to do
 - [x] **Mobile first**
-- [ ] Use volumes for the DB file
-- [ ] Small add user button for admin
-- [x] Add a map with Nuxt Scripts and use the Maps JS API/SDK
-- [ ] Ability to add and save a point on the map
+- [x] Use volumes for the DB file
+- [ ] Admin panel
+  - [ ] Add/delete users (on add, add a linked map)
+  - [ ] Ability to switch maps
+  - [ ] Add/edit/delete map (on add, auto add admins + default location/zoom/country)
+- [x] Add a map ~~with Nuxt Scripts~~ and use the Maps JS API/SDK
+- [x] Ability to add and save a point on the map
   - [x] Name (autocomplete/bare address if not found)
   - [x] Description (optional)
   - [x] Color + Icon (house, caddie, book, handbag, pizza, ...)

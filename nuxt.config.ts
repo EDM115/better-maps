@@ -98,11 +98,11 @@ export default defineNuxtConfig({
         themes: {
           dark: {
             colors: {
-              accent: "#53B9C8",
+              accent: "#F5A249",
               background: "#020613",
               error: "#EE3124",
               info: "#53B9C8",
-              primary: "#EE3124",
+              primary: "#53B9C8",
               secondary: "#2646CB",
               success: "#50FA7B",
               text: "#F8F8F2",
@@ -112,11 +112,11 @@ export default defineNuxtConfig({
           },
           light: {
             colors: {
-              accent: "#379DAD",
+              accent: "#FFB86C",
               background: "#DFDFD2",
               error: "#EE3124",
               info: "#379DAD",
-              primary: "#EE3124",
+              primary: "#379DAD",
               secondary: "#803EDF",
               success: "#3CD863",
               text: "#070B1A",
