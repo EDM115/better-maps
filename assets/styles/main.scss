@@ -102,3 +102,11 @@ input:-webkit-autofill:active {
   line-clamp: none !important;
   opacity: 0.8 !important;
 }
+
+.v-autocomplete--single:not(.v-autocomplete--selection-slot) .v-field--dirty:not(.v-field--focused) input {
+  opacity: initial;
+}
+
+.v-expansion-panel-text__wrapper {
+  padding: 0;
+}

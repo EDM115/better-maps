@@ -10,10 +10,11 @@
     return-object
     clearable
     hide-no-data
-    @update:search="searchQuery && (searchQuery.length > 0 && !editMode) ? loading = true : loading = false"
+    @blur="loading = false"
   >
-    <template #item="{ item }">
+    <template #item="{ props: itemProps, item }">
       <v-list-item
+        v-bind="itemProps"
         :title="item.raw.name"
         :subtitle="item.raw.formatted_address"
         @click="selectedPlace = item.raw"
@@ -79,7 +80,7 @@
 
 <script setup lang="ts">
 import { refDebounced } from "@vueuse/core"
-import { ref, watch } from "vue"
+import { nextTick, ref, watch } from "vue"
 
 import { getIconColor, iconOptions } from "./consts"
 
@@ -128,6 +129,7 @@ const placeService = ref<google.maps.places.PlacesService>()
 const autocompleteService = ref<google.maps.places.AutocompleteService>()
 const searchQuery = ref("")
 const searchDebounced = refDebounced(searchQuery, 500, { maxWait: 1500 })
+const didSearch = ref(false)
 
 const placeDetails = ref<PlaceDetails>({
   name: "",
@@ -206,35 +208,33 @@ const startEditing = (pin: PlaceDetails) => {
   }
 }
 
-const handleSearch = (search: string) => {
+const handleSearch = async (search: string) => {
   if (!autocompleteService.value || !search) {
     return
   }
-  searchQuery.value = search
 
-  loading.value = true
+  const currentSearch = search
+  didSearch.value = false
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
     locationBias: props.map?.getBounds() || undefined,
     componentRestrictions: { country: config.public.country },
   }
 
-  autocompleteService.value?.getPlacePredictions(request, (predictions, status) => {
-    loading.value = false
-
+  autocompleteService.value?.getPlacePredictions(request, async (predictions, status) => {
     if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-      searchResults.value = predictions.map((prediction) => ({
+      const results = predictions.map((prediction) => ({
         name: prediction.structured_formatting.main_text || prediction.description,
         formatted_address: prediction.structured_formatting.secondary_text || "",
         place_id: prediction.place_id,
         geometry: {
           location: {
-            lat: () => 0,
-            lng: () => 0,
+            lat: (): number => 0,
+            lng: (): number => 0,
           },
         },
       }))
-      searchResults.value.forEach((result) => {
+      results.forEach((result) => {
         placeService.value?.getDetails({ placeId: result.place_id }, (detail, detailStatus) => {
           if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && detail.geometry) {
             result.geometry.location.lat = () => detail.geometry?.location?.lat() ?? 0
@@ -242,14 +242,30 @@ const handleSearch = (search: string) => {
           }
         })
       })
+
+      searchResults.value = results
     } else {
       searchResults.value = []
     }
+
+    didSearch.value = true
+    nextTick(() => {
+      searchQuery.value = currentSearch
+    })
   })
 }
 
-watch(searchDebounced, (search) => {
-  handleSearch(search)
+watch(searchQuery, (search) => {
+  if (!editMode.value && search && search.length > 0 && !didSearch.value) {
+    loading.value = true
+  } else {
+    loading.value = false
+  }
+})
+
+watch(searchDebounced, async (search) => {
+  await handleSearch(search)
+  loading.value = false
 })
 
 watch(selectedPlace, (place) => {
