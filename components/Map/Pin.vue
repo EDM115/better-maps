@@ -9,6 +9,7 @@
       }"
     >
       <div
+        v-if="pin.visible"
         class="pin-content"
         :style="{ backgroundColor: darkBackgroundColor }"
       >
@@ -24,7 +25,7 @@
 
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import { AdvancedMarker } from "vue3-google-map"
 import { useTheme } from "vuetify"
 
@@ -45,6 +46,7 @@ type ApiPointResponse = {
   lng: number
   color: string
   icon: string
+  visible: boolean
 }
 
 const props = defineProps<Props>()
@@ -62,6 +64,7 @@ const dummyPin: Pin = {
   icon: "mdi-home-outline",
   color: "",
   position: { lat: 0, lng: 0 },
+  visible: true,
 }
 
 const addPin = async (pin: Pin) => {
@@ -77,7 +80,7 @@ const addPin = async (pin: Pin) => {
         color: pin.color,
         icon: pin.icon,
         map_id: Number(props.mapId),
-        visible: 1,
+        visible: true
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -85,7 +88,7 @@ const addPin = async (pin: Pin) => {
     })
 
     if ("id" in response.body) {
-      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id }]
+      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id, visible: true }]
     }
   } catch (error) {
     console.error("Échec de l'ajout du pin :", error)
@@ -121,7 +124,7 @@ const editPin = async (pin: Pin) => {
         color: pin.color,
         icon: pin.icon,
         map_id: Number(props.mapId),
-        visible: 1,
+        visible: pin.visible,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -138,10 +141,41 @@ const editPin = async (pin: Pin) => {
   }
 }
 
+const togglePinVisibility = async (pin: Pin) => {
+  try {
+    await $fetch("/api/point", {
+      method: "PUT",
+      body: {
+        id: pin.id,
+        name: pin.name,
+        description: pin.description,
+        address: pin.formatted_address,
+        lat: pin.position.lat,
+        lng: pin.position.lng,
+        color: pin.color,
+        icon: pin.icon,
+        map_id: props.mapId,
+        visible: !pin.visible,
+      },
+      headers: {
+        Authorization: `Bearer ${store.getUser.token}`,
+      },
+    })
+
+    const index = pins.value.findIndex((p) => p.id === pin.id)
+    if (index !== -1) {
+      pins.value[index] = { ...pin, visible: !pin.visible }
+    }
+  } catch (error) {
+    console.error("Échec de la mise à jour de la visibilité du pin :", error)
+  }
+}
+
 defineExpose({
   addPin,
   deletePin,
   editPin,
+  togglePinVisibility,
   pins,
 })
 
@@ -172,6 +206,7 @@ const fetchPins = async () => {
           lat: point.lat,
           lng: point.lng,
         },
+        visible: point.visible,
       }))
     }
   } catch (error) {
@@ -194,8 +229,8 @@ onMounted(() => {
 
 <style scoped>
 .pin-content {
-  border-radius: 1em;
-  padding: 0.5em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 0.5em;
+  border-radius: 1em;
 }
 </style>

@@ -1,55 +1,71 @@
 <template>
-  <v-list>
-    <v-list-item
-      v-for="(pin, index) in pins"
-      :key="index"
-      :title="pin.name"
-      :subtitle="pin.formatted_address"
-      style="padding: 0.2em;"
-    >
-      <template #prepend>
-        <div
-          :style="{
-            backgroundColor: isDark ? undefined : darkBackgroundColor,
-            borderRadius: '0.5em',
-            padding: '0.2em',
-            marginRight: '0.5em',
-          }"
-        >
-          <v-icon
-            :icon="pin.icon"
-            :color="getIconColor(pin.icon)"
-          />
-        </div>
-      </template>
-      <div style="white-space: pre-wrap; font-size: 0.9em;">
-        {{ pin.description }}
-      </div>
-      <template #append>
-        <v-col>
-          <v-row>
-            <v-btn
-              icon="mdi-pencil"
-              color="primary"
-              size="small"
-              style="margin-bottom: 0.5em;"
-              :disabled="editMode"
-              @click="() => emit('edit', pin)"
-            />
-          </v-row>
-          <v-row>
-            <v-btn
-              icon="mdi-delete"
-              color="error"
-              size="small"
-              :disabled="editMode"
-              @click="() => showDeleteDialog(pin)"
-            />
-          </v-row>
-        </v-col>
-      </template>
-    </v-list-item>
-  </v-list>
+  <v-expansion-panels
+    v-model="activePanel"
+    flat
+  >
+    <v-expansion-panel value="true">
+      <v-expansion-panel-title>
+        Points d'intérêt ({{ pins.length }})
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <v-list>
+          <v-list-item
+            v-for="(pin, index) in pins"
+            :key="index"
+            :title="pin.name"
+            :subtitle="pin.formatted_address"
+            :class="{ 'disabled-pin': !pin.visible }"
+            style="padding: 0.2em;"
+          >
+            <template #prepend>
+              <div
+                :style="{
+                  backgroundColor: isDark ? undefined : darkBackgroundColor,
+                  borderRadius: '0.5em',
+                  padding: '0.2em',
+                  marginRight: '0.5em',
+                  cursor: 'pointer',
+                  opacity: pin.visible ? 1 : 0.5
+                }"
+                @click="togglePinVisibility(pin)"
+              >
+                <v-icon
+                  :icon="pin.icon"
+                  :color="getIconColor(pin.icon)"
+                />
+              </div>
+            </template>
+            <div style="white-space: pre-wrap; font-size: 0.9em;">
+              {{ pin.description }}
+            </div>
+            <template #append>
+              <v-col>
+                <v-row>
+                  <v-btn
+                    icon="mdi-pencil"
+                    color="primary"
+                    size="small"
+                    style="margin-bottom: 0.5em;"
+                    :disabled="editMode"
+                    @click="() => emit('edit', pin)"
+                  />
+                </v-row>
+                <v-row>
+                  <v-btn
+                    icon="mdi-delete"
+                    color="error"
+                    size="small"
+                    :disabled="editMode"
+                    @click="() => showDeleteDialog(pin)"
+                  />
+                </v-row>
+              </v-col>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
 
   <v-dialog
     v-model="showDialog"
@@ -89,10 +105,12 @@ const theme = useTheme()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
 const isDark = computed(() => theme.name.value === "dark")
+const activePanel = ref(0)
 
 const emit = defineEmits<{
   (e: "edit", pin: Pin): void
   (e: "delete", pin: Pin): void
+  (e: "toggle-visibility", pin: Pin): void
 }>()
 
 defineProps<{
@@ -115,4 +133,14 @@ const confirmDelete = () => {
   }
   showDialog.value = false
 }
+
+const togglePinVisibility = (pin: Pin) => {
+  emit("toggle-visibility", pin)
+}
 </script>
+
+<style scoped>
+.disabled-pin {
+  opacity: 0.7;
+}
+</style>

@@ -104,9 +104,9 @@ input:-webkit-autofill:active {
 }
 
 .v-autocomplete--single:not(.v-autocomplete--selection-slot) .v-field--dirty:not(.v-field--focused) input {
-  opacity: initial;
+  opacity: initial !important;
 }
 
 .v-expansion-panel-text__wrapper {
-  padding: 0;
+  padding: 0 !important;
 }

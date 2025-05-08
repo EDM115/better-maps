@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
           color: string
           icon: string
           map_id: number
-          visible: number
+          visible: boolean
         } | undefined
 
         if (!point) {
@@ -33,6 +33,8 @@ export default defineEventHandler(async (event) => {
             message: "Point non trouvé",
           })
         }
+
+        point.visible = Boolean(point.visible)
 
         return {
           status: 200,
@@ -55,8 +57,12 @@ export default defineEventHandler(async (event) => {
           color: string
           icon: string
           map_id: number
-          visible: number
+          visible: boolean
         }[]
+
+        points.forEach((point) => {
+          point.visible = Boolean(point.visible)
+        })
 
         return {
           status: 200,
@@ -76,12 +82,14 @@ export default defineEventHandler(async (event) => {
         color: string
         icon: string
         map_id: number
-        visible: number
+        visible: boolean
       }
 
       if (!name || !address || !lat || !lng || !icon || !map_id) {
         throw createError({ status: 400, message: "Champs requis manquants" })
       }
+
+      const dbVisible = visible ? 1 : 0
 
       const newPoint = db.prepare(`
         INSERT INTO Point (name, description, address, lat, lng, color, icon, map_id, visible)
@@ -95,7 +103,7 @@ export default defineEventHandler(async (event) => {
         color,
         icon,
         map_id,
-        visible,
+        dbVisible,
       )
 
       return {
@@ -115,12 +123,14 @@ export default defineEventHandler(async (event) => {
         lng: number
         color: string
         icon: string
-        visible: number
+        visible: boolean
       }
 
       if (!id || !name || !address || !lat || !lng || !icon) {
         throw createError({ status: 400, message: "Champs requis manquants" })
       }
+
+      const dbVisible = visible ? 1 : 0
 
       db.prepare(`
         UPDATE Point
@@ -134,7 +144,7 @@ export default defineEventHandler(async (event) => {
         lng,
         color,
         icon,
-        visible,
+        dbVisible,
         id,
       )
 

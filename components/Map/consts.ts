@@ -27,4 +27,5 @@ export interface Pin {
     lat: number
     lng: number
   }
+  visible: boolean
 }

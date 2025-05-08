@@ -35,6 +35,7 @@
           :edit-mode="mapSearchRef?.editMode"
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
+          @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
         />
         <MapTransportation :map="mapRef?.map" />
       </v-card>
@@ -69,6 +70,7 @@
             :edit-mode="mapSearchRef?.editMode"
             @edit="(pin) => mapSearchRef?.startEditing(pin)"
             @delete="(pin) => mapPinRef?.deletePin(pin)"
+            @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
           />
         </v-list-item>
         <v-list-item>
