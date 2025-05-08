@@ -35,7 +35,9 @@ function initDatabase() {
       name TEXT NOT NULL DEFAULT 'Default Map',
       start_lat REAL NOT NULL,
       start_lng REAL NOT NULL,
-      start_zoom INTEGER NOT NULL
+      start_zoom INTEGER NOT NULL,
+      country TEXT NOT NULL,
+      show_transit INTEGER NOT NULL DEFAULT 0
     );
   `).run()
 
@@ -64,19 +66,6 @@ function initDatabase() {
       FOREIGN KEY (map_id) REFERENCES Map(id)
     );
   `).run()
-
-  db.prepare(`
-    CREATE TABLE IF NOT EXISTS Line (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      description TEXT NOT NULL DEFAULT '',
-      color TEXT NOT NULL DEFAULT '#8BE9FD',
-      map_id INTEGER NOT NULL,
-      visible INTEGER NOT NULL DEFAULT 1,
-      FOREIGN KEY (map_id) REFERENCES Map(id)
-    );
-  `).run()
-
   return db
 }
 
@@ -112,12 +101,13 @@ async function seedMaps(db: Database.Database) {
   const [ lat, lng, zoom ] = raw
     ? raw.split(",").map(Number)
     : [ 48.8566, 2.3522, 3 ]
+  const country = process.env.COUNTRY || "fr"
 
   const insert = db.prepare(`
-    INSERT OR IGNORE INTO Map (start_lat, start_lng, start_zoom)
-    VALUES (?, ?, ?)
+    INSERT OR IGNORE INTO Map (start_lat, start_lng, start_zoom, country, show_transit)
+    VALUES (?, ?, ?, ?, ?)
   `)
-  const mapId = insert.run(lat, lng, zoom).lastInsertRowid
+  const mapId = insert.run(lat, lng, zoom, country, 0).lastInsertRowid
 
   const insertLink = db.prepare(`
     INSERT OR IGNORE INTO UserMap (map_id, user_id)

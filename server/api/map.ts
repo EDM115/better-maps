@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
     start_lat: number
     start_lng: number
     start_zoom: number
+    country: string
+    show_transit: boolean
   } | undefined
 
   if (!map) {
@@ -30,6 +32,8 @@ export default defineEventHandler(async (event) => {
       message: "Carte non trouvée",
     })
   }
+
+  map.show_transit = Boolean(map.show_transit)
 
   return {
     status: 200,

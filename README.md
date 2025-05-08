@@ -67,30 +67,22 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
 | start_lat  | float  | Not Null                               |
 | start_lng  | float  | Not Null                               |
 | start_zoom | int    | Not Null                               |
+| country    | string | Not Null, lowercase country code       |
+| show_transit | bool   | Not Null, default false                |
 
 ### Point
-| Column      | Type   | Extra                       |
-| :---------- | :----- | :-------------------------- |
-| id          | int    | Primary Key, Autoincrement  |
-| name        | string | Not Null                    |
-| description | string | Not Null, default ""        |
-| address     | string | Not Null                    |
-| lat         | float  | Not Null                    |
-| lng         | float  | Not Null                    |
-| color       | string | Not Null, default ""        |
-| icon        | string | Not Null, default "house"   |
-| map_id      | int    | Foreign Key, Not Null       |
-| visible     | bool   | Not Null, default true      |
-
-### Line
-| Column      | Type   | Extra                       |
-| :---------- | :----- | :-------------------------- |
-| id          | int    | Primary Key, Autoincrement  |
-| name        | string | Not Null                    |
-| description | string | Not Null, default ""        |
-| color       | string | Not Null, default "#8BE9FD" |
-| map_id      | int    | Foreign Key, Not Null       |
-| visible     | bool   | Not Null, default true      |
+| Column      | Type   | Extra                      |
+| :---------- | :----- | :------------------------- |
+| id          | int    | Primary Key, Autoincrement |
+| name        | string | Not Null                   |
+| description | string | Not Null, default ""       |
+| address     | string | Not Null                   |
+| lat         | float  | Not Null                   |
+| lng         | float  | Not Null                   |
+| color       | string | Not Null, default ""       |
+| icon        | string | Not Null, default "house"  |
+| map_id      | int    | Foreign Key, Not Null      |
+| visible     | bool   | Not Null, default true     |
 
 ## Dev left to do
 - [x] **Mobile first**
@@ -104,7 +96,7 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
   - [x] Name (autocomplete/bare address if not found)
   - [x] Description (optional)
   - [x] Color + Icon (house, caddie, book, handbag, pizza, ...)
-- [ ] Ability to add public transportation lines
+- [x] Ability to show public transportation lines
 - [ ] Show/hide any point/line
 - [ ] On load : show an overview of the area
 - [ ] Each user is linked to a map, a map can have multiple users

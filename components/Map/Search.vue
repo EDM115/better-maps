@@ -87,6 +87,7 @@ import { getIconColor, iconOptions } from "./consts"
 interface Props {
   map?: google.maps.Map
   center?: { lat: number; lng: number }
+  country?: string
 }
 
 interface Place {
@@ -218,7 +219,7 @@ const handleSearch = async (search: string) => {
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
     locationBias: props.map?.getBounds() || undefined,
-    componentRestrictions: { country: config.public.country },
+    componentRestrictions: { country: props.country ?? config.public.country },
   }
 
   autocompleteService.value?.getPlacePredictions(request, async (predictions, status) => {

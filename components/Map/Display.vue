@@ -27,6 +27,7 @@
           ref="mapSearchRef"
           :map="mapRef?.map"
           :center="center"
+          :country="mapCountry"
           @add-marker="(details) => mapPinRef?.addPin(details)"
           @update-marker="(details) => mapPinRef?.editPin(details)"
         />
@@ -37,7 +38,10 @@
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
         />
-        <MapTransportation :map="mapRef?.map" />
+        <MapTransportation
+          :map="mapRef?.map"
+          :show="mapShowTransit"
+        />
       </v-card>
     </v-col>
   </v-row>
@@ -60,6 +64,7 @@
             ref="mapSearchRef"
             :map="mapRef?.map"
             :center="center"
+            :country="mapCountry"
             @add-marker="(details) => mapPinRef?.addPin(details)"
             @update-marker="(details) => mapPinRef?.editPin(details)"
           />
@@ -74,7 +79,10 @@
           />
         </v-list-item>
         <v-list-item>
-          <MapTransportation :map="mapRef?.map" />
+          <MapTransportation
+            :map="mapRef?.map"
+            :show="mapShowTransit"
+          />
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -134,6 +142,8 @@ const center = ref({ lat: 0, lng: 0 })
 const zoom = ref(0)
 const mapId = ref(String(0))
 const translateX = ref("80vw")
+const mapCountry = ref("")
+const mapShowTransit = ref(false)
 
 watch(drawer, (val) => {
   translateX.value = val ? "0" : "80vw"
@@ -162,6 +172,8 @@ const fetchMapData = async (userId: number | null) => {
   mapId.value = String(response.body.map.id)
   center.value = { lat: response.body.map.start_lat, lng: response.body.map.start_lng }
   zoom.value = response.body.map.start_zoom
+  mapCountry.value = response.body.map.country
+  mapShowTransit.value = response.body.map.show_transit
 }
 
 watch(

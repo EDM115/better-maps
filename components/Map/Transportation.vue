@@ -12,18 +12,24 @@ import { ref, watch } from "vue"
 
 interface Props {
   map?: google.maps.Map
+  show: boolean
 }
 
 const props = defineProps<Props>()
-const showTransit = ref(false)
+const showTransit = ref(props.show)
+const transitLayer = ref<google.maps.TransitLayer | null>(null)
 
 watch(showTransit, (show) => {
   if (props.map) {
-    props.map.setOptions({
-      styles: show
-        ? []
-        : [{ featureType: "transit", stylers: [{ visibility: "off" }] }],
-    })
+    if (show) {
+      transitLayer.value = new google.maps.TransitLayer()
+      transitLayer.value.setMap(props.map)
+    } else {
+      if (transitLayer.value) {
+        transitLayer.value.setMap(null)
+        transitLayer.value = null
+      }
+    }
   }
 })
 </script>
