@@ -7,6 +7,7 @@
         position: pin.position,
         map: index < pins.length ? props.map : null
       }"
+      @click="() => handlePinClick(pin)"
     >
       <div
         v-if="pin.visible"
@@ -20,13 +21,33 @@
         />
       </div>
     </AdvancedMarker>
+
+    <InfoWindow
+      v-if="selectedPin && selectedPin.id !== -1"
+      v-model="showInfoWindow"
+      :options="{ 
+        position: selectedPin.position,
+        pixelOffset: pixelOffset,
+      }"
+    >
+      <div class="info-window-content">
+        <h3>{{ selectedPin.name }}</h3>
+        <p>{{ selectedPin.formatted_address }}</p>
+        <p
+          v-if="selectedPin.description"
+          style="white-space: pre-wrap;"
+        >
+          {{ selectedPin.description }}
+        </p>
+      </div>
+    </InfoWindow>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
 import { onMounted, ref, watch } from "vue"
-import { AdvancedMarker } from "vue3-google-map"
+import { AdvancedMarker, InfoWindow } from "vue3-google-map"
 import { useTheme } from "vuetify"
 
 import { getIconColor, type Pin } from "./consts"
@@ -65,6 +86,19 @@ const dummyPin: Pin = {
   color: "",
   position: { lat: 0, lng: 0 },
   visible: true,
+}
+
+const selectedPin = ref<Pin | null>(null)
+const showInfoWindow = ref(false)
+const pixelOffset = ref<google.maps.Size | null>(null)
+
+const handlePinClick = (pin: Pin) => {
+  if (pin.id === -1) {
+    return
+  }
+  pixelOffset.value = new google.maps.Size(0, -30)
+  selectedPin.value = pin
+  showInfoWindow.value = true
 }
 
 const addPin = async (pin: Pin) => {
@@ -223,6 +257,7 @@ watch(() => props.mapId, (newMapId) => {
 onMounted(() => {
   if (props.mapId) {
     fetchPins()
+    pixelOffset.value = new google.maps.Size(0, -30)
   }
 })
 </script>
@@ -232,5 +267,24 @@ onMounted(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 0.5em;
   border-radius: 1em;
+}
+
+.info-window-container {
+  margin-bottom: 10px;
+}
+
+.info-window-content {
+  padding: 8px;
+  max-width: 300px;
+}
+
+.info-window-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1em;
+}
+
+.info-window-content p {
+  margin: 4px 0;
+  font-size: 0.9em;
 }
 </style>

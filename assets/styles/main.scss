@@ -2,6 +2,10 @@
   $color-pack: false
 );
 
+@function var-color($name) {
+  @return rgb(var(--#{$name}));
+}
+
 :root {
   --fc-border-color: rgb(var(--v-theme-text));
 }
@@ -9,6 +13,30 @@
 * {
   font-family: "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif;
   font-display: swap;
+}
+
+*::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+*::-webkit-scrollbar-track {
+  background: var-color(v-theme-background) !important;
+  border-radius: 10px !important;
+}
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track, .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece {
+  background: var-color(v-theme-background) !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var-color(v-theme-primary) !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var-color(v-theme-secondary) !important;
 }
 
 body {
@@ -42,11 +70,11 @@ input:-webkit-autofill:active {
 }
 
 .link-color {
-  color: rgb(var(--v-theme-accent));
+  color: var-color(v-theme-accent);
   transition: color 0.3s;
 }
 .link-color:hover {
-  color: rgb(var(--v-theme-success));
+  color: var-color(v-theme-success);
 }
 
 .code {
@@ -109,4 +137,26 @@ input:-webkit-autofill:active {
 
 .v-expansion-panel-text__wrapper {
   padding: 0 !important;
+}
+
+/* Info window content */
+.gm-style .gm-style-iw-c {
+  background-color: var-color(v-theme-background);
+  color: var-color(v-theme-text);
+}
+
+/* Info window text */
+.gm-style .gm-style-iw-d {
+  overflow-wrap: break-word;
+  overflow: auto !important;
+}
+
+/* Info window little triangle */
+.gm-style .gm-style-iw-tc::after {
+  background-color: var-color(v-theme-background);
+}
+
+/* Info window close button */
+.gm-ui-hover-effect > span {
+  background-color: var-color(v-theme-text);
 }
