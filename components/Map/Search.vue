@@ -167,10 +167,7 @@ const addPin = () => {
     return
   }
 
-  const pinData = {
-    ...placeDetails.value,
-    formatted_address: selectedPlace.value.formatted_address,
-  }
+  const pinData = placeDetails.value
 
   emit("add-marker", pinData)
   resetPlace()
@@ -185,7 +182,6 @@ const updatePin = () => {
   const updatedPin = {
     ...editingPin.value,
     ...placeDetails.value,
-    formatted_address: selectedPlace.value.formatted_address,
   }
 
   emit("update-marker", updatedPin)
