@@ -28,4 +28,5 @@ export interface Pin {
     lng: number
   }
   visible: boolean
+  favorite: boolean
 }

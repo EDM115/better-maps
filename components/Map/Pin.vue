@@ -11,7 +11,7 @@
     >
       <div
         v-if="pin.visible"
-        class="pin-content"
+        :class="pin.favorite ? 'pin-content pin-favorite' : 'pin-content'"
         :style="{ backgroundColor: darkBackgroundColor }"
       >
         <v-icon
@@ -70,6 +70,7 @@ type ApiPointResponse = {
   color: string
   icon: string
   visible: boolean
+  favorite: boolean
 }
 
 const props = defineProps<Props>()
@@ -88,6 +89,7 @@ const dummyPin: Pin = {
   color: "",
   position: { lat: 0, lng: 0 },
   visible: true,
+  favorite: false,
 }
 
 const selectedPin = ref<Pin | null>(null)
@@ -102,7 +104,7 @@ const handlePinClick = (pin: Pin) => {
   if (pin.id === -1) {
     return
   }
-  pixelOffset.value = new google.maps.Size(0, -30)
+  pixelOffset.value = new google.maps.Size(0, -34)
   selectedPin.value = pin
   showInfoWindow.value = true
   emit("pin-selected", pin.id)
@@ -134,7 +136,8 @@ const addPin = async (pin: Pin) => {
         color: pin.color,
         icon: pin.icon,
         map_id: Number(props.mapId),
-        visible: true
+        visible: true,
+        favorite: pin.favorite,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -142,7 +145,7 @@ const addPin = async (pin: Pin) => {
     })
 
     if ("id" in response.body) {
-      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id, visible: true }]
+      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id, visible: true, favorite: pin.favorite }]
     }
   } catch (error) {
     console.error("Échec de l'ajout du pin :", error)
@@ -179,6 +182,7 @@ const editPin = async (pin: Pin) => {
         icon: pin.icon,
         map_id: Number(props.mapId),
         visible: pin.visible,
+        favorite: pin.favorite,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -210,6 +214,7 @@ const togglePinVisibility = async (pin: Pin) => {
         icon: pin.icon,
         map_id: props.mapId,
         visible: !pin.visible,
+        favorite: pin.favorite,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -261,6 +266,7 @@ const fetchPins = async () => {
           lng: point.lng,
         },
         visible: point.visible,
+        favorite: point.favorite,
       }))
     }
   } catch (error) {
@@ -277,7 +283,7 @@ watch(() => props.mapId, (newMapId) => {
 onMounted(() => {
   if (props.mapId) {
     fetchPins()
-    pixelOffset.value = new google.maps.Size(0, -30)
+    pixelOffset.value = new google.maps.Size(0, -34)
   }
 })
 </script>
@@ -287,6 +293,10 @@ onMounted(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 0.5em;
   border-radius: 1em;
+}
+
+.pin-favorite {
+  border: 4px solid rgb(var(--v-theme-warning));
 }
 
 .info-window-container {

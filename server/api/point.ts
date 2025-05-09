@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
           icon: string
           map_id: number
           visible: boolean
+          favorite: boolean
         } | undefined
 
         if (!point) {
@@ -35,6 +36,7 @@ export default defineEventHandler(async (event) => {
         }
 
         point.visible = Boolean(point.visible)
+        point.favorite = Boolean(point.favorite)
 
         return {
           status: 200,
@@ -58,10 +60,12 @@ export default defineEventHandler(async (event) => {
           icon: string
           map_id: number
           visible: boolean
+          favorite: boolean
         }[]
 
         points.forEach((point) => {
           point.visible = Boolean(point.visible)
+          point.favorite = Boolean(point.favorite)
         })
 
         return {
@@ -73,7 +77,7 @@ export default defineEventHandler(async (event) => {
         }
       }
     } case "POST": {
-      const { name, description, address, lat, lng, color, icon, map_id, visible } = await readBody(event) as {
+      const { name, description, address, lat, lng, color, icon, map_id, visible, favorite } = await readBody(event) as {
         name: string
         description: string
         address: string
@@ -83,6 +87,7 @@ export default defineEventHandler(async (event) => {
         icon: string
         map_id: number
         visible: boolean
+        favorite: boolean
       }
 
       if (!name || !address || !lat || !lng || !icon || !map_id) {
@@ -90,10 +95,11 @@ export default defineEventHandler(async (event) => {
       }
 
       const dbVisible = visible ? 1 : 0
+      const dbFavorite = favorite ? 1 : 0
 
       const newPoint = db.prepare(`
-        INSERT INTO Point (name, description, address, lat, lng, color, icon, map_id, visible)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Point (name, description, address, lat, lng, color, icon, map_id, visible, favorite)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
         name,
         description,
@@ -104,6 +110,7 @@ export default defineEventHandler(async (event) => {
         icon,
         map_id,
         dbVisible,
+        dbFavorite,
       )
 
       return {
@@ -114,7 +121,7 @@ export default defineEventHandler(async (event) => {
         },
       }
     } case "PUT": {
-      const { id, name, description, address, lat, lng, color, icon, visible } = await readBody(event) as {
+      const { id, name, description, address, lat, lng, color, icon, visible, favorite } = await readBody(event) as {
         id: number
         name: string
         description: string
@@ -124,6 +131,7 @@ export default defineEventHandler(async (event) => {
         color: string
         icon: string
         visible: boolean
+        favorite: boolean
       }
 
       if (!id || !name || !address || !lat || !lng || !icon) {
@@ -131,10 +139,11 @@ export default defineEventHandler(async (event) => {
       }
 
       const dbVisible = visible ? 1 : 0
+      const dbFavorite = favorite ? 1 : 0
 
       db.prepare(`
         UPDATE Point
-        SET name = ?, description = ?, address = ?, lat = ?, lng = ?, color = ?, icon = ?, visible = ?
+        SET name = ?, description = ?, address = ?, lat = ?, lng = ?, color = ?, icon = ?, visible = ?, favorite = ?
         WHERE id = ?
       `).run(
         name,
@@ -145,6 +154,7 @@ export default defineEventHandler(async (event) => {
         color,
         icon,
         dbVisible,
+        dbFavorite,
         id,
       )
 

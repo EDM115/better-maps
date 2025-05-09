@@ -55,6 +55,7 @@ function initDatabase() {
       icon TEXT NOT NULL DEFAULT 'house',
       map_id INTEGER NOT NULL,
       visible INTEGER NOT NULL DEFAULT 1,
+      favorite INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (map_id) REFERENCES Map(id)
     );
   `).run()

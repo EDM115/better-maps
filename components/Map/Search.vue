@@ -39,7 +39,7 @@
       v-model="placeDetails.description"
       label="Description"
       class="mt-2"
-      rows="2"
+      rows="3"
     />
     <v-select
       v-model="placeDetails.icon"
@@ -57,6 +57,12 @@
         />
       </template>
     </v-select>
+    <v-switch
+      v-model="placeDetails.favorite"
+      label="Favori"
+      color="primary"
+      class="mt-4"
+    />
     <div class="d-flex flex-column gap-2 mt-4">
       <v-btn
         v-if="editMode"
@@ -112,6 +118,7 @@ interface PlaceDetails {
     lat: number
     lng: number
   }
+  favorite: boolean
 }
 
 const props = defineProps<Props>()
@@ -139,6 +146,7 @@ const placeDetails = ref<PlaceDetails>({
   icon: "mdi-home-outline",
   color: "",
   position: { lat: 0, lng: 0 },
+  favorite: false,
 })
 
 function resetPlace() {
@@ -150,6 +158,7 @@ function resetPlace() {
     icon: "mdi-home-outline",
     color: "",
     position: { lat: 0, lng: 0 },
+    favorite: false,
   }
 }
 
