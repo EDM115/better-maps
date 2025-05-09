@@ -25,7 +25,7 @@
     <InfoWindow
       v-if="selectedPin && selectedPin.id !== -1"
       v-model="showInfoWindow"
-      :options="{ 
+      :options="{
         position: selectedPin.position,
         pixelOffset: pixelOffset,
       }"
@@ -222,6 +222,7 @@ const togglePinVisibility = async (pin: Pin) => {
     })
 
     const index = pins.value.findIndex((p) => p.id === pin.id)
+
     if (index !== -1) {
       pins.value[index] = { ...pin, visible: !pin.visible }
     }

@@ -59,6 +59,7 @@ function initDatabase() {
       FOREIGN KEY (map_id) REFERENCES Map(id)
     );
   `).run()
+
   return db
 }
 

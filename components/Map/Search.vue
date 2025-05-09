@@ -220,6 +220,7 @@ const handleSearch = async (search: string) => {
   }
 
   const currentSearch = search
+
   didSearch.value = false
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
@@ -240,6 +241,7 @@ const handleSearch = async (search: string) => {
           },
         },
       }))
+
       results.forEach((result) => {
         placeService.value?.getDetails({ placeId: result.place_id }, (detail, detailStatus) => {
           if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && detail.geometry) {
