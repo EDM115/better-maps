@@ -10,17 +10,18 @@ export const useMainStore = defineStore("main", {
       username: null as string | null,
       token: null as string | null,
       role: null as string | null,
+      map_id: null as number | null,
     },
   }),
   getters: {
     getTheme(state): string {
       return state.theme
     },
-    getUser(state): { id: number | null; username: string | null; token: string | null; role: string | null } {
+    getUser(state): { id: number | null; username: string | null; token: string | null; role: string | null; map_id: number | null } {
       return state.user
     },
     isUserEmpty(state): boolean {
-      return state.user.id === null && state.user.username === null && state.user.token === null && state.user.role === null
+      return state.user.id === null && state.user.username === null && state.user.token === null && state.user.role === null && state.user.map_id === null
     },
   },
   actions: {
@@ -55,7 +56,7 @@ export const useMainStore = defineStore("main", {
       this.theme = theme
       this.createCookie("theme", theme, 30)
     },
-    setUser(user: { id: number | null; username: string | null; token: string | null; role: string | null }) {
+    setUser(user: { id: number | null; username: string | null; token: string | null; role: string | null; map_id: number | null }) {
       this.user = user
       this.createCookie("user", encodeURI(JSON.stringify(user)), 1)
     },
@@ -65,6 +66,7 @@ export const useMainStore = defineStore("main", {
         username: null,
         token: null,
         role: null,
+        map_id: null,
       }
       cookie.remove("user")
     },

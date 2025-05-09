@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     FROM User
     WHERE username = ?
   `)
-  const user = stmt.get(username) as { id: number; username: string; password: string; role: string } | undefined
+  const user = stmt.get(username) as { id: number; username: string; password: string; role: string; map_id: number } | undefined
 
   if (!user) {
     throw createError({ status: 401, message: "L'utilisateur n'existe pas" })
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     status: 200,
     body: {
       success: "Utilisateur connecté",
-      user: { id: user.id, username: user.username, token, role: user.role },
+      user: { id: user.id, username: user.username, token, role: user.role, map_id: user.map_id },
     },
   }
 })

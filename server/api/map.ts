@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ status: 405, message: "Méthode non autorisée" })
   }
 
-  const { user_id } = await getQuery(event) as { user_id: string }
+  const { user_id } = await getQuery(event) as { user_id: number }
 
   if (!user_id) {
     throw createError({ status: 400, message: "L'ID de l'utilisateur est requis" })
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const map = db.prepare(`
     SELECT * FROM Map
     WHERE id IN (
-      SELECT map_id FROM UserMap WHERE user_id = ?
+      SELECT map_id FROM User WHERE id = ?
     )
   `).get(user_id) as {
     id: number

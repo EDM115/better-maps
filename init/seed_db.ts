@@ -25,7 +25,9 @@ function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'user'
+      role TEXT NOT NULL DEFAULT 'user',
+      map_id INTEGER NOT NULL,
+      FOREIGN KEY (map_id) REFERENCES Map(id)
     );
   `).run()
 
@@ -38,16 +40,6 @@ function initDatabase() {
       start_zoom INTEGER NOT NULL,
       country TEXT NOT NULL,
       show_transit INTEGER NOT NULL DEFAULT 0
-    );
-  `).run()
-
-  db.prepare(`
-    CREATE TABLE IF NOT EXISTS UserMap (
-      map_id INTEGER NOT NULL,
-      user_id INTEGER NOT NULL,
-      PRIMARY KEY (map_id, user_id),
-      FOREIGN KEY (map_id) REFERENCES Map(id),
-      FOREIGN KEY (user_id) REFERENCES User(id)
     );
   `).run()
 
@@ -69,6 +61,22 @@ function initDatabase() {
   return db
 }
 
+async function seedMaps(db: Database.Database) {
+  const raw = process.env.STARTING_POINT
+  const [ lat, lng, zoom ] = raw
+    ? raw.split(",").map(Number)
+    : [ 48.8566, 2.3522, 3 ]
+  const country = process.env.COUNTRY || "fr"
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO Map (start_lat, start_lng, start_zoom, country, show_transit)
+    VALUES (?, ?, ?, ?, ?)
+  `)
+  const mapId = insert.run(lat, lng, zoom, country, 0).lastInsertRowid
+
+  console.log(`Seeded map with id : ${mapId}`)
+}
+
 async function seedUsers(db: Database.Database) {
   const raw = process.env.SEED_USERS
     ?.replace("\\'", "'")
@@ -83,52 +91,27 @@ async function seedUsers(db: Database.Database) {
     users = []
   }
 
+  const map = db.prepare("SELECT id FROM Map").get() as { id: number }
+
   const insert = db.prepare(`
-    INSERT OR IGNORE INTO User (username, password, role)
-    VALUES (?, ?, ?)
+    INSERT OR IGNORE INTO User (username, password, role, map_id)
+    VALUES (?, ?, ?, ?)
   `)
 
   await Promise.all(users.map(async ({ username, password, role }) => {
     const hashed = await bcrypt.hash(password, SALT_ROUNDS)
 
-    insert.run(username, hashed, role)
+    insert.run(username, hashed, role, map.id)
     console.log(`Seeded user : ${username}`)
   }))
-}
-
-async function seedMaps(db: Database.Database) {
-  const raw = process.env.STARTING_POINT
-  const [ lat, lng, zoom ] = raw
-    ? raw.split(",").map(Number)
-    : [ 48.8566, 2.3522, 3 ]
-  const country = process.env.COUNTRY || "fr"
-
-  const insert = db.prepare(`
-    INSERT OR IGNORE INTO Map (start_lat, start_lng, start_zoom, country, show_transit)
-    VALUES (?, ?, ?, ?, ?)
-  `)
-  const mapId = insert.run(lat, lng, zoom, country, 0).lastInsertRowid
-
-  const insertLink = db.prepare(`
-    INSERT OR IGNORE INTO UserMap (map_id, user_id)
-    VALUES (?, ?)
-  `)
-
-  const users = db.prepare("SELECT id FROM User").all() as Array<{ id: number }>
-
-  await Promise.all(users.map(async ({ id }) => {
-    insertLink.run(mapId, id)
-  }))
-
-  console.log(`Seeded map with id : ${mapId}`)
 }
 
 async function main() {
   if (process.env.SEED === "true") {
     const db = initDatabase()
 
-    await seedUsers(db)
     await seedMaps(db)
+    await seedUsers(db)
     db.close()
     console.log("✅ Database initialized and seeded")
   } else {
