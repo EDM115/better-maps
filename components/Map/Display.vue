@@ -17,6 +17,7 @@
             :map="mapRef?.map"
             :center="center"
             :map-id="Number(mapId)"
+            @pin-selected="(pinId) => selectedPin = pinId"
           />
         </GoogleMap>
       </v-card>
@@ -34,6 +35,7 @@
         <MapPinsList
           :pins="mapPinRef?.pins || []"
           :edit-mode="mapSearchRef?.editMode"
+          :selected-pin-id="selectedPin"
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
@@ -73,6 +75,7 @@
           <MapPinsList
             :pins="mapPinRef?.pins || []"
             :edit-mode="mapSearchRef?.editMode"
+            :selected-pin-id="selectedPin"
             @edit="(pin) => mapSearchRef?.startEditing(pin)"
             @delete="(pin) => mapPinRef?.deletePin(pin)"
             @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
@@ -103,6 +106,7 @@
           :map="mapRef?.map"
           :center="center"
           :map-id="Number(mapId)"
+          @pin-selected="(pinId) => selectedPin = pinId"
         />
       </GoogleMap>
       <v-btn
@@ -144,6 +148,7 @@ const mapId = ref(String(0))
 const translateX = ref("80vw")
 const mapCountry = ref("")
 const mapShowTransit = ref(false)
+const selectedPin = ref<number | null>(null)
 
 watch(drawer, (val) => {
   translateX.value = val ? "0" : "80vw"

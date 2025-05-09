@@ -29,6 +29,8 @@
         position: selectedPin.position,
         pixelOffset: pixelOffset,
       }"
+      @closeclick="handleInfoWindowClose"
+      @visible-changed="handleInfoWindowVisibility"
     >
       <div class="info-window-content">
         <h3>{{ selectedPin.name }}</h3>
@@ -92,6 +94,10 @@ const selectedPin = ref<Pin | null>(null)
 const showInfoWindow = ref(false)
 const pixelOffset = ref<google.maps.Size | null>(null)
 
+const emit = defineEmits<{
+  (e: "pin-selected", pinId: number | null): void
+}>()
+
 const handlePinClick = (pin: Pin) => {
   if (pin.id === -1) {
     return
@@ -99,6 +105,20 @@ const handlePinClick = (pin: Pin) => {
   pixelOffset.value = new google.maps.Size(0, -30)
   selectedPin.value = pin
   showInfoWindow.value = true
+  emit("pin-selected", pin.id)
+}
+
+const handleInfoWindowClose = () => {
+  showInfoWindow.value = false
+  selectedPin.value = null
+  emit("pin-selected", null)
+}
+
+const handleInfoWindowVisibility = (visible: boolean) => {
+  if (!visible) {
+    selectedPin.value = null
+    emit("pin-selected", null)
+  }
 }
 
 const addPin = async (pin: Pin) => {
