@@ -22,5 +22,6 @@ export type Icon = {
 
 export const getIconColor = (icon: string, icons: Icon[]) => {
   const foundIcon = icons.find((i) => i.icon === icon)
+
   return foundIcon ? foundIcon.color : "#FF5555"
 }
