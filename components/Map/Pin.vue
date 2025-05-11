@@ -1,16 +1,18 @@
 <template>
   <div>
     <AdvancedMarker
-      v-for="(pin, index) in [...pins, dummyPin]"
-      :key="index"
+      v-for="(pin) in filteredPins"
+      :key="pin.id + String(pin.visible) + String(checkIconVisibility(pin.icon))"
       :options="{
         position: pin.position,
-        map: index < pins.length ? props.map : null
+        map: pin.id === -1 ? null : props.map
+      }"
+      :pin-options="{
+        background: 'transparent'
       }"
       @click="() => handlePinClick(pin)"
     >
       <div
-        v-if="pin.visible"
         :class="pin.favorite ? 'pin-content pin-favorite' : 'pin-content'"
         :style="{ backgroundColor: darkBackgroundColor }"
       >
@@ -48,11 +50,11 @@
 
 <script setup lang="ts">
 import { useMainStore } from "~/stores/main"
-import { onMounted, ref, watch } from "vue"
+import { onMounted, ref, watch, computed } from "vue"
 import { AdvancedMarker, InfoWindow } from "vue3-google-map"
 import { useTheme } from "vuetify"
 
-import { getIconColor, type Pin } from "./consts"
+import { getIconColor, type Pin, iconOptions } from "./consts"
 
 interface Props {
   map?: google.maps.Map
@@ -80,6 +82,26 @@ const theme = useTheme()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
 
+const selectedPin = ref<Pin | null>(null)
+const showInfoWindow = ref(false)
+const pixelOffset = ref<google.maps.Size | null>(null)
+
+const visibleIconTypes = ref<Record<string, boolean>>(Object.fromEntries(
+  iconOptions.map(icon => [icon.value, true])
+))
+
+const updateVisibleIconTypes = (newVisibleIcons: Record<string, boolean>) => {
+  const updatedVisibleIcons: Record<string, boolean> = {}
+  for (const key in visibleIconTypes.value) {
+    updatedVisibleIcons[key] = newVisibleIcons[key] ?? visibleIconTypes.value[key]
+  }
+  visibleIconTypes.value = updatedVisibleIcons
+}
+
+function checkIconVisibility(icon: string): boolean {
+  return visibleIconTypes.value[icon] ?? true
+}
+
 const dummyPin: Pin = {
   id: -1,
   name: "",
@@ -92,9 +114,10 @@ const dummyPin: Pin = {
   favorite: false,
 }
 
-const selectedPin = ref<Pin | null>(null)
-const showInfoWindow = ref(false)
-const pixelOffset = ref<google.maps.Size | null>(null)
+const filteredPins = computed(() => {
+  const filtered = pins.value.filter(pin => pin.visible && checkIconVisibility(pin.icon) && pin.id !== -1)
+  return [...filtered, dummyPin]
+})
 
 const emit = defineEmits<{
   (e: "pin-selected", pinId: number | null): void
@@ -237,6 +260,7 @@ defineExpose({
   editPin,
   togglePinVisibility,
   pins,
+  updateVisibleIconTypes,
 })
 
 const fetchPins = async () => {

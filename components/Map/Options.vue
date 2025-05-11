@@ -9,7 +9,7 @@
           color="primary"
           class="mb-4"
         />
-        <!--<div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-2">
           <v-switch
             v-for="icon in iconOptions"
             :key="icon.value"
@@ -18,7 +18,7 @@
             :color="icon.color"
             @update:model-value="updateIconVisibility"
           />
-        </div> -->
+        </div>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>

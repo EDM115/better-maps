@@ -43,6 +43,7 @@
         <MapOptions
           :map="mapRef?.map"
           :show="mapShowTransit"
+          @update-icon-visibility="(icons) => mapPinRef?.updateVisibleIconTypes(icons)"
         />
       </v-card>
     </v-col>
@@ -85,6 +86,7 @@
           <MapOptions
             :map="mapRef?.map"
             :show="mapShowTransit"
+            @update-icon-visibility="(icons) => mapPinRef?.updateVisibleIconTypes(icons)"
           />
         </v-list-item>
       </v-list>
