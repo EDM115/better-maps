@@ -40,7 +40,7 @@
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
         />
-        <MapTransportation
+        <MapOptions
           :map="mapRef?.map"
           :show="mapShowTransit"
         />
@@ -82,7 +82,7 @@
           />
         </v-list-item>
         <v-list-item>
-          <MapTransportation
+          <MapOptions
             :map="mapRef?.map"
             :show="mapShowTransit"
           />

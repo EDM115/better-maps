@@ -87,18 +87,10 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
 | favorite    | bool   | Not Null, default false    |
 
 ## Dev left to do
-- [x] **Mobile first**
-- [x] Use volumes for the DB file
 - [ ] Admin panel
   - [ ] Add/delete users (on add, add a linked map)
   - [ ] Ability to switch maps
-  - [ ] Add/edit/delete map (on add, auto add admins + default location/zoom/country)
-- [x] Add a map ~~with Nuxt Scripts~~ and use the Maps JS API/SDK
-- [x] Ability to add and save a point on the map
-  - [x] Name (autocomplete/bare address if not found)
-  - [x] Description (optional)
-  - [x] Color + Icon (house, caddie, book, handbag, pizza, ...)
-- [x] Ability to show public transportation lines
-- [ ] Show/hide any point/category of points
-- [ ] On load : show an overview of the area
-- [ ] Each user is linked to a map, a map can have multiple users
+  - [ ] Add/edit/delete map
+
+## Unplanned
+- [ ] ~~Show/hide any category of points~~ *very broken, unstyles points and defeats the purpose of the dummy pin*
