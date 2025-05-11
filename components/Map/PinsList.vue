@@ -35,7 +35,7 @@
               >
                 <v-icon
                   :icon="pin.icon"
-                  :color="getIconColor(pin.icon)"
+                  :color="getIconColor(pin.icon, icons)"
                 />
               </div>
             </template>
@@ -104,7 +104,7 @@ import { computed, ref, watch } from "vue"
 import { useTheme } from "vuetify"
 import type { ComponentPublicInstance } from "vue"
 
-import { getIconColor, type Pin } from "./consts"
+import { getIconColor, type Pin, type Icon } from "./consts"
 
 const theme = useTheme()
 
@@ -122,6 +122,7 @@ defineProps<{
   pins: Pin[]
   editMode?: boolean
   selectedPinId?: number | null
+  icons: Icon[]
 }>()
 
 const showDialog = ref(false)

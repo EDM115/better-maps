@@ -9,16 +9,6 @@
           color="primary"
           class="mb-4"
         />
-        <!--<div class="d-flex flex-column gap-2">
-          <v-switch
-            v-for="icon in iconOptions"
-            :key="icon.value"
-            v-model="visibleIcons[icon.value]"
-            :label="icon.label"
-            :color="icon.color"
-            @update:model-value="updateIconVisibility"
-          />
-        </div> -->
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -26,28 +16,17 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue"
-import { iconOptions } from "./consts"
 
 interface Props {
   map?: google.maps.Map
   show: boolean
 }
 
-const emit = defineEmits<{
-  (e: "update-icon-visibility", visibleIcons: Record<string, boolean>): void
-}>()
 
 const props = defineProps<Props>()
 const showTransit = ref(props.show)
 const transitLayer = ref<google.maps.TransitLayer | null>(null)
 
-const visibleIcons = ref(Object.fromEntries(
-  iconOptions.map(icon => [icon.value, true])
-))
-
-const updateIconVisibility = () => {
-  emit("update-icon-visibility", visibleIcons.value)
-}
 
 watch(showTransit, (show) => {
   if (props.map) {

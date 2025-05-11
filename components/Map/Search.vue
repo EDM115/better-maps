@@ -43,16 +43,16 @@
     />
     <v-select
       v-model="placeDetails.icon"
-      :items="iconOptions"
+      :items="icons"
       label="Icône"
-      item-title="label"
-      item-value="value"
+      item-title="name"
+      item-value="icon"
       class="mt-2"
     >
       <template #prepend>
         <v-icon
           :icon="placeDetails.icon"
-          :color="getIconColor(placeDetails.icon)"
+          :color="getIconColor(placeDetails.icon, props.icons)"
           class="mr-2"
         />
       </template>
@@ -88,12 +88,13 @@
 import { refDebounced } from "@vueuse/core"
 import { nextTick, ref, watch } from "vue"
 
-import { getIconColor, iconOptions } from "./consts"
+import { getIconColor, type Icon } from "./consts"
 
 interface Props {
   map?: google.maps.Map
   center?: { lat: number; lng: number }
   country?: string
+  icons: Icon[]
 }
 
 interface Place {

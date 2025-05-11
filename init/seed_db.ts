@@ -60,6 +60,17 @@ function initDatabase() {
     );
   `).run()
 
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS Icon (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      color TEXT NOT NULL,
+      icon TEXT NOT NULL
+    );
+  `).run()
+
+  console.log("\n✅ Database initialized\n")
+
   return db
 }
 
@@ -77,6 +88,7 @@ async function seedMaps(db: Database.Database) {
   const mapId = insert.run(lat, lng, zoom, country, 0).lastInsertRowid
 
   console.log(`Seeded map with id : ${mapId}`)
+  console.log("\n✅ Map seeding completed\n")
 }
 
 async function seedUsers(db: Database.Database) {
@@ -106,15 +118,47 @@ async function seedUsers(db: Database.Database) {
     insert.run(username, hashed, role, map.id)
     console.log(`Seeded user : ${username}`)
   }))
+
+  console.log("\n✅ User seeding completed\n")
+}
+
+async function seedIcons(db: Database.Database) {
+  const raw = process.env.SEED_ICONS || "[]"
+  let icons: Array<{ name: string, color: string, icon: string }>
+
+  try {
+    icons = JSON.parse(raw)
+  } catch (e) {
+    console.error("❌ failed to parse SEED_ICONS :", e)
+    icons = []
+  }
+
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO Icon (name, color, icon)
+    VALUES (?, ?, ?)
+  `)
+
+  await Promise.all(icons.map(async ({ name, color, icon }) => {
+    insert.run(name, color, icon)
+    console.log(`Seeded icon : ${name}`)
+  }))
+
+  console.log("\n✅ Icon seeding completed\n")
 }
 
 async function main() {
   if (process.env.SEED === "true") {
     const db = initDatabase()
 
-    await seedMaps(db)
-    await seedUsers(db)
-    db.close()
+    try {
+      await seedMaps(db)
+      await seedUsers(db)
+      await seedIcons(db)
+    } catch (e) {
+      console.error("❌ Error seeding database :", e)
+    } finally {
+      db.close()
+    }
     console.log("✅ Database initialized and seeded")
   } else {
     console.log("❌ Skipping database initialization")

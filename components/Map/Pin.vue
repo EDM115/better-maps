@@ -16,7 +16,7 @@
       >
         <v-icon
           :icon="pin.icon"
-          :color="getIconColor(pin.icon)"
+          :color="getIconColor(pin.icon, props.icons)"
           size="large"
         />
       </div>
@@ -52,12 +52,13 @@ import { onMounted, ref, watch } from "vue"
 import { AdvancedMarker, InfoWindow } from "vue3-google-map"
 import { useTheme } from "vuetify"
 
-import { getIconColor, type Pin } from "./consts"
+import { getIconColor, type Pin, type Icon } from "./consts"
 
 interface Props {
   map?: google.maps.Map
   center?: { lat: number; lng: number }
   mapId?: number
+  icons: Icon[]
 }
 
 type ApiPointResponse = {
@@ -82,11 +83,11 @@ const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.backgroun
 
 const dummyPin: Pin = {
   id: -1,
-  name: "",
+  name: "Dummy Pin",
   description: "",
   formatted_address: "",
-  icon: "mdi-home-outline",
-  color: "",
+  icon: "mdi-dots-horizontal",
+  color: "#F8F8F2",
   position: { lat: 0, lng: 0 },
   visible: true,
   favorite: false,

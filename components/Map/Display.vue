@@ -17,6 +17,7 @@
             :map="mapRef?.map"
             :center="center"
             :map-id="Number(mapId)"
+            :icons="icons"
             @pin-selected="(pinId) => selectedPin = pinId"
           />
         </GoogleMap>
@@ -29,6 +30,7 @@
           :map="mapRef?.map"
           :center="center"
           :country="mapCountry"
+          :icons="icons"
           @add-marker="(details) => mapPinRef?.addPin(details)"
           @update-marker="(details) => mapPinRef?.editPin(details)"
         />
@@ -36,6 +38,7 @@
           :pins="mapPinRef?.pins || []"
           :edit-mode="mapSearchRef?.editMode"
           :selected-pin-id="selectedPin"
+          :icons="icons"
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
@@ -67,6 +70,7 @@
             :map="mapRef?.map"
             :center="center"
             :country="mapCountry"
+            :icons="icons"
             @add-marker="(details) => mapPinRef?.addPin(details)"
             @update-marker="(details) => mapPinRef?.editPin(details)"
           />
@@ -76,6 +80,7 @@
             :pins="mapPinRef?.pins || []"
             :edit-mode="mapSearchRef?.editMode"
             :selected-pin-id="selectedPin"
+            :icons="icons"
             @edit="(pin) => mapSearchRef?.startEditing(pin)"
             @delete="(pin) => mapPinRef?.deletePin(pin)"
             @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
@@ -106,6 +111,7 @@
           :map="mapRef?.map"
           :center="center"
           :map-id="Number(mapId)"
+          :icons="icons"
           @pin-selected="(pinId) => selectedPin = pinId"
         />
       </GoogleMap>
@@ -124,6 +130,8 @@ import { useMainStore } from "~/stores/main"
 import { computed, onMounted, ref, watch } from "vue"
 import { useDisplay } from "vuetify"
 import { GoogleMap } from "vue3-google-map"
+
+import type { Icon } from "./consts"
 
 interface MapRef {
   map: google.maps.Map
@@ -149,6 +157,7 @@ const translateX = ref("80vw")
 const mapCountry = ref("")
 const mapShowTransit = ref(false)
 const selectedPin = ref<number | null>(null)
+const icons = ref<Icon[]>([])
 
 watch(drawer, (val) => {
   translateX.value = val ? "0" : "80vw"
@@ -181,12 +190,21 @@ const fetchMapData = async (userId: number | null) => {
   mapShowTransit.value = response.body.map.show_transit
 }
 
+const fetchIcons = async () => {
+  const response = await $fetch("/api/icon", {
+    headers: { Authorization: `Bearer ${user.value.token}` },
+  })
+
+  icons.value = response.body.icons
+}
+
 watch(
   () => user.value,
   async (newUser) => {
     if (newUser && newUser.token) {
       await fetchGoogleMapsApiKey(newUser.token)
       await fetchMapData(newUser.id)
+      await fetchIcons()
     }
   },
   { immediate: true },
@@ -196,6 +214,7 @@ onMounted(async () => {
   if (!store.isUserEmpty) {
     await fetchGoogleMapsApiKey(store.getUser.token ?? "")
     await fetchMapData(store.getUser.id ?? null)
+    await fetchIcons()
   }
 
   if (props.setHasLoaded) {

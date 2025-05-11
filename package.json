@@ -89,5 +89,5 @@
     "nuxt:upgrade": "nuxi upgrade --dedupe"
   },
   "type": "module",
-  "version": "0.23.0"
+  "version": "0.24.0"
 }
