@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
-  css: [ "~/assets/styles/main.scss" ],
+  css: ["~/assets/styles/main.scss"],
   runtimeConfig: {
     public: {
       country: process.env.COUNTRY,
@@ -70,6 +70,17 @@ export default defineNuxtConfig({
   },
   vite: {
     clearScreen: false,
+    css: {
+      preprocessorOptions: {
+        sass: {
+          api: "modern-compiler"
+        },
+        scss: {
+          api: "modern-compiler"
+        }
+      },
+      preprocessorMaxWorkers: 4
+    },
   },
   typescript: {
     typeCheck: true,
@@ -92,7 +103,7 @@ export default defineNuxtConfig({
         fallback: "en",
         locale: "fr",
       },
-      localeMessages: [ "en", "fr" ],
+      localeMessages: ["en", "fr"],
       theme: {
         defaultTheme: "dark",
         themes: {
