@@ -4,7 +4,7 @@
     v-model:search="searchQuery"
     :items="searchResults"
     :loading="loading"
-    placeholder="Rechercher un lieu, une adresse..."
+    :placeholder="$t('map.search.placeholder')"
     item-title="name"
     item-value="place_id"
     return-object
@@ -28,23 +28,23 @@
   >
     <v-text-field
       v-model="placeDetails.name"
-      label="Nom"
+      :label="$t('map.search.name')"
     />
     <v-text-field
       v-model="placeDetails.formatted_address"
-      label="Adresse"
+      :label="$t('map.search.address')"
       class="mt-2"
     />
     <v-textarea
       v-model="placeDetails.description"
-      label="Description"
+      :label="$t('map.search.description')"
       class="mt-2"
       rows="3"
     />
     <v-select
       v-model="placeDetails.icon"
       :items="icons"
-      label="Icône"
+      :label="$t('map.search.icon')"
       item-title="name"
       item-value="icon"
       class="mt-2"
@@ -59,7 +59,7 @@
     </v-select>
     <v-switch
       v-model="placeDetails.favorite"
-      label="Favori"
+      :label="$t('map.search.favorite')"
       color="primary"
       class="mt-4"
     />
@@ -71,14 +71,14 @@
         style="margin-bottom: 0.5em;"
         @click="cancelEdit"
       >
-        Annuler
+        {{ $t('map.search.cancel') }}
       </v-btn>
       <v-btn
         color="primary"
         block
         @click="editMode ? updatePin() : addPin()"
       >
-        {{ editMode ? 'Mettre à jour le pin' : 'Ajouter un pin' }}
+        {{ editMode ? $t('map.search.edit-pin') : $t('map.search.add-pin') }}
       </v-btn>
     </div>
   </v-form>

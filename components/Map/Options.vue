@@ -1,11 +1,11 @@
 <template>
   <v-expansion-panels flat>
     <v-expansion-panel>
-      <v-expansion-panel-title>Options de la carte</v-expansion-panel-title>
+      <v-expansion-panel-title>{{ $t("map.options.title") }}</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-switch
           v-model="showTransit"
-          label="Afficher les transports en commun"
+          :label="$t('map.options.show-transit')"
           color="primary"
           class="mb-4"
         />

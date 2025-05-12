@@ -47,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "#imports"
 import { useMainStore } from "~/stores/main"
 import { onMounted, ref, watch } from "vue"
 import { AdvancedMarker, InfoWindow } from "vue3-google-map"
@@ -78,12 +79,13 @@ const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
 const store = useMainStore()
 const theme = useTheme()
+const { t } = useI18n()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
 
 const dummyPin: Pin = {
   id: -1,
-  name: "Dummy Pin",
+  name: t("map.pin.dummy-pin"),
   description: "",
   formatted_address: "",
   icon: "mdi-dots-horizontal",

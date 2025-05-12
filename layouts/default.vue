@@ -9,32 +9,39 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n, useLocaleHead } from "#imports"
 import { useMainStore } from "~/stores/main"
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill"
 import { onMounted } from "vue"
 import { useTheme } from "vuetify"
 
+const i18nHead = useLocaleHead()
+const { t } = useI18n()
+
 useHead({
-  title: "Better Maps",
+  title: t("main.title"),
   meta: [
     { charset: "utf-8" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
-    { name: "description", content: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf" },
+    { name: "description", content: t("main.description") },
   ],
   link: [{ rel: "icon", type: "image/png", href: "/images/logo.png" }],
   htmlAttrs: {
-    lang: "fr",
+    lang: i18nHead.value.htmlAttrs!.lang,
   },
 })
 
 useSeoMeta({
-  title: "Better Maps",
-  ogTitle: "Better Maps",
-  description: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf",
-  ogDescription: "A quick way to add pin-points to a map, with details, filters and more. Made for my gf",
+  title: t("main.title"),
+  ogTitle: t("main.title"),
+  description: t("main.description"),
+  ogDescription: t("main.description"),
   ogImage: "/images/logo.png",
   ogUrl: "https://maps.edm115.dev",
   ogLocale: "fr_FR",
 })
+
+polyfillCountryFlagEmojis()
 
 const store = useMainStore()
 const vuetifyTheme = useTheme()

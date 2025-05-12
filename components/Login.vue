@@ -1,6 +1,6 @@
 <template>
   <h1 class="text-center my-4">
-    Connexion
+    {{ $t('login.title') }}
   </h1>
   <Error
     v-if="errorMessage"
@@ -17,7 +17,7 @@
         <v-text-field
           v-model="state.username"
           class="input-field mx-auto"
-          label="Username"
+          :label="$t('login.username')"
         />
       </v-col>
     </v-row>
@@ -27,7 +27,7 @@
           v-model="state.password"
           :type="showPassword ? 'text' : 'password'"
           class="input-field mx-auto"
-          label="Mot de passe"
+          :label="$t('login.password')"
         >
           <template #append-inner>
             <v-icon
@@ -46,7 +46,7 @@
       >
         <v-btn
           color="primary"
-          text="Se connecter"
+          :text="$t('login.login')"
           type="submit"
           variant="elevated"
         />

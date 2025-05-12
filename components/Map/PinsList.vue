@@ -5,7 +5,7 @@
   >
     <v-expansion-panel value="true">
       <v-expansion-panel-title>
-        Points d'intérêt ({{ pins.length }})
+        {{ $t("map.pins-list.pins").replace("X", String(pins.length)) }}
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list>
@@ -77,21 +77,21 @@
   >
     <v-card>
       <v-card-title class="text-h5">
-        Confirmation de suppression
+        {{ $t('map.pins-list.delete-title') }}
       </v-card-title>
       <v-card-text>
-        Êtes-vous sûr de vouloir supprimer ce pin ?
+        {{ $t('map.pins-list.delete-description') }}
       </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn
           color="error"
-          text="Supprimer"
+          :text="$t('map.pins-list.delete-confirm')"
           @click="confirmDelete"
         />
         <v-btn
           color="secondary"
-          text="Annuler"
+          :text="$t('map.pins-list.delete-cancel')"
           @click="showDialog = false"
         />
       </v-card-actions>

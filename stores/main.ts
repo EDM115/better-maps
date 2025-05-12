@@ -4,6 +4,7 @@ import { defineStore } from "pinia"
 
 export const useMainStore = defineStore("main", {
   state: () => ({
+    i18n: "fr" as "fr" | "en",
     theme: "dark",
     user: {
       id: null as number | null,
@@ -14,6 +15,9 @@ export const useMainStore = defineStore("main", {
     },
   }),
   getters: {
+    getI18n(state): "fr" | "en" {
+      return state.i18n
+    },
     getTheme(state): string {
       return state.theme
     },
@@ -29,6 +33,14 @@ export const useMainStore = defineStore("main", {
       cookie(name, value, days)
 
       return value
+    },
+    initI18n() {
+      const storedI18n = cookie.get("i18n_lang")
+      if (storedI18n) {
+        this.i18n = String(storedI18n) as "fr" | "en"
+      } else {
+        this.i18n = "fr"
+      }
     },
     initTheme() {
       let storedTheme = cookie.get("theme")
@@ -52,6 +64,9 @@ export const useMainStore = defineStore("main", {
         }
       }
     },
+    setI18n(i18n: "fr" | "en") {
+      this.i18n = i18n
+    },
     setTheme(theme: string) {
       this.theme = theme
       this.createCookie("theme", theme, 30)
@@ -71,6 +86,7 @@ export const useMainStore = defineStore("main", {
       cookie.remove("user")
     },
     initStore() {
+      this.initI18n()
       this.initTheme()
       this.initUser()
     },

@@ -1,0 +1,46 @@
+{
+  "error": {
+    "more-infos": "More information"
+  },
+  "login": {
+    "login": "Log in",
+    "password": "Password",
+    "title": "Login",
+    "username": "Username"
+  },
+  "main": {
+    "description": "A quick way to add pin-points to a map, with details, filters and more. Made for my gf",
+    "title": "Better Maps"
+  },
+  "map": {
+    "options": {
+      "show-transit": "Show public transit",
+      "title": "Map options"
+    },
+    "pin": {
+      "dummy-pin": "Dummy pin"
+    },
+    "pins-list": {
+      "delete-cancel": "Cancel",
+      "delete-confirm": "Delete",
+      "delete-description": "Are you sure you want to delete this pin?",
+      "delete-title": "Delete confirmation",
+      "pins": "Points of interest (X)"
+    },
+    "search": {
+      "add-pin": "Add a pin",
+      "address": "Address",
+      "cancel": "Cancel",
+      "description": "Description",
+      "edit-pin": "Update the pin",
+      "favorite": "Favorite",
+      "icon": "Icon",
+      "name": "Name",
+      "placeholder": "Search for a place, an address..."
+    }
+  },
+  "navbar": {
+    "connect": "Connect",
+    "disconnect": "Disconnect"
+  }
+}

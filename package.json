@@ -32,6 +32,7 @@
     "@nuxt/cli": "~3.25.1",
     "@nuxt/devtools": "~2.4.0",
     "@nuxt/eslint": "~1.3.1",
+    "@nuxtjs/i18n": "~9.5.4",
     "@stylistic/eslint-plugin": "~4.2.0",
     "@tsconfig/node22": "^22.0.1",
     "@types/better-sqlite3": "^7.6.13",
@@ -39,6 +40,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.17",
     "@typescript-eslint/parser": "~8.32.1",
+    "country-flag-emoji-polyfill": "~0.1.8",
     "dotenv": "~16.5.0",
     "dotenv-cli": "~8.0.0",
     "eslint": "~9.26.0",
@@ -89,5 +91,5 @@
     "reinstall": "pnpm dlx rimraf node_modules .nuxt .output pnpm-lock.yaml && pnpm i && pnpm typecheck"
   },
   "type": "module",
-  "version": "0.24.0"
+  "version": "0.25.0"
 }

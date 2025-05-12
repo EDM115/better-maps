@@ -10,7 +10,7 @@
   >
     <v-tooltip
       location="top"
-      text="Informations supplémentaires"
+      :text="$t('error.more-infos')"
     >
       <template #activator="{ props }">
         <v-btn

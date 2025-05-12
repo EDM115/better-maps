@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/fonts",
     "@nuxt/image",
+    "@nuxtjs/i18n",
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "vuetify-nuxt-module",
@@ -90,6 +91,22 @@ export default defineNuxtConfig({
       autoInit: false,
       standalone: false,
     },
+  },
+  i18n: {
+    defaultLocale: "fr",
+    detectBrowserLanguage: {
+      cookieKey: "i18n_lang",
+      fallbackLocale: "fr",
+      useCookie: true
+    },
+    experimental: {
+      typedOptionsAndMessages: "all",
+    },
+    locales: [
+      { code: "en", name: "English", file: "en.json" },
+      { code: "fr", name: "Français", file: "fr.json" },
+    ],
+    strategy: "no_prefix"
   },
   vuetify: {
     /* moduleOptions: {

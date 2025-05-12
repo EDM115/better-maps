@@ -101,7 +101,6 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
   - [ ] Add/delete users (on add, add a linked map)
   - [ ] Ability to switch maps
   - [ ] Add/edit/delete map
-- [ ] proper i18n
 
 ## Unplanned
 - [ ] ~~Show/hide any category of points~~ *very broken, unstyles points and defeats the purpose of the dummy pin*

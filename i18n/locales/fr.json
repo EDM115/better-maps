@@ -1,0 +1,46 @@
+{
+  "error": {
+    "more-infos": "Informations supplémentaires"
+  },
+  "login": {
+    "login": "Se connecter",
+    "password": "Mot de passe",
+    "title": "Connexion",
+    "username": "Nom d'utilisateur"
+  },
+  "main": {
+    "description": "Un moyen rapide d'ajouter des points sur une carte, avec des détails, des filtres et plus encore. Réalisé pour ma copine",
+    "title": "Better Maps"
+  },
+  "map": {
+    "options": {
+      "show-transit": "Afficher les transports en commun",
+      "title": "Options de la carte"
+    },
+    "pin": {
+      "dummy-pin": "Point fictif"
+    },
+    "pins-list": {
+      "delete-cancel": "Annuler",
+      "delete-confirm": "Supprimer",
+      "delete-description": "Êtes-vous sûr de vouloir supprimer ce pin ?",
+      "delete-title": "Confirmation de suppression",
+      "pins": "Points d'intérêt (X)"
+    },
+    "search": {
+      "add-pin": "Ajouter un pin",
+      "address": "Adresse",
+      "cancel": "Annuler",
+      "description": "Description",
+      "edit-pin": "Mettre à jour le pin",
+      "favorite": "Favori",
+      "icon": "Icône",
+      "name": "Nom",
+      "placeholder": "Rechercher un lieu, une adresse..."
+    }
+  },
+  "navbar": {
+    "connect": "Connexion",
+    "disconnect": "Déconnexion"
+  }
+}
