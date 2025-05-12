@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
-  css: ["~/assets/styles/main.scss"],
+  css: [ "~/assets/styles/main.scss" ],
   runtimeConfig: {
     public: {
       country: process.env.COUNTRY,
@@ -74,13 +74,13 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         sass: {
-          api: "modern-compiler"
+          api: "modern-compiler",
         },
         scss: {
-          api: "modern-compiler"
-        }
+          api: "modern-compiler",
+        },
       },
-      preprocessorMaxWorkers: 4
+      preprocessorMaxWorkers: 4,
     },
   },
   typescript: {
@@ -97,7 +97,7 @@ export default defineNuxtConfig({
     detectBrowserLanguage: {
       cookieKey: "i18n_lang",
       fallbackLocale: "fr",
-      useCookie: true
+      useCookie: true,
     },
     experimental: {
       typedOptionsAndMessages: "all",
@@ -106,7 +106,7 @@ export default defineNuxtConfig({
       { code: "en", name: "English", file: "en.json" },
       { code: "fr", name: "Français", file: "fr.json" },
     ],
-    strategy: "no_prefix"
+    strategy: "no_prefix",
   },
   vuetify: {
     /* moduleOptions: {
@@ -120,7 +120,7 @@ export default defineNuxtConfig({
         fallback: "en",
         locale: "fr",
       },
-      localeMessages: ["en", "fr"],
+      localeMessages: [ "en", "fr" ],
       theme: {
         defaultTheme: "dark",
         themes: {

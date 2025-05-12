@@ -36,6 +36,7 @@ export const useMainStore = defineStore("main", {
     },
     initI18n() {
       const storedI18n = cookie.get("i18n_lang")
+
       if (storedI18n) {
         this.i18n = String(storedI18n) as "fr" | "en"
       } else {
