@@ -93,6 +93,7 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
+    baseUrl: "/",
     defaultLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
     detectBrowserLanguage: {
       cookieKey: "i18n_lang",
@@ -102,11 +103,13 @@ export default defineNuxtConfig({
     experimental: {
       typedOptionsAndMessages: "all",
     },
+    lazy: true,
     locales: [
-      { code: "en", name: "English", file: "en.json" },
-      { code: "fr", name: "Français", file: "fr.json" },
+      { code: "en", name: "English" },
+      { code: "fr", name: "Français" },
     ],
     strategy: "no_prefix",
+    vueI18n: './i18n.config.ts',
   },
   vuetify: {
     /* moduleOptions: {
