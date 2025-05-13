@@ -82,7 +82,7 @@
 <script lang="ts" setup>
 import { useI18n } from "#imports"
 import { useMainStore } from "~/stores/main"
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { useDisplay, useTheme } from "vuetify"
 
 const router = useRouter()
@@ -126,12 +126,6 @@ const getFlagEmoji = (l: string): string => {
       return "🌐"
   }
 }
-
-onMounted(() => {
-  store.setTheme(store.getTheme)
-  vuetifyTheme.global.name.value = store.getTheme
-  switchLocale(store.getI18n)
-})
 
 function handleConnect() {
   if (connected.value) {

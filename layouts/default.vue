@@ -16,7 +16,7 @@ import { onMounted } from "vue"
 import { useTheme } from "vuetify"
 
 const i18nHead = useLocaleHead()
-const { t } = useI18n()
+const { t, setLocale } = useI18n()
 
 useHead({
   title: t("main.title"),
@@ -48,7 +48,9 @@ const vuetifyTheme = useTheme()
 
 onMounted(() => {
   store.initStore()
+  store.setTheme(store.getTheme)
   vuetifyTheme.global.name.value = store.getTheme
+  setLocale(store.getI18n)
 })
 </script>
 

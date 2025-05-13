@@ -93,10 +93,10 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    defaultLocale: "fr",
+    defaultLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
     detectBrowserLanguage: {
       cookieKey: "i18n_lang",
-      fallbackLocale: "fr",
+      fallbackLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
       useCookie: true,
     },
     experimental: {
