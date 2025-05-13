@@ -1,5 +1,6 @@
 @use "vuetify/settings" with (
-  $color-pack: false
+  $color-pack: false,
+  $body-font-family: "Twemoji Country Flags, Inter, Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
 );
 
 @function var-color($name) {
