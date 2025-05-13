@@ -140,6 +140,32 @@ input:-webkit-autofill:active {
   padding: 0 !important;
 }
 
+/* Info window */
+.gm-style {
+  padding: 1em;
+}
+.gm-style .transit-container {
+  background-color: var-color(v-theme-background);
+  color: var-color(v-theme-text);
+}
+.gm-style .transit-container div {
+  background-color: var-color(v-theme-background);
+  color: var-color(v-theme-text);
+}
+.gm-style .transit-container .transit-line-group-vehicle-icons img {
+  filter: invert(1);
+}
+.gm-style .transit-container [class^="transit-"][class$="-icon"] {
+  filter: invert(1);
+}
+.poi-info-window div, .poi-info-window a {
+  background-color: var-color(v-theme-background);
+  color: var-color(v-theme-text);
+}
+.poi-info-window a:link {
+  color: var-color(v-theme-accent);
+}
+
 /* Info window content */
 .gm-style .gm-style-iw-c {
   background-color: var-color(v-theme-background);
