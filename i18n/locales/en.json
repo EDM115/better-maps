@@ -47,6 +47,7 @@
     "redirect-to-home": "Redirecting to home page..."
   },
   "login": {
+    "github": "Source / Help",
     "login": "Log in",
     "password": "Password",
     "title": "Login",

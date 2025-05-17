@@ -47,6 +47,7 @@
     "redirect-to-home": "Redirection vers la page d'accueil..."
   },
   "login": {
+    "github": "Source / Aide",
     "login": "Se connecter",
     "password": "Mot de passe",
     "title": "Connexion",
