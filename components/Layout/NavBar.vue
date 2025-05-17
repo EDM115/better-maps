@@ -28,6 +28,26 @@
       >
         Better Maps
       </NuxtLink>
+      <NuxtLink
+        to="/admin"
+      >
+        <v-btn
+          v-if="store.getUser.role === 'admin'"
+          icon="mdi-shield-account-outline"
+          :variant="router.currentRoute.value.path === '/admin' ? 'outlined' : 'text'"
+        />
+      </NuxtLink>
+    </v-app-bar-title>
+    <v-app-bar-title v-else>
+      <NuxtLink
+        to="/admin"
+      >
+        <v-btn
+          v-if="store.getUser.role === 'admin'"
+          icon="mdi-shield-account-outline"
+          :variant="router.currentRoute.value.path === '/admin' ? 'outlined' : 'text'"
+        />
+      </NuxtLink>
     </v-app-bar-title>
     <v-spacer />
     <v-btn
