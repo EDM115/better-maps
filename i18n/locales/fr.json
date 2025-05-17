@@ -1,4 +1,35 @@
 {
+  "admin": {
+    "icons": {
+      "add-icon": "Ajouter une icône",
+      "edit-icon": "Modifier l'icône",
+      "icon": "Icône",
+      "name": "Nom",
+      "title": "Gestion des icônes"
+    },
+    "maps": {
+      "add-map": "Ajouter une carte",
+      "country": "Pays",
+      "edit-map": "Modifier la carte",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "name": "Nom",
+      "show-transit": "Afficher les transports en commun",
+      "title": "Gestion des cartes",
+      "users": "Utilisateurs",
+      "zoom": "Zoom"
+    },
+    "title": "Paramètres",
+    "users": {
+      "add-user": "Ajouter un utilisateur",
+      "edit-user": "Modifier l'utilisateur",
+      "map": "Carte",
+      "password": "Mot de passe",
+      "role": "Rôle",
+      "title": "Gestion des utilisateurs",
+      "username": "Nom d'utilisateur"
+    }
+  },
   "error": {
     "more-infos": "Informations supplémentaires"
   },

@@ -1,4 +1,35 @@
 {
+  "admin": {
+    "icons": {
+      "add-icon": "Add an icon",
+      "edit-icon": "Edit the icon",
+      "icon": "Icon",
+      "name": "Name",
+      "title": "Icon management"
+    },
+    "maps": {
+      "add-map": "Add a map",
+      "country": "Country",
+      "edit-map": "Edit the map",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "name": "Name",
+      "show-transit": "Show public transit",
+      "title": "Map management",
+      "users": "Users",
+      "zoom": "Zoom"
+    },
+    "title": "Settings",
+    "users": {
+      "add-user": "Add a user",
+      "edit-user": "Edit the user",
+      "map": "Map",
+      "password": "Password",
+      "role": "Role",
+      "title": "User management",
+      "username": "Username"
+    }
+  },
   "error": {
     "more-infos": "More information"
   },

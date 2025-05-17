@@ -1,8 +1,10 @@
 <template>
-  <h1>Settings</h1>
+  <h1 class="mb-4">
+    {{ $t("admin.title") }}
+  </h1>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-title>User Management</v-expansion-panel-title>
+      <v-expansion-panel-title>{{ $t("admin.users.title") }}</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list>
           <v-list-item
@@ -31,7 +33,7 @@
                 @update:model-value="updateUser(user.id, user.role, $event)"
               />
               <v-btn
-                v-if="user.id !== store.getUser.id"
+                :disabled="user.id === store.getUser.id"
                 icon="mdi-delete"
                 color="error"
                 variant="text"
@@ -49,7 +51,7 @@
             >
               <v-text-field
                 v-model="newUser.username"
-                label="Username"
+                :label="$t('admin.users.username')"
                 required
               />
             </v-col>
@@ -59,7 +61,7 @@
             >
               <v-text-field
                 v-model="newUser.password"
-                label="Password"
+                :label="$t('admin.users.password')"
                 type="password"
                 required
               />
@@ -71,7 +73,7 @@
               <v-select
                 v-model="newUser.role"
                 :items="['user', 'admin']"
-                label="Role"
+                :label="$t('admin.users.role')"
                 required
               />
             </v-col>
@@ -84,7 +86,7 @@
                 :items="maps"
                 item-title="name"
                 item-value="id"
-                label="Map"
+                :label="$t('admin.users.map')"
                 required
               />
             </v-col>
@@ -97,7 +99,7 @@
                 block
                 type="submit"
               >
-                Add User
+                {{ $t("admin.users.add-user") }}
               </v-btn>
             </v-col>
           </v-row>
@@ -106,7 +108,7 @@
     </v-expansion-panel>
 
     <v-expansion-panel>
-      <v-expansion-panel-title>Map Management</v-expansion-panel-title>
+      <v-expansion-panel-title>{{ $t("admin.maps.title") }}</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list>
           <v-list-item
@@ -136,7 +138,7 @@
                   hide-details
                   type="number"
                   step="0.000001"
-                  label="Latitude"
+                  :label="$t('admin.maps.latitude')"
                   @change="updateMap(map.id, map.name, $event, map.start_lng, map.start_zoom, map.country, map.show_transit)"
                 />
               </v-col>
@@ -150,7 +152,7 @@
                   hide-details
                   type="number"
                   step="0.000001"
-                  label="Longitude"
+                  :label="$t('admin.maps.longitude')"
                   @change="updateMap(map.id, map.name, map.start_lat, $event, map.start_zoom, map.country, map.show_transit)"
                 />
               </v-col>
@@ -165,7 +167,7 @@
                   type="number"
                   min="1"
                   max="20"
-                  label="Zoom"
+                  :label="$t('admin.maps.zoom')"
                   @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, $event, map.country, map.show_transit)"
                 />
               </v-col>
@@ -177,7 +179,7 @@
                   v-model="map.country"
                   density="compact"
                   hide-details
-                  label="Country"
+                  :label="$t('admin.maps.country')"
                   @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, map.start_zoom, $event, map.show_transit)"
                 />
               </v-col>
@@ -189,13 +191,13 @@
                   v-model="map.show_transit"
                   density="compact"
                   hide-details
-                  label="Transit"
+                  :label="$t('admin.maps.show-transit')"
                   @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, map.start_zoom, map.country, $event)"
                 />
               </v-col>
             </v-row>
             <template #subtitle>
-              Users: {{ (mapUsers[map.id] || []).map(u => u.name).join(', ') }}
+              {{ $t("admin.maps.users") }} : {{ (mapUsers[map.id] || []).map(u => u.name).join(', ') }}
             </template>
             <template #append>
               <v-btn
@@ -216,7 +218,7 @@
             >
               <v-text-field
                 v-model="newMap.name"
-                label="Name"
+                :label="$t('admin.maps.name')"
                 required
               />
             </v-col>
@@ -226,7 +228,7 @@
             >
               <v-text-field
                 v-model="newMap.start_lat"
-                label="Latitude"
+                :label="$t('admin.maps.latitude')"
                 type="number"
                 step="0.000001"
                 required
@@ -238,7 +240,7 @@
             >
               <v-text-field
                 v-model="newMap.start_lng"
-                label="Longitude"
+                :label="$t('admin.maps.longitude')"
                 type="number"
                 step="0.000001"
                 required
@@ -250,7 +252,7 @@
             >
               <v-text-field
                 v-model="newMap.start_zoom"
-                label="Zoom"
+                :label="$t('admin.maps.zoom')"
                 type="number"
                 min="1"
                 max="20"
@@ -263,7 +265,7 @@
             >
               <v-text-field
                 v-model="newMap.country"
-                label="Country"
+                :label="$t('admin.maps.country')"
                 required
               />
             </v-col>
@@ -273,7 +275,7 @@
             >
               <v-switch
                 v-model="newMap.show_transit"
-                label="Transit"
+                :label="$t('admin.maps.show-transit')"
               />
             </v-col>
             <v-col
@@ -285,7 +287,7 @@
                 block
                 type="submit"
               >
-                Add
+                {{ $t("admin.maps.add-map") }}
               </v-btn>
             </v-col>
           </v-row>
@@ -294,7 +296,7 @@
     </v-expansion-panel>
 
     <v-expansion-panel>
-      <v-expansion-panel-title>Icons Management</v-expansion-panel-title>
+      <v-expansion-panel-title>{{ $t("admin.icons.title") }}</v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list>
           <v-list-item
@@ -311,7 +313,7 @@
               v-model="icon.name"
               density="compact"
               hide-details
-              label="Name"
+              :label="$t('admin.icons.name')"
               class="mx-2"
               @change="updateIcon(icon.id, $event, icon.color, icon.icon)"
             />
@@ -321,7 +323,7 @@
                   v-model="icon.icon"
                   density="compact"
                   hide-details
-                  label="Icon"
+                  :label="$t('admin.icons.icon')"
                   class="mx-2"
                   prefix="mdi-"
                   @change="validateAndUpdateIcon(icon.id, icon.name, icon.color, $event)"
@@ -351,7 +353,7 @@
             >
               <v-text-field
                 v-model="newIcon.name"
-                label="Name"
+                :label="$t('admin.icons.name')"
                 required
               />
             </v-col>
@@ -361,7 +363,7 @@
             >
               <v-text-field
                 v-model="newIcon.icon"
-                label="Icon"
+                :label="$t('admin.icons.icon')"
                 prefix="mdi-"
                 required
                 :error="!isValidIcon"
@@ -389,7 +391,7 @@
                 type="submit"
                 :disabled="!isValidIcon"
               >
-                Add Icon
+                {{ $t("admin.icons.add-icon") }}
               </v-btn>
             </v-col>
           </v-row>
