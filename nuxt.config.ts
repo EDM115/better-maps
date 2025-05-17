@@ -109,7 +109,7 @@ export default defineNuxtConfig({
       { code: "fr", name: "Français" },
     ],
     strategy: "no_prefix",
-    vueI18n: './i18n.config.ts',
+    vueI18n: "./i18n.config.ts",
   },
   vuetify: {
     /* moduleOptions: {

@@ -82,12 +82,14 @@ function clear() {
   Object.assign(state, initialState)
 }
 
+// oxlint-disable-next-line no-explicit-any
 function handleError(error: any) {
   messageColor.value = "error"
   errorMessage.value = error.data?.message ?? error
   issueMessage.value = error.data?.statusMessage ?? ""
 }
 
+// oxlint-disable-next-line no-explicit-any
 async function login(event: any) {
   errorMessage.value = ""
 
