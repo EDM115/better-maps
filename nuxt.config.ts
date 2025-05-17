@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       country: process.env.COUNTRY,
+      startingPoint: process.env.STARTING_POINT,
     },
   },
   sourcemap: {
