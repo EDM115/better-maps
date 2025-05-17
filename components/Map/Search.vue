@@ -43,15 +43,15 @@
     />
     <v-select
       v-model="placeDetails.icon"
-      :items="icons"
+      :items="props.icons"
       :label="$t('map.search.icon')"
       item-title="name"
-      item-value="icon"
+      item-value="id"
       class="mt-2"
     >
       <template #prepend>
         <v-icon
-          :icon="placeDetails.icon"
+          :icon="props.icons.find(icon => icon.id === placeDetails.icon)?.icon || 'mdi-dots-horizontal'"
           :color="getIconColor(placeDetails.icon, props.icons)"
           class="mr-2"
         />
@@ -113,7 +113,7 @@ interface PlaceDetails {
   name: string
   description: string
   formatted_address: string
-  icon: string
+  icon: number
   color: string
   position: {
     lat: number
@@ -144,7 +144,7 @@ const placeDetails = ref<PlaceDetails>({
   name: "",
   description: "",
   formatted_address: "",
-  icon: "mdi-home-outline",
+  icon: props.icons.length > 0 ? props.icons[0].id : -1,
   color: "",
   position: { lat: 0, lng: 0 },
   favorite: false,
@@ -156,7 +156,7 @@ function resetPlace() {
     name: "",
     description: "",
     formatted_address: "",
-    icon: "mdi-home-outline",
+    icon: props.icons.length > 0 ? props.icons[0].id : -1,
     color: "",
     position: { lat: 0, lng: 0 },
     favorite: false,

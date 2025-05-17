@@ -15,7 +15,7 @@
         :style="{ backgroundColor: darkBackgroundColor }"
       >
         <v-icon
-          :icon="pin.icon"
+          :icon="props.icons.find(icon => icon.id === pin.icon)?.icon || 'mdi-dots-horizontal'"
           :color="getIconColor(pin.icon, props.icons)"
           size="large"
         />
@@ -70,7 +70,7 @@ type ApiPointResponse = {
   lat: number
   lng: number
   color: string
-  icon: string
+  icon: number
   visible: boolean
   favorite: boolean
 }
@@ -84,7 +84,7 @@ const dummyPin: Pin = {
   name: t("map.pin.dummy-pin"),
   description: "",
   formatted_address: "",
-  icon: "mdi-dots-horizontal",
+  icon: -1,
   color: "#F8F8F2",
   position: { lat: 0, lng: 0 },
   visible: true,

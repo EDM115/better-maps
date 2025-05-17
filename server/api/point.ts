@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
           lat: number
           lng: number
           color: string
-          icon: string
+          icon: number
           map_id: number
           visible: boolean
           favorite: boolean
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
           lat: number
           lng: number
           color: string
-          icon: string
+          icon: number
           map_id: number
           visible: boolean
           favorite: boolean
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
         lat: number
         lng: number
         color: string
-        icon: string
+        icon: number
         map_id: number
         visible: boolean
         favorite: boolean
@@ -129,7 +129,7 @@ export default defineEventHandler(async (event) => {
         lat: number
         lng: number
         color: string
-        icon: string
+        icon: number
         visible: boolean
         favorite: boolean
       }

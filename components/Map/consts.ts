@@ -3,7 +3,7 @@ export interface Pin {
   name: string
   description: string
   formatted_address: string
-  icon: string
+  icon: number
   color: string
   position: {
     lat: number
@@ -20,8 +20,8 @@ export type Icon = {
   icon: string
 }
 
-export const getIconColor = (icon: string, icons: Icon[]) => {
-  const foundIcon = icons.find((i) => i.icon === icon)
+export const getIconColor = (icon: number, icons: Icon[]) => {
+  const foundIcon = icons.find((i) => i.id === icon)
 
   return foundIcon ? foundIcon.color : "#FF5555"
 }

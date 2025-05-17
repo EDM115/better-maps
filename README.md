@@ -170,7 +170,7 @@ And add new ones, with on-the-fly icon preview and validation :
 | lat         | float  | Not Null                   |
 | lng         | float  | Not Null                   |
 | color       | string | Not Null, default ""       |
-| icon        | string | Not Null, default "house"  |
+| icon        | int    | Foreign Key, Not Null      |
 | map_id      | int    | Foreign Key, Not Null      |
 | visible     | bool   | Not Null, default true     |
 | favorite    | bool   | Not Null, default false    |

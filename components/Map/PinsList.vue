@@ -34,7 +34,7 @@
                 @click="togglePinVisibility(pin)"
               >
                 <v-icon
-                  :icon="pin.icon"
+                  :icon="icons.find(icon => icon.id === pin.icon)?.icon || 'mdi-dots-horizontal'"
                   :color="getIconColor(pin.icon, icons)"
                 />
               </div>

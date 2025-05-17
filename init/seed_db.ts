@@ -52,11 +52,12 @@ function initDatabase() {
       lat REAL NOT NULL,
       lng REAL NOT NULL,
       color TEXT NOT NULL DEFAULT '',
-      icon TEXT NOT NULL DEFAULT 'house',
+      icon INTEGER NOT NULL,
       map_id INTEGER NOT NULL,
       visible INTEGER NOT NULL DEFAULT 1,
       favorite INTEGER NOT NULL DEFAULT 0,
-      FOREIGN KEY (map_id) REFERENCES Map(id)
+      FOREIGN KEY (map_id) REFERENCES Map(id),
+      FOREIGN KEY (icon) REFERENCES Icon(id)
     );
   `).run()
 
