@@ -91,5 +91,5 @@
     "reinstall": "pnpm dlx rimraf node_modules .nuxt .output pnpm-lock.yaml && pnpm i && pnpm typecheck"
   },
   "type": "module",
-  "version": "1.0.1"
+  "version": "1.1.0"
 }
