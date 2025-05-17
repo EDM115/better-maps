@@ -16,8 +16,7 @@ Toggle the visibility of each point/group of points.
 Toggle the visibility of certain lines of public transportation.  
 Every user can access their own map, and a map can be used collaboratively by multiple users.
 
-<details><summary><h2>User documentation</h2></summary>
-
+## User documentation
 Hi :wave:  
 If you're here, it's probably because you've been sent a link to a hosted version of this app, but don't know how to use it.  
 The starting point is the login screen :
@@ -80,8 +79,6 @@ On a side note : this app is also available in French (use the language switch i
 
 And a light mode is also available, if you prefer it :
 ![Light mode](./docs/light_mode.png)
-
-</details>
 
 <details><summary><h2>Developer documentation</h2></summary>
 
