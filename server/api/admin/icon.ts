@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Icônes récupérées",
+          success: "Icons retrieved",
           icons,
         },
       }
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 201,
         body: {
-          success: "Icône créée",
+          success: "Icon created",
           id: newIcon.lastInsertRowid,
         },
       }
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Icône mise à jour",
+          success: "Icon updated",
         },
       }
     }
@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Icône supprimée",
+          success: "Icon deleted",
         },
       }
     }

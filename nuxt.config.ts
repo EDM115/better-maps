@@ -113,11 +113,6 @@ export default defineNuxtConfig({
     vueI18n: "./i18n.config.ts",
   },
   vuetify: {
-    /* moduleOptions: {
-      styles: {
-        configFile: "~/assets/styles/main.scss",
-      },
-    }, */
     vuetifyOptions: {
       labComponents: true,
       locale: {

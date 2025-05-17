@@ -31,7 +31,8 @@
     }
   },
   "error": {
-    "more-infos": "Informations supplémentaires"
+    "more-infos": "Informations supplémentaires",
+    "redirect-to-home": "Redirection vers la page d'accueil..."
   },
   "login": {
     "login": "Se connecter",

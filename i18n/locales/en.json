@@ -31,7 +31,8 @@
     }
   },
   "error": {
-    "more-infos": "More information"
+    "more-infos": "More information",
+    "redirect-to-home": "Redirecting to home page..."
   },
   "login": {
     "login": "Log in",

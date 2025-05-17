@@ -2,7 +2,7 @@ import db from "./db"
 
 export default defineEventHandler(async (event) => {
   if (![ "GET", "POST", "PUT", "DELETE" ].includes(event.method)) {
-    throw createError({ status: 405, message: "Méthode non autorisée" })
+    throw createError({ status: 405, message: "Method not allowed" })
   }
 
   switch (event.method) {
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
         if (!point) {
           throw createError({
             status: 404,
-            message: "Point non trouvé",
+            message: "Point not found",
           })
         }
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
         return {
           status: 200,
           body: {
-            success: "Point récupéré",
+            success: "Point retrieved",
             point,
           },
         }
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
         return {
           status: 200,
           body: {
-            success: "Points récupérés",
+            success: "Points retrieved",
             points,
           },
         }
@@ -91,7 +91,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!name || !address || !lat || !lng || !icon || !map_id) {
-        throw createError({ status: 400, message: "Champs requis manquants" })
+        throw createError({ status: 400, message: "Required fields missing" })
       }
 
       const dbVisible = visible ? 1 : 0
@@ -116,7 +116,7 @@ export default defineEventHandler(async (event) => {
       return {
         status: 201,
         body: {
-          success: "Point créé",
+          success: "Point created",
           id: newPoint.lastInsertRowid,
         },
       }
@@ -135,7 +135,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!id || !name || !address || !lat || !lng || !icon) {
-        throw createError({ status: 400, message: "Champs requis manquants" })
+        throw createError({ status: 400, message: "Required fields missing" })
       }
 
       const dbVisible = visible ? 1 : 0
@@ -161,14 +161,14 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Point mis à jour",
+          success: "Point updated",
         },
       }
     } case "DELETE": {
       const { id } = await readBody(event) as { id: number }
 
       if (!id) {
-        throw createError({ status: 400, message: "Champs requis manquants" })
+        throw createError({ status: 400, message: "Required fields missing" })
       }
 
       db.prepare(`
@@ -179,11 +179,11 @@ export default defineEventHandler(async (event) => {
       return {
         status: 200,
         body: {
-          success: "Point supprimé",
+          success: "Point deleted",
         },
       }
     } default: {
-      throw createError({ status: 405, message: "Méthode non autorisée" })
+      throw createError({ status: 405, message: "Method not allowed" })
     }
   }
 })

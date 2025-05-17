@@ -151,7 +151,7 @@ const addPin = async (pin: Pin) => {
       pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id, visible: true, favorite: pin.favorite }]
     }
   } catch (error) {
-    console.error("Échec de l'ajout du pin :", error)
+    console.error("Failed to add pin :", error)
   }
 }
 
@@ -166,7 +166,7 @@ const deletePin = async (pin: Pin) => {
     })
     pins.value = pins.value.filter((p) => p.id !== pin.id)
   } catch (error) {
-    console.error("Échec de la suppression du pin :", error)
+    console.error("Failed to delete pin :", error)
   }
 }
 
@@ -198,7 +198,7 @@ const editPin = async (pin: Pin) => {
       pins.value[index] = pin
     }
   } catch (error) {
-    console.error("Échec de l'édition du pin :", error)
+    console.error("Failed to edit pin :", error)
   }
 }
 
@@ -230,7 +230,7 @@ const togglePinVisibility = async (pin: Pin) => {
       pins.value[index] = { ...pin, visible: !pin.visible }
     }
   } catch (error) {
-    console.error("Échec de la mise à jour de la visibilité du pin :", error)
+    console.error("Failed to update pin visibility :", error)
   }
 }
 
@@ -274,7 +274,7 @@ const fetchPins = async () => {
       }))
     }
   } catch (error) {
-    console.error("Échec de la récupération des pins :", error)
+    console.error("Failed to fetch pins :", error)
   }
 }
 

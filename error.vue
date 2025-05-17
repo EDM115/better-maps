@@ -27,7 +27,7 @@
             justify="center"
           >
             <NuxtLink to="/">
-              Redirection vers la page d'accueil...
+              {{ $t("error.redirect-to-home") }}
             </NuxtLink>
           </v-row>
         </v-col>

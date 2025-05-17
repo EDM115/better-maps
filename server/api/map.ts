@@ -2,13 +2,13 @@ import db from "./db"
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
-    throw createError({ status: 405, message: "Méthode non autorisée" })
+    throw createError({ status: 405, message: "Method not allowed" })
   }
 
   const { user_id } = await getQuery(event) as { user_id: number }
 
   if (!user_id) {
-    throw createError({ status: 400, message: "L'ID de l'utilisateur est requis" })
+    throw createError({ status: 400, message: "User ID is required" })
   }
 
   const map = db.prepare(`
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   if (!map) {
     throw createError({
       status: 404,
-      message: "Carte non trouvée",
+      message: "Map not found",
     })
   }
 
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   return {
     status: 200,
     body: {
-      success: "Carte récupérée",
+      success: "Map retrieved",
       map,
     },
   }

@@ -2,7 +2,7 @@ import db from "./db"
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
-    throw createError({ status: 405, message: "Méthode non autorisée" })
+    throw createError({ status: 405, message: "Method not allowed" })
   }
 
   const icons = db.prepare(`
@@ -17,14 +17,14 @@ export default defineEventHandler(async (event) => {
   if (!icons) {
     throw createError({
       status: 404,
-      message: "Icônes non trouvées",
+      message: "Icons not found",
     })
   }
 
   return {
     status: 200,
     body: {
-      success: "Icônes récupérées",
+      success: "Icons retrieved",
       icons,
     },
   }

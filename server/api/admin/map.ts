@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         return {
           status: 200,
           body: {
-            success: "Cartes et utilisateurs récupérés",
+            success: "Maps and users retrieved",
             getAllUsers,
           },
         }
@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
         return {
           status: 200,
           body: {
-            success: "Cartes récupérées",
+            success: "Maps retrieved",
             maps,
           },
         }
