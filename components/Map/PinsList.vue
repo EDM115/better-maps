@@ -8,7 +8,12 @@
         {{ $t("map.pins-list.pins").replace("X", String(pins.length)) }}
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <v-list>
+        <v-list
+          :class="{ 
+            'scrollable-list': smAndUp,
+            'px-0': smAndUp 
+          }"
+        >
           <v-list-item
             v-for="(pin, index) in pins"
             :key="index"
@@ -101,11 +106,12 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { useTheme } from "vuetify"
+import { useDisplay, useTheme } from "vuetify"
 import type { ComponentPublicInstance } from "vue"
 
 import { getIconColor, type Pin, type Icon } from "./consts"
 
+const { smAndUp } = useDisplay()
 const theme = useTheme()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
@@ -133,7 +139,7 @@ const selectedItem = ref<ComponentPublicInstance | null>(null)
 watch(() => selectedItem.value, (el) => {
   if (el && activePanel.value === 0) {
     setTimeout(() => {
-      el.$el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+      el.$el?.scrollIntoView({ behavior: "smooth", block: smAndUp.value ? "center" : "nearest" })
     }, 100)
   }
 })
@@ -164,5 +170,11 @@ const togglePinVisibility = (pin: Pin) => {
 .highlighted-pin {
   background-color: rgba(var(--v-theme-secondary), 0.5);
   border-radius: 0.5em !important;
+}
+
+.scrollable-list {
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>
