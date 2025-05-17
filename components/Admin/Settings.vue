@@ -334,7 +334,13 @@
                   <v-row class="align-center">
                     <v-col cols="auto">
                       <v-icon
-                        :ref="el => { editIconRefs[icon.id] = (el as any).$el ?? el }"
+                        :ref="el => {
+                          if (!el) {
+                            delete editIconRefs[icon.id]
+                            return
+                          }
+                          editIconRefs[icon.id] = (el as any).$el ?? el
+                        }"
                         :icon="icon.icon"
                         :color="icon.color"
                       />
@@ -395,7 +401,7 @@
               <v-col cols="12">
                 <v-row class="align-center px-3">
                   <v-icon
-                    :ref="el => { testIcon = (el as any).$el ?? el }"
+                    ref="testIcon"
                     v-model="newIcon.icon"
                     :icon="newIcon.icon"
                     class="mr-4"
@@ -521,6 +527,7 @@
 <script lang="ts" setup>
 import { useMainStore } from "~/stores/main"
 import { reactive, ref, onMounted } from "vue"
+import type { VIcon } from "vuetify/components"
 
 type User = {
   id: number
@@ -562,7 +569,7 @@ const userToDelete = ref<number | null>(null)
 const mapToDelete = ref<number | null>(null)
 const iconToDelete = ref<number | null>(null)
 
-const testIcon = ref<HTMLElement | null>(null)
+const testIcon = ref<InstanceType<typeof VIcon> | HTMLElement | null>(null)
 const editIconRefs = reactive<Record<number, HTMLElement | null>>({})
 
 const newUser = ref({ username: "", password: "", role: "user", map_id: 0 })
@@ -740,7 +747,9 @@ const validateIcon = async (iconName: string, iconId?: number) => {
   if (iconId !== undefined) {
     el = editIconRefs[iconId]
   } else {
-    el = testIcon.value
+    el = testIcon.value instanceof HTMLElement
+      ? testIcon.value
+      : testIcon.value?.$el
   }
 
   await nextTick()
