@@ -138,6 +138,14 @@ export default defineEventHandler(async (event) => {
         throw createError({ status: 400, message: "Missing required fields" })
       }
 
+      const mapCount = db.prepare(`
+        SELECT COUNT(*) as count FROM Map
+      `).get() as { count: number }
+
+      if (mapCount.count <= 1) {
+        throw createError({ status: 400, message: "Cannot delete the only map" })
+      }
+
       db.prepare(`
         DELETE FROM Map
         WHERE id = ?

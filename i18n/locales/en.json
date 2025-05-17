@@ -2,6 +2,10 @@
   "admin": {
     "icons": {
       "add-icon": "Add an icon",
+      "delete-cancel": "Cancel",
+      "delete-confirm": "Delete",
+      "delete-description": "Are you sure you want to delete this icon ?",
+      "delete-title": "Delete confirmation",
       "edit-icon": "Edit the icon",
       "icon": "Icon",
       "name": "Name",
@@ -10,6 +14,10 @@
     "maps": {
       "add-map": "Add a map",
       "country": "Country",
+      "delete-cancel": "Cancel",
+      "delete-confirm": "Delete",
+      "delete-description": "Are you sure you want to delete this map ?",
+      "delete-title": "Delete confirmation",
       "edit-map": "Edit the map",
       "latitude": "Latitude",
       "longitude": "Longitude",
@@ -22,6 +30,10 @@
     "title": "Settings",
     "users": {
       "add-user": "Add a user",
+      "delete-cancel": "Cancel",
+      "delete-confirm": "Delete",
+      "delete-description": "Are you sure you want to delete this user ?",
+      "delete-title": "Delete confirmation",
       "edit-user": "Edit the user",
       "map": "Map",
       "password": "Password",
@@ -55,7 +67,7 @@
     "pins-list": {
       "delete-cancel": "Cancel",
       "delete-confirm": "Delete",
-      "delete-description": "Are you sure you want to delete this pin?",
+      "delete-description": "Are you sure you want to delete this pin ?",
       "delete-title": "Delete confirmation",
       "pins": "Points of interest (X)"
     },

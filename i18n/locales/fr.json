@@ -2,6 +2,10 @@
   "admin": {
     "icons": {
       "add-icon": "Ajouter une icône",
+      "delete-cancel": "Annuler",
+      "delete-confirm": "Supprimer",
+      "delete-description": "Êtes-vous sûr de vouloir supprimer cette icône ?",
+      "delete-title": "Confirmation de suppression",
       "edit-icon": "Modifier l'icône",
       "icon": "Icône",
       "name": "Nom",
@@ -10,6 +14,10 @@
     "maps": {
       "add-map": "Ajouter une carte",
       "country": "Pays",
+      "delete-cancel": "Annuler",
+      "delete-confirm": "Supprimer",
+      "delete-description": "Êtes-vous sûr de vouloir supprimer cette carte ?",
+      "delete-title": "Confirmation de suppression",
       "edit-map": "Modifier la carte",
       "latitude": "Latitude",
       "longitude": "Longitude",
@@ -22,6 +30,10 @@
     "title": "Paramètres",
     "users": {
       "add-user": "Ajouter un utilisateur",
+      "delete-cancel": "Annuler",
+      "delete-confirm": "Supprimer",
+      "delete-description": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+      "delete-title": "Confirmation de suppression",
       "edit-user": "Modifier l'utilisateur",
       "map": "Carte",
       "password": "Mot de passe",

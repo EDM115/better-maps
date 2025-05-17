@@ -11,39 +11,50 @@
             v-for="user in users"
             :key="user.id"
           >
-            <v-list-item-title>{{ user.username }}</v-list-item-title>
-            <template #append>
+            <div class="d-flex align-center ga-4">
+              <v-list-item-title>{{ user.username }}</v-list-item-title>
               <v-select
                 v-model="user.role"
+                :disabled="user.id === store.getUser.id"
                 :items="['user', 'admin']"
                 density="compact"
-                class="mx-2"
-                style="min-width: 100px"
-                @update:model-value="updateUser(user.id, $event, user.map_id)"
+                :label="$t('admin.users.role')"
+                style="min-width: 150px"
               />
               <v-select
-                v-if="maps.length > 1"
+                v-if="maps.length > 0"
                 v-model="user.map_id"
                 :items="maps"
                 item-title="name"
                 item-value="id"
                 density="compact"
-                class="mx-2"
-                style="min-width: 150px"
-                @update:model-value="updateUser(user.id, user.role, $event)"
+                :label="$t('admin.users.map')"
+                style="min-width: 200px"
+              />
+            </div>
+            <template #append>
+              <v-btn
+                color="primary"
+                class="ml-2"
+                size="small"
+                icon="mdi-pencil"
+                @click="updateUser(user.id, user.role, user.map_id)"
               />
               <v-btn
                 :disabled="user.id === store.getUser.id"
                 icon="mdi-delete"
                 color="error"
                 variant="text"
-                @click="deleteUser(user.id)"
+                @click="showUserDeleteDialog(user)"
               />
             </template>
           </v-list-item>
         </v-list>
         <v-divider class="my-2" />
-        <v-form @submit.prevent="addUser">
+        <v-form
+          class="pl-4 pb-4"
+          @submit.prevent="addUser"
+        >
           <v-row>
             <v-col
               cols="12"
@@ -96,11 +107,9 @@
             >
               <v-btn
                 color="primary"
-                block
+                icon="mdi-account-plus-outline"
                 type="submit"
-              >
-                {{ $t("admin.users.add-user") }}
-              </v-btn>
+              />
             </v-col>
           </v-row>
         </v-form>
@@ -116,22 +125,15 @@
             :key="map.id"
           >
             <v-row>
-              <v-col
-                cols="12"
-                sm="4"
-              >
+              <v-col cols="12">
                 <v-text-field
                   v-model="map.name"
                   density="compact"
                   hide-details
-                  label="Name"
-                  @change="updateMap(map.id, $event, map.start_lat, map.start_lng, map.start_zoom, map.country, map.show_transit)"
+                  :label="$t('admin.maps.name')"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="2"
-              >
+              <v-col cols="12">
                 <v-text-field
                   v-model="map.start_lat"
                   density="compact"
@@ -139,13 +141,9 @@
                   type="number"
                   step="0.000001"
                   :label="$t('admin.maps.latitude')"
-                  @change="updateMap(map.id, map.name, $event, map.start_lng, map.start_zoom, map.country, map.show_transit)"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="2"
-              >
+              <v-col cols="12">
                 <v-text-field
                   v-model="map.start_lng"
                   density="compact"
@@ -153,13 +151,9 @@
                   type="number"
                   step="0.000001"
                   :label="$t('admin.maps.longitude')"
-                  @change="updateMap(map.id, map.name, map.start_lat, $event, map.start_zoom, map.country, map.show_transit)"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="1"
-              >
+              <v-col cols="12">
                 <v-text-field
                   v-model="map.start_zoom"
                   density="compact"
@@ -168,31 +162,33 @@
                   min="1"
                   max="20"
                   :label="$t('admin.maps.zoom')"
-                  @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, $event, map.country, map.show_transit)"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="1"
-              >
+              <v-col cols="12">
                 <v-text-field
                   v-model="map.country"
                   density="compact"
                   hide-details
                   :label="$t('admin.maps.country')"
-                  @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, map.start_zoom, $event, map.show_transit)"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                sm="1"
-              >
+              <v-col cols="12">
                 <v-switch
                   v-model="map.show_transit"
                   density="compact"
                   hide-details
                   :label="$t('admin.maps.show-transit')"
-                  @change="updateMap(map.id, map.name, map.start_lat, map.start_lng, map.start_zoom, map.country, $event)"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                class="d-flex justify-end"
+              >
+                <v-btn
+                  color="primary"
+                  class="mr-2"
+                  icon="mdi-pencil"
+                  @click="updateMap(map.id, map.name, map.start_lat, map.start_lng, map.start_zoom, map.country, map.show_transit)"
                 />
               </v-col>
             </v-row>
@@ -202,9 +198,10 @@
             <template #append>
               <v-btn
                 icon="mdi-delete"
+                :disabled="maps.length <= 1"
                 color="error"
                 variant="text"
-                @click="deleteMap(map.id)"
+                @click="triggerShowMapDeleteDialog(map)"
               />
             </template>
           </v-list-item>
@@ -284,11 +281,9 @@
             >
               <v-btn
                 color="primary"
-                block
+                icon="mdi-map-marker-plus-outline"
                 type="submit"
-              >
-                {{ $t("admin.maps.add-map") }}
-              </v-btn>
+              />
             </v-col>
           </v-row>
         </v-form>
@@ -318,27 +313,30 @@
               @change="updateIcon(icon.id, $event, icon.color, icon.icon)"
             />
             <template #append>
-              <div class="d-flex align-center">
+              <div class="d-flex align-center gap-2">
                 <v-text-field
                   v-model="icon.icon"
                   density="compact"
                   hide-details
                   :label="$t('admin.icons.icon')"
-                  class="mx-2"
                   prefix="mdi-"
-                  @change="validateAndUpdateIcon(icon.id, icon.name, icon.color, $event)"
                 />
                 <v-color-picker
                   v-model="icon.color"
                   hide-inputs
                   mode="hex"
-                  @update:model-value="updateIcon(icon.id, icon.name, $event, icon.icon)"
+                />
+                <v-btn
+                  color="primary"
+                  size="small"
+                  icon="mdi-pencil"
+                  @click="validateAndUpdateIcon(icon.id, icon.name, icon.color, icon.icon)"
                 />
                 <v-btn
                   icon="mdi-delete"
                   color="error"
                   variant="text"
-                  @click="deleteIcon(icon.id)"
+                  @click="triggerShowIconDeleteDialog(icon)"
                 />
               </div>
             </template>
@@ -387,18 +385,97 @@
             >
               <v-btn
                 color="primary"
-                block
+                icon="mdi-shape-square-rounded-plus"
                 type="submit"
                 :disabled="!isValidIcon"
-              >
-                {{ $t("admin.icons.add-icon") }}
-              </v-btn>
+              />
             </v-col>
           </v-row>
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
+
+  <v-dialog
+    v-model="showDeleteDialog"
+    persistent
+  >
+    <v-card>
+      <v-card-title class="text-h5">
+        {{ $t('admin.users.delete-title') }}
+      </v-card-title>
+      <v-card-text>
+        {{ $t('admin.users.delete-description') }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="error"
+          :text="$t('admin.users.delete-confirm')"
+          @click="deleteUser"
+        />
+        <v-btn
+          color="secondary"
+          :text="$t('admin.users.delete-cancel')"
+          @click="showDeleteDialog = false"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog
+    v-model="showMapDeleteDialog"
+    persistent
+  >
+    <v-card>
+      <v-card-title class="text-h5">
+        {{ $t('admin.maps.delete-title') }}
+      </v-card-title>
+      <v-card-text>
+        {{ $t('admin.maps.delete-description') }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="error"
+          :text="$t('admin.maps.delete-confirm')"
+          @click="deleteMap"
+        />
+        <v-btn
+          color="secondary"
+          :text="$t('admin.maps.delete-cancel')"
+          @click="showMapDeleteDialog = false"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog
+    v-model="showIconDeleteDialog"
+    persistent
+  >
+    <v-card>
+      <v-card-title class="text-h5">
+        {{ $t('admin.icons.delete-title') }}
+      </v-card-title>
+      <v-card-text>
+        {{ $t('admin.icons.delete-description') }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="error"
+          :text="$t('admin.icons.delete-confirm')"
+          @click="deleteIcon"
+        />
+        <v-btn
+          color="secondary"
+          :text="$t('admin.icons.delete-cancel')"
+          @click="showIconDeleteDialog = false"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -436,6 +513,14 @@ const users = ref<User[]>([])
 const maps = ref<Map[]>([])
 const icons = ref<Icon[]>([])
 const mapUsers = ref<Record<number, { id: number, name: string }[]>>({})
+
+const showDeleteDialog = ref(false)
+const showMapDeleteDialog = ref(false)
+const showIconDeleteDialog = ref(false)
+
+const userToDelete = ref<number | null>(null)
+const mapToDelete = ref<number | null>(null)
+const iconToDelete = ref<number | null>(null)
 
 const newUser = ref({ username: "", password: "", role: "user", map_id: 0 })
 const newMap = ref({ name: "", start_lat: 0, start_lng: 0, start_zoom: 2, country: "", show_transit: false })
@@ -547,7 +632,13 @@ const deleteUser = async (userId: number) => {
       Authorization: `Bearer ${store.getUser.token}`,
     },
   })
+  showDeleteDialog.value = false
   await fetchData()
+}
+
+const showUserDeleteDialog = (user: User) => {
+  userToDelete.value = user.id
+  showDeleteDialog.value = true
 }
 
 const addMap = async () => {
@@ -581,7 +672,13 @@ const deleteMap = async (mapId: number) => {
       Authorization: `Bearer ${store.getUser.token}`,
     },
   })
+  showMapDeleteDialog.value = false
   await fetchData()
+}
+
+const triggerShowMapDeleteDialog = (map: Map) => {
+  mapToDelete.value = map.id
+  showMapDeleteDialog.value = true
 }
 
 const validateIcon = (iconName: string) => {
@@ -633,15 +730,25 @@ const addIcon = async () => {
   await fetchData()
 }
 
-const deleteIcon = async (iconId: number) => {
-  await $fetch(`/api/admin/icon`, {
+const deleteIcon = async () => {
+  if (iconToDelete.value === null) {
+    return
+  }
+
+  await $fetch("/api/admin/icon", {
     method: "DELETE",
-    body: { id: iconId, admin_id: store.getUser.id },
+    body: { id: iconToDelete.value, admin_id: store.getUser.id },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
   })
+  showIconDeleteDialog.value = false
   await fetchData()
+}
+
+const triggerShowIconDeleteDialog = (icon: Icon) => {
+  iconToDelete.value = icon.id
+  showIconDeleteDialog.value = true
 }
 
 onMounted(async () => {
