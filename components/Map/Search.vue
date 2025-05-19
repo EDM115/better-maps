@@ -291,14 +291,12 @@ watch(selectedPlace, (place) => {
   }
 })
 
-onMounted(() => {
-  if (!props.map) {
-    return
+watch(() => props.map, (newMap) => {
+  if (newMap) {
+    placeService.value = new google.maps.places.PlacesService(newMap)
+    autocompleteService.value = new google.maps.places.AutocompleteService()
   }
-
-  placeService.value = new google.maps.places.PlacesService(props.map)
-  autocompleteService.value = new google.maps.places.AutocompleteService()
-})
+}, { immediate: true })
 
 defineExpose({
   startEditing,
