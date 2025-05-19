@@ -28,8 +28,9 @@
           >
             <template #prepend>
               <div
+                :class="pin.favorite ? 'pin-content pin-favorite' : 'pin-content'"
                 :style="{
-                  backgroundColor: isDark ? undefined : darkBackgroundColor,
+                  backgroundColor: darkBackgroundColor,
                   borderRadius: '0.5em',
                   padding: '0.2em',
                   marginRight: '0.5em',
@@ -105,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { useDisplay, useTheme } from "vuetify"
 import type { ComponentPublicInstance } from "vue"
 
@@ -115,7 +116,6 @@ const { smAndUp } = useDisplay()
 const theme = useTheme()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
-const isDark = computed(() => theme.name.value === "dark")
 const activePanel = ref(0)
 
 const emit = defineEmits<{
@@ -176,5 +176,15 @@ const togglePinVisibility = (pin: Pin) => {
   max-height: 55vh;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.pin-content {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 0.5em;
+  border-radius: 1em;
+}
+
+.pin-favorite {
+  border: 4px solid rgb(var(--v-theme-warning));
 }
 </style>

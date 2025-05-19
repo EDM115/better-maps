@@ -138,6 +138,9 @@ As well as edit the icons available for the users to choose from when adding a p
 And add new ones, with on-the-fly icon preview and validation :
 ![Add icon](./docs/add_icon.png)
 
+## Quick notes
+- The pins background will always be in dark mode, due to how bright the icons are in general, to make them readable both in light and dark mode (ex map).
+
 ## DB Scheme
 ### User
 | Column   | Type   | Extra                                 |
