@@ -2,6 +2,7 @@
   <h1 class="mb-4">
     {{ $t("admin.title") }}
   </h1>
+
   <v-expansion-panels>
     <v-expansion-panel>
       <v-expansion-panel-title>{{ $t("admin.users.title") }}</v-expansion-panel-title>
@@ -442,6 +443,54 @@
     </v-expansion-panel>
   </v-expansion-panels>
 
+  <v-card class="mt-4">
+    <v-card-title>{{ $t('admin.backup.title') }}</v-card-title>
+    <v-card-text>
+      <v-row>
+        <v-col>
+          <v-btn
+            color="success"
+            prepend-icon="mdi-file-delimited-outline"
+            :loading="exporting"
+            @click="downloadBackup('csv')"
+          >
+            {{ $t('admin.backup.export-csv') }}
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+            color="success"
+            prepend-icon="mdi-code-json"
+            :loading="exporting"
+            @click="downloadBackup('json')"
+          >
+            {{ $t('admin.backup.export-json') }}
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+            color="success"
+            prepend-icon="mdi-database-export-outline"
+            :loading="exporting"
+            @click="downloadBackup('sql')"
+          >
+            {{ $t('admin.backup.export-sql') }}
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+            color="success"
+            prepend-icon="mdi-database-arrow-down-outline"
+            :loading="exporting"
+            @click="downloadBackup('sqlite')"
+          >
+            {{ $t('admin.backup.export-sqlite') }}
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+
   <v-dialog
     v-model="showDeleteDialog"
     persistent
@@ -560,6 +609,7 @@ const users = ref<User[]>([])
 const maps = ref<Map[]>([])
 const icons = ref<Icon[]>([])
 const mapUsers = ref<Record<number, { id: number, name: string }[]>>({})
+const exporting = ref(false)
 
 const showDeleteDialog = ref(false)
 const showMapDeleteDialog = ref(false)
@@ -585,7 +635,7 @@ const resetNewUser = () => {
 }
 
 const resetNewMap = () => {
-  const [lat, lng, zoom] = config.public.startingPoint.split(",").map(Number)
+  const [ lat, lng, zoom ] = config.public.startingPoint.split(",").map(Number)
   const resetValue = { name: "", start_lat: lat, start_lng: lng, start_zoom: zoom, country: config.public.country, show_transit: false }
 
   newMap.value = resetValue
@@ -639,11 +689,13 @@ const fetchData = async () => {
   } else {
     users.value = []
   }
+
   if ("maps" in mapsData.body) {
     maps.value = mapsData.body.maps
   } else {
     maps.value = []
   }
+
   if ("icons" in iconsData.body) {
     icons.value = iconsData.body.icons
   } else {
@@ -733,17 +785,20 @@ const triggerShowMapDeleteDialog = (map: Map) => {
 }
 
 const validateIcon = async (iconName: string, iconId?: number) => {
-  const okBasic = iconName.startsWith('mdi-') && iconName.length >= 5
+  const okBasic = iconName.startsWith("mdi-") && iconName.length >= 5
+
   if (!okBasic) {
     if (iconId !== undefined) {
       isValidEditIcons[iconId] = false
     } else {
       isValidNewIcon.value = false
     }
+
     return
   }
 
   let el: HTMLElement | null = null
+
   if (iconId !== undefined) {
     el = editIconRefs[iconId]
   } else {
@@ -760,17 +815,18 @@ const validateIcon = async (iconName: string, iconId?: number) => {
     } else {
       isValidNewIcon.value = false
     }
+
     return
   }
 
   await nextTick()
 
   const content = window
-    .getComputedStyle(el, '::before')
-    .getPropertyValue('content')
-    .replace(/"/g, '')
+    .getComputedStyle(el, "::before")
+    .getPropertyValue("content")
+    .replace(/"/g, "")
 
-  const valid = Boolean(content) && content !== 'none' && content !== 'normal'
+  const valid = Boolean(content) && content !== "none" && content !== "normal"
 
   if (iconId !== undefined) {
     isValidEditIcons[iconId] = valid
@@ -780,7 +836,7 @@ const validateIcon = async (iconName: string, iconId?: number) => {
 }
 
 const updateIcon = async (iconId: number, name: string, color: string, icon: string) => {
-  await $fetch(`/api/admin/icon`, {
+  await $fetch("/api/admin/icon", {
     method: "PUT",
     body: { id: iconId, name, color, icon, admin_id: store.getUser.id },
     headers: {
@@ -835,10 +891,41 @@ const triggerShowIconDeleteDialog = (icon: Icon) => {
   showIconDeleteDialog.value = true
 }
 
+const downloadBackup = async (format: "csv" | "json" | "sql" | "sqlite") => {
+  try {
+    exporting.value = true
+    const response = await $fetch("/api/admin/dbExport", {
+      params: { format, admin_id: store.getUser.id },
+      headers: { Authorization: `Bearer ${store.getUser.token}` },
+    })
+
+    const binaryString = atob(response.body)
+    const len = binaryString.length
+    const bytes = new Uint8Array(len)
+
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
+    const blob = new Blob([ bytes ])
+
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+
+    a.href = url
+    a.download = response.filename
+    a.click()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error("Export failed :", error)
+  } finally {
+    exporting.value = false
+  }
+}
+
 onMounted(async () => {
   await fetchData()
 
-  icons.value.forEach(icon => {
+  icons.value.forEach((icon) => {
     isValidEditIcons[icon.id] = true
   })
 })

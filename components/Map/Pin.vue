@@ -94,8 +94,8 @@ const dummyPin: Pin = {
 const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
 const filteredPins = computed(() => [
-  ...pins.value.filter(p => p.visible),
-  dummyPin
+  ...pins.value.filter((p) => p.visible),
+  dummyPin,
 ])
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)

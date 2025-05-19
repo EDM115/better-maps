@@ -1,5 +1,12 @@
 {
   "admin": {
+    "backup": {
+      "title": "Database backup",
+      "export-csv": "CSV",
+      "export-json": "JSON",
+      "export-sql": "SQL",
+      "export-sqlite": "SQLite"
+    },
     "icons": {
       "add-icon": "Add an icon",
       "delete-cancel": "Cancel",

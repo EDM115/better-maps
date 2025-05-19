@@ -32,7 +32,7 @@ You will then land in the main screen (the map) :
 To add a new point, go in the search bar and type the name of the place you want to add :
 ![Search bar](./docs/search.png)
 > [!TIP]  
-> If results don't appear, it can be either because there's a small problem in the search (try to untype/retype a character) or because of the aggressive security, try to log out, reload and log back in.
+> If results don't appear, it's probably because there's a small problem in the search (try to untype/retype a character).
   
 You can either search for a specific place, or just enter an address.  
 > [!TIP]  
@@ -122,6 +122,8 @@ docker run -d -p 27400:27400 --env-file .env -v better_maps_db:/app/db --name be
 ## In-app settings
 Every admin can access the settings page by clicking on the account shield icon in the navigation bar :
 ![Admin settings](./docs/admin_settings.png)
+
+You can dump the database, as CSV, JSON, SQL or the raw SQLite file.
 
 You will be able to edit existing users :
 ![Edit user](./docs/user_management.png)

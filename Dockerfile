@@ -1,4 +1,4 @@
-FROM node:23-alpine AS builder
+FROM node:24-alpine AS builder
 
 ARG PORT=27400
 ENV PORT=${PORT}
@@ -39,7 +39,7 @@ RUN pnpm build
 
 ###
 
-FROM node:23-alpine
+FROM node:24-alpine
 
 LABEL org.opencontainers.image.authors="EDM115 <dev@edm115.dev>"
 LABEL org.opencontainers.image.base.name="node:23-alpine"
@@ -54,7 +54,7 @@ ENV NODE_ENV=production
 
 RUN apk update && \
     apk upgrade --no-cache && \
-    apk add --no-cache bash && \
+    apk add --no-cache bash sqlite && \
     corepack disable yarn && \
     npm uninstall -g corepack
 

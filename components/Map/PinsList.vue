@@ -9,9 +9,9 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list
-          :class="{ 
+          :class="{
             'scrollable-list': smAndUp,
-            'px-0': smAndUp 
+            'px-0': smAndUp
           }"
         >
           <v-list-item
