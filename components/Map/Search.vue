@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { refDebounced } from "@vueuse/core"
-import { nextTick, ref, watch } from "vue"
+import { ref, watch } from "vue"
 
 import { getIconColor, type Icon } from "./consts"
 
@@ -220,8 +220,6 @@ const handleSearch = async (search: string) => {
     return
   }
 
-  const currentSearch = search
-
   didSearch.value = false
   const request: google.maps.places.AutocompletionRequest = {
     input: search,
@@ -258,9 +256,6 @@ const handleSearch = async (search: string) => {
     }
 
     didSearch.value = true
-    nextTick(() => {
-      searchQuery.value = currentSearch
-    })
   })
 }
 
