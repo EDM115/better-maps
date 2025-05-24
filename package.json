@@ -33,7 +33,7 @@
     "@nuxt/devtools": "~2.4.1",
     "@nuxt/eslint": "~1.4.0",
     "@nuxtjs/i18n": "~9.5.4",
-    "@stylistic/eslint-plugin": "~4.2.0",
+    "@stylistic/eslint-plugin": "~4.4.0",
     "@tsconfig/node22": "^22.0.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/google.maps": "^3.58.1",
