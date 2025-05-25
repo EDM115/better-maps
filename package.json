@@ -44,7 +44,7 @@
     "dotenv": "~16.5.0",
     "dotenv-cli": "~8.0.0",
     "eslint": "~9.27.0",
-    "eslint-import-resolver-typescript": "~4.3.5",
+    "eslint-import-resolver-typescript": "~4.4.0",
     "eslint-plugin-import-x": "~4.12.2",
     "eslint-plugin-oxlint": "~0.16.11",
     "eslint-plugin-vue": "~10.1.0",
