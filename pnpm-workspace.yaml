@@ -1,13 +1,17 @@
 lockfileIncludeTarballUrl: true
-nodeLinker: hoisted
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - better-sqlite3
   - esbuild
   - sharp
   - unrs-resolver
-  - vue-demi
+
+publicHoistPattern:
+  - '*vuetify*'
+
 resolutionMode: highest
+
 savePrefix: ''
-shamefullyHoist: true
-virtualStoreDirMaxLength: 1024
+
+virtualStoreDirMaxLength: 120

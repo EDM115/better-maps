@@ -95,6 +95,9 @@ export default defineNuxtConfig({
   },
   i18n: {
     baseUrl: "/",
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
     defaultLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
     detectBrowserLanguage: {
       cookieKey: "i18n_lang",

@@ -6,13 +6,12 @@
   "assignees": [
     "EDM115"
   ],
-  "cloneSubmodules": true,
   "commitBodyTable": true,
   "configMigration": true,
   "dependencyDashboard": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
   "draftPR": true,
-  "enabled": true,
+  "enabled": false,
   "extends": [
     "config:recommended"
   ],
