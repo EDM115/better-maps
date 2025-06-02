@@ -57,7 +57,7 @@
   },
   "license": "MIT",
   "name": "better-maps",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "private": true,
   "repository": {
     "type": "git",
