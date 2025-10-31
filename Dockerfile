@@ -69,8 +69,7 @@ ENV PATH=$PNPM_HOME:$PATH
 
 RUN PNPM_VERSION=$(grep '"packageManager":' package.json | sed -E 's/.*"pnpm@([^"]+)".*/\1/') && \
     wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" PNPM_VERSION=$PNPM_VERSION bash - && \
-    pnpm add -g @dotenvx/dotenvx && \
-    pnpm store prune
+    pnpm add -g dotenv-cli
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/db /app/db
@@ -80,4 +79,5 @@ VOLUME ["/app/db"]
 
 EXPOSE ${PORT}
 
-CMD ["dotenvx", "--", "node", "/app/.output/server/index.mjs"]
+ENTRYPOINT ["dotenv-cli", "--"]
+CMD ["node", "/app/.output/server/index.mjs"]
