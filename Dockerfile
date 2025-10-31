@@ -1,4 +1,4 @@
-FROM node:25-alpine AS builder
+FROM node:24-alpine AS builder
 
 ARG PORT=27400
 ENV PORT=${PORT}
@@ -41,10 +41,10 @@ RUN pnpm build && \
 
 ###
 
-FROM node:25-alpine
+FROM node:24-alpine
 
 LABEL org.opencontainers.image.authors="EDM115 <docker@edm115.dev>"
-LABEL org.opencontainers.image.base.name="node:25-alpine"
+LABEL org.opencontainers.image.base.name="node:24-alpine"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/EDM115/better-maps.git"
 LABEL org.opencontainers.image.title="Better Maps"
