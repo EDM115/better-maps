@@ -1,12 +1,12 @@
-// run this script with node --experimental-strip-types init/seed_db.ts
-import "dotenv/config"
-
-import bcrypt from "bcryptjs"
 import Database from "better-sqlite3"
 
-import { mkdirSync } from "fs"
-import { dirname, resolve } from "path"
-import { fileURLToPath } from "url"
+import { hash } from "bcryptjs"
+import { mkdirSync } from "node:fs"
+import {
+  dirname,
+  resolve,
+} from "node:path"
+import { fileURLToPath } from "node:url"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -29,7 +29,8 @@ function initDatabase() {
       map_id INTEGER NOT NULL,
       FOREIGN KEY (map_id) REFERENCES Map(id)
     );
-  `).run()
+  `)
+    .run()
 
   db.prepare(`
     CREATE TABLE IF NOT EXISTS Map (
@@ -41,7 +42,8 @@ function initDatabase() {
       country TEXT NOT NULL,
       show_transit INTEGER NOT NULL DEFAULT 0
     );
-  `).run()
+  `)
+    .run()
 
   db.prepare(`
     CREATE TABLE IF NOT EXISTS Point (
@@ -59,7 +61,8 @@ function initDatabase() {
       FOREIGN KEY (map_id) REFERENCES Map(id),
       FOREIGN KEY (icon) REFERENCES Icon(id)
     );
-  `).run()
+  `)
+    .run()
 
   db.prepare(`
     CREATE TABLE IF NOT EXISTS Icon (
@@ -68,7 +71,8 @@ function initDatabase() {
       color TEXT NOT NULL,
       icon TEXT NOT NULL
     );
-  `).run()
+  `)
+    .run()
 
   console.log("\n✅ Database initialized\n")
 
@@ -78,7 +82,8 @@ function initDatabase() {
 async function seedMaps(db: Database.Database) {
   const raw = process.env.STARTING_POINT
   const [ lat, lng, zoom ] = raw
-    ? raw.split(",").map(Number)
+    ? raw.split(",")
+        .map(Number)
     : [ 48.8566, 2.3522, 3 ]
   const country = process.env.COUNTRY || "fr"
 
@@ -95,9 +100,10 @@ async function seedMaps(db: Database.Database) {
 async function seedUsers(db: Database.Database) {
   const raw = process.env.SEED_USERS
     ?.replace("\\'", "'")
-    // eslint-disable-next-line @stylistic/quotes
-    .replace('\\"', '"') || "[]"
-  let users: Array<{ username: string, password: string, role: string }>
+    .replace("\\\"", "\"") || "[]"
+  let users: Array<{
+    username: string; password: string; role: string;
+  }>
 
   try {
     users = JSON.parse(raw)
@@ -106,15 +112,18 @@ async function seedUsers(db: Database.Database) {
     users = []
   }
 
-  const map = db.prepare("SELECT id FROM Map").get() as { id: number }
+  const map = db.prepare("SELECT id FROM Map")
+    .get() as { id: number }
 
   const insert = db.prepare(`
     INSERT OR IGNORE INTO User (username, password, role, map_id)
     VALUES (?, ?, ?, ?)
   `)
 
-  await Promise.all(users.map(async ({ username, password, role }) => {
-    const hashed = await bcrypt.hash(password, SALT_ROUNDS)
+  await Promise.all(users.map(async ({
+    username, password, role,
+  }) => {
+    const hashed = await hash(password, SALT_ROUNDS)
 
     insert.run(username, hashed, role, map.id)
     console.log(`Seeded user : ${username}`)
@@ -125,7 +134,9 @@ async function seedUsers(db: Database.Database) {
 
 async function seedIcons(db: Database.Database) {
   const raw = process.env.SEED_ICONS || "[]"
-  let icons: Array<{ name: string, color: string, icon: string }>
+  let icons: Array<{
+    name: string; color: string; icon: string;
+  }>
 
   try {
     icons = JSON.parse(raw)
@@ -139,7 +150,9 @@ async function seedIcons(db: Database.Database) {
     VALUES (?, ?, ?)
   `)
 
-  await Promise.all(icons.map(async ({ name, color, icon }) => {
+  await Promise.all(icons.map(async ({
+    name, color, icon,
+  }) => {
     insert.run(name, color, icon)
     console.log(`Seeded icon : ${name}`)
   }))

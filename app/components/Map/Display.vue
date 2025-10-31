@@ -126,31 +126,31 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStore } from "~/stores/main"
-import { computed, onMounted, ref, watch } from "vue"
-import { useDisplay } from "vuetify"
 import { GoogleMap } from "vue3-google-map"
 
 import type { Icon } from "./consts"
 
 interface MapRef {
-  map: google.maps.Map
+  map: google.maps.Map;
 }
 
 type Props = {
-  setHasLoaded?: (loaded: boolean)=> void
+  setHasLoaded?: (loaded: boolean)=> void;
 }
 
 const props = defineProps<Props>()
 
 const store = useMainStore()
-const { smAndUp } = useDisplay()
+const { smAndUp } = useVDisplay()
 
 const drawer = ref(false)
 const mapRef = ref<MapRef>()
 const mapPinRef = ref()
 const mapSearchRef = ref()
-const center = ref({ lat: 0, lng: 0 })
+const center = ref({
+  lat: 0,
+  lng: 0,
+})
 const zoom = ref(0)
 const mapId = ref(String(0))
 const translateX = ref("80vw")
@@ -160,7 +160,9 @@ const selectedPin = ref<number | null>(null)
 const icons = ref<Icon[]>([])
 
 watch(drawer, (val) => {
-  translateX.value = val ? "0" : "80vw"
+  translateX.value = val
+    ? "0"
+    : "80vw"
 })
 
 const user = computed(() => store.getUser)
@@ -184,7 +186,9 @@ const fetchMapData = async (userId: number | null) => {
   })
 
   mapId.value = String(response.body.map.id)
-  center.value = { lat: response.body.map.start_lat, lng: response.body.map.start_lng }
+  center.value = {
+    lat: response.body.map.start_lat, lng: response.body.map.start_lng,
+  }
   zoom.value = response.body.map.start_zoom
   mapCountry.value = response.body.map.country
   mapShowTransit.value = response.body.map.show_transit

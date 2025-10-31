@@ -15,11 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
-
 interface Props {
-  map?: google.maps.Map
-  show: boolean
+  map?: google.maps.Map;
+  show: boolean;
 }
 
 

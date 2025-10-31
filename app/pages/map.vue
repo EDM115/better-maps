@@ -15,9 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStore } from "~/stores/main"
-import { nextTick, onMounted, ref } from "vue"
-
 const store = useMainStore()
 const router = useRouter()
 const hasLoaded = ref(false)

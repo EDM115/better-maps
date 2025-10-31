@@ -2,7 +2,7 @@
   <v-alert
     v-if="!close"
     class="mx-auto"
-    :color="color"
+    :color="color ?? 'error'"
     closable
     variant="elevated"
     width="80%"
@@ -16,7 +16,7 @@
         <v-btn
           v-if="issue"
           v-bind="props"
-          :color="color"
+          :color="color ?? 'error'"
           class="mr-4"
           icon="mdi-information-outline"
           variant="flat"
@@ -25,7 +25,7 @@
         <v-btn
           v-else
           v-bind="props"
-          :color="color"
+          :color="color ?? 'error'"
           class="mr-4"
           icon="mdi-information-outline"
           variant="flat"
@@ -42,22 +42,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
-
-defineProps({
-  color: {
-    type: String,
-    default: "error",
-  },
-  issue: {
-    type: String,
-    default: "",
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-})
+defineProps<{
+  color?: string;
+  issue?: string;
+  message: string;
+}>()
 
 const more = ref(false)
 const close = ref(false)

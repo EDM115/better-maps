@@ -74,8 +74,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useMainStore } from "~/stores/main"
-import { nextTick, onMounted, ref, reactive } from "vue"
+type ErrorType = {
+  data?: {
+    message: string;
+    statusMessage: string;
+  };
+} | string
 
 const router = useRouter()
 const store = useMainStore()
@@ -100,15 +104,21 @@ function clear() {
   Object.assign(state, initialState)
 }
 
-// oxlint-disable-next-line no-explicit-any
-function handleError(error: any) {
+function handleError(error: ErrorType) {
   messageColor.value = "error"
-  errorMessage.value = error.data?.message ?? error
+
+  if (typeof error === "string") {
+    errorMessage.value = error
+    issueMessage.value = ""
+
+    return
+  }
+
+  errorMessage.value = error.data?.message ?? "An unknown error occurred."
   issueMessage.value = error.data?.statusMessage ?? ""
 }
 
-// oxlint-disable-next-line no-explicit-any
-async function login(event: any) {
+async function login(event: typeof state) {
   errorMessage.value = ""
 
   try {
@@ -120,7 +130,7 @@ async function login(event: any) {
     store.setUser(result.body.user)
     router.push("/map")
   } catch (error) {
-    handleError(error)
+    handleError(error as ErrorType)
   }
 }
 

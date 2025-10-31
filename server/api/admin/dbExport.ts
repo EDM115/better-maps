@@ -1,18 +1,21 @@
-import db from "../db"
+import db from "@@/server/api/db"
 
-import { exec } from "node:child_process"
 import fs from "node:fs/promises"
 import path from "node:path"
+
+import { exec } from "node:child_process"
 import { promisify } from "node:util"
 
 const execAsync = promisify(exec)
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
-    throw createError({ status: 405, message: "Method not allowed" })
+    throw createError({
+      status: 405, message: "Method not allowed",
+    })
   }
 
-  const { format } = await getQuery(event) as { format: "csv" | "json" | "sql" | "sqlite" }
+  const { format } = getQuery(event)
   const timestamp = Date.now()
   const tempDir = path.join(process.cwd(), "temp")
 
@@ -51,24 +54,28 @@ export default defineEventHandler(async (event) => {
 
       await execAsync(`sqlite3 -json "${db.name}" "SELECT * FROM ${table};" > "${outputPath}"`)
 
-    // read & parse
       const content = await fs.readFile(outputPath, "utf-8")
 
       await fs.unlink(outputPath)
 
-      return { table, data: JSON.parse(content) as unknown[] }
+      return {
+        table, data: JSON.parse(content) as unknown[],
+      }
     }))
 
     const dataObj: Record<string, unknown[]> = {}
 
-    for (const { table, data } of jsonResults) {
+    for (const {
+      table, data,
+    } of jsonResults) {
       dataObj[table] = data
     }
 
     const jsonString = JSON.stringify(dataObj, null, 2)
 
     return {
-      body: Buffer.from(jsonString).toString("base64"),
+      body: Buffer.from(jsonString)
+        .toString("base64"),
       filename: "better-maps-backup.json",
     }
   } else {
@@ -84,7 +91,8 @@ export default defineEventHandler(async (event) => {
     }))
 
     return {
-      body: Buffer.from(csvData.join("\n")).toString("base64"),
+      body: Buffer.from(csvData.join("\n"))
+        .toString("base64"),
       filename: "better-maps-backup.csv",
     }
   }

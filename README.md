@@ -105,7 +105,7 @@ DEFAULT_UI_LANG=en
 - `COUNTRY` : the base country to "limit" the search results, lowercase country code only
 - `DEFAULT_UI_LANG` : the default language of the UI, either `en` or `fr`
 ```pwsh
-node --experimental-strip-types init/seed_db.ts
+pnpm seed
 ```
 Put `SEED` to `false` once the DB is seeded.
 ```pwsh

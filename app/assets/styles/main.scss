@@ -1,6 +1,9 @@
 @use "vuetify/settings" with (
+  $badge-font-family: ("Twemoji Country Flags", "Nunito", "Inter", sans-serif),
+  $body-font-family: ("Twemoji Country Flags", "Nunito", "Inter", sans-serif),
+  $kbd-font-family: ("Twemoji Country Flags", "Nunito", "Inter", sans-serif),
+  $heading-font-family: ("Twemoji Country Flags", "Nunito", "Inter", sans-serif),
   $color-pack: false,
-  $body-font-family: ("Twemoji Country Flags", "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif),
 );
 
 @function var-color($name) {
@@ -12,7 +15,7 @@
 }
 
 * {
-  font-family: "Twemoji Country Flags", "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif !important;
+  font-family: "Twemoji Country Flags", "Nunito", "Inter", sans-serif !important;
   font-display: swap;
 }
 
@@ -38,11 +41,6 @@
 
 *::-webkit-scrollbar-thumb:hover {
   background: var-color(v-theme-secondary) !important;
-}
-
-body {
-  font-family: "Nunito", "Inter", "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif;
-  font-display: swap;
 }
 
 a {
@@ -79,7 +77,7 @@ input:-webkit-autofill:active {
 }
 
 .code {
-  font-family: "Fira Code", "Courier New", monospace;
+  font-family: "Fira Code", monospace;
   font-display: swap;
 }
 
@@ -186,4 +184,12 @@ input:-webkit-autofill:active {
 /* Info window close button */
 .gm-ui-hover-effect > span {
   background-color: var-color(v-theme-text);
+}
+
+.force-nuxt-fonts-nunito {
+  font-family: "Nunito";
+}
+
+.force-nuxt-fonts-inter {
+  font-family: "Inter";
 }

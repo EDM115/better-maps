@@ -6,117 +6,136 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+    "nuxt-svgo",
     "vuetify-nuxt-module",
   ],
-  ssr: false,
+  ssr: true,
   devtools: {
-    enabled: true,
-    timeline: { enabled: true },
-    vueDevTools: true,
+    enabled: false,
+    timeline: { enabled: false },
   },
   app: {
-    pageTransition: { name: "page", mode: "out-in" },
+    pageTransition: {
+      name: "page", mode: "out-in",
+    },
   },
-  css: [ "~/assets/styles/main.scss" ],
+  css: ["~/assets/styles/main.scss"],
   runtimeConfig: {
-    public: {
+    "public": {
       country: process.env.COUNTRY,
       startingPoint: process.env.STARTING_POINT,
     },
   },
   sourcemap: {
-    client: false,
-    server: false,
+    client: true,
+    server: true,
   },
   devServer: {
     port: 8888,
   },
-  future: {
-    typescriptBundlerResolution: true,
-  },
+  future: { typescriptBundlerResolution: true },
   experimental: {
     asyncContext: true,
+    browserDevtoolsTiming: true,
     buildCache: true,
     clientFallback: true,
     clientNodeCompat: true,
     crossOriginPrefetch: true,
-    defaults: {
-      nuxtLink: {
-        prefetch: true,
-        prefetchOn: { interaction: true, visibility: false },
+    defaults: { nuxtLink: {
+      prefetch: true,
+      prefetchOn: {
+        interaction: true, visibility: false,
       },
-    },
+    } },
+    entryImportMap: true,
+    extractAsyncDataHandlers: true,
+    inlineRouteRules: true,
     normalizeComponentNames: true,
+    parseErrorData: true,
     sharedPrerenderData: true,
     typedPages: true,
+    typescriptPlugin: true,
     viewTransition: true,
+    viteEnvironmentApi: true,
   },
-  compatibilityDate: "2025-05-01",
+  compatibilityDate: "2025-10-15",
   nitro: {
     compressPublicAssets: {
       brotli: true,
       gzip: true,
     },
-    esbuild: {
-      options: {
-        target: "esnext",
-      },
-    },
+    esbuild: { options: { target: "esnext" } },
     minify: true,
-    rollupConfig: {
-      output: {
-        compact: true,
-        validate: true,
-      },
-    },
   },
   vite: {
+    build: {
+      chunkSizeWarningLimit: 2000,
+      cssMinify: "lightningcss",
+    },
     clearScreen: false,
     css: {
-      preprocessorOptions: {
-        sass: {
-          api: "modern-compiler",
-        },
-        scss: {
-          api: "modern-compiler",
-        },
-      },
-      preprocessorMaxWorkers: 4,
+      preprocessorMaxWorkers: true,
     },
   },
   typescript: {
-    typeCheck: true,
+    tsConfig: { compilerOptions: {
+      allowArbitraryExtensions: true,
+      checkJs: false,
+      disableSizeLimit: true,
+      emitDecoratorMetadata: true,
+      experimentalDecorators: true,
+      incremental: true,
+      noErrorTruncation: true,
+      preserveWatchOutput: true,
+      removeComments: true,
+    } },
+    typeCheck: false,
   },
-  eslint: {
-    config: {
-      autoInit: false,
-      standalone: false,
-    },
+  eslint: { config: {
+    autoInit: false,
+    standalone: false,
+  } },
+  fonts: {
+    processCSSVariables: true,
+    provider: "google",
   },
   i18n: {
     baseUrl: "/",
-    bundle: {
-      optimizeTranslationDirective: false,
-    },
     defaultLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
     detectBrowserLanguage: {
-      cookieKey: "i18n_lang",
       fallbackLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
-      useCookie: true,
+      useCookie: false,
     },
-    experimental: {
-      typedOptionsAndMessages: "all",
-    },
-    lazy: true,
+    experimental: { typedOptionsAndMessages: "all" },
     locales: [
-      { code: "en", name: "English" },
-      { code: "fr", name: "Français" },
+      {
+        code: "en", name: "English", language: "en-US",
+      },
+      {
+        code: "fr", name: "Français", language: "fr-FR",
+      },
     ],
     strategy: "no_prefix",
-    vueI18n: "./i18n.config.ts",
+  },
+  image: { quality: 100 },
+  svgo: {
+    autoImportPath: "./public/images",
+    defaultImport: "component",
+    dts: true,
+    svgoConfig: { multipass: true },
   },
   vuetify: {
+    moduleOptions: {
+      prefixComposables: true,
+      ssrClientHints: {
+        reloadOnFirstRequest: true,
+        viewportSize: true,
+        prefersColorScheme: true,
+        prefersColorSchemeOptions: { cookieName: "theme" },
+      },
+    },
     vuetifyOptions: {
+      directives: true,
       labComponents: true,
       locale: {
         fallback: "en",

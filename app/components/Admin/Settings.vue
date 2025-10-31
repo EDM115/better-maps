@@ -574,32 +574,30 @@
 </template>
 
 <script lang="ts" setup>
-import { useMainStore } from "~/stores/main"
-import { reactive, ref, onMounted } from "vue"
 import type { VIcon } from "vuetify/components"
 
 type User = {
-  id: number
-  username: string
-  role: string
-  map_id: number
+  id: number;
+  username: string;
+  role: string;
+  map_id: number;
 }
 
 type Map = {
-  id: number
-  name: string
-  start_lat: number
-  start_lng: number
-  start_zoom: number
-  country: string
-  show_transit: boolean
+  id: number;
+  name: string;
+  start_lat: number;
+  start_lng: number;
+  start_zoom: number;
+  country: string;
+  show_transit: boolean;
 }
 
 type Icon = {
-  id: number
-  name: string
-  color: string
-  icon: string
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
 }
 
 const config = useRuntimeConfig()
@@ -608,7 +606,10 @@ const store = useMainStore()
 const users = ref<User[]>([])
 const maps = ref<Map[]>([])
 const icons = ref<Icon[]>([])
-const mapUsers = ref<Record<number, { id: number, name: string }[]>>({})
+const mapUsers = ref<Record<number, {
+  id: number;
+  name: string;
+}[]>>({})
 const exporting = ref(false)
 
 const showDeleteDialog = ref(false)
@@ -622,34 +623,49 @@ const iconToDelete = ref<number | null>(null)
 const testIcon = ref<InstanceType<typeof VIcon> | HTMLElement | null>(null)
 const editIconRefs = reactive<Record<number, HTMLElement | null>>({})
 
-const newUser = ref({ username: "", password: "", role: "user", map_id: 0 })
-const newMap = ref({ name: "", start_lat: 0, start_lng: 0, start_zoom: 2, country: "", show_transit: false })
-const newIcon = ref({ name: "", color: "#FF0000", icon: "" })
+const newUser = ref({
+  username: "", password: "", role: "user", map_id: 0,
+})
+const newMap = ref({
+  name: "", start_lat: 0, start_lng: 0, start_zoom: 2, country: "", show_transit: false,
+})
+const newIcon = ref({
+  name: "", color: "#FF0000", icon: "",
+})
 const isValidNewIcon = ref(false)
 const isValidEditIcons = reactive<Record<number, boolean>>({})
 
 const resetNewUser = () => {
-  const resetValue = { username: "", password: "", role: "user", map_id: 0 }
+  const resetValue = {
+    username: "", password: "", role: "user", map_id: 0,
+  }
 
   newUser.value = resetValue
 }
 
 const resetNewMap = () => {
-  const [ lat, lng, zoom ] = config.public.startingPoint.split(",").map(Number)
-  const resetValue = { name: "", start_lat: lat, start_lng: lng, start_zoom: zoom, country: config.public.country, show_transit: false }
+  const [ lat, lng, zoom ] = config.public.startingPoint.split(",")
+    .map(Number)
+  const resetValue = {
+    name: "", start_lat: lat ?? 0, start_lng: lng ?? 0, start_zoom: zoom ?? 2, country: config.public.country, show_transit: false,
+  }
 
   newMap.value = resetValue
 }
 
 const resetNewIcon = () => {
-  const resetValue = { name: "", color: "#FF0000", icon: "" }
+  const resetValue = {
+    name: "", color: "#FF0000", icon: "",
+  }
 
   newIcon.value = resetValue
 }
 
 const updateMapUsersMap = async () => {
   const mapUsersData = await $fetch("/api/admin/map", {
-    params: { admin_id: store.getUser.id, get_all_users: true },
+    params: {
+      admin_id: store.getUser.id, get_all_users: true,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -701,13 +717,16 @@ const fetchData = async () => {
   } else {
     icons.value = []
   }
+
   await updateMapUsersMap()
 }
 
 const addUser = async () => {
   await $fetch("/api/admin/user", {
     method: "POST",
-    body: { ...newUser.value, admin_id: store.getUser.id },
+    body: {
+      ...newUser.value, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -719,7 +738,9 @@ const addUser = async () => {
 const updateUser = async (userId: number, role: string, mapId: number) => {
   await $fetch("/api/admin/user", {
     method: "PUT",
-    body: { id: userId, role, map_id: mapId, admin_id: store.getUser.id },
+    body: {
+      id: userId, role, map_id: mapId, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -730,7 +751,9 @@ const updateUser = async (userId: number, role: string, mapId: number) => {
 const deleteUser = async (userId: number) => {
   await $fetch("/api/admin/user", {
     method: "DELETE",
-    body: { id: userId, admin_id: store.getUser.id },
+    body: {
+      id: userId, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -747,7 +770,9 @@ const showUserDeleteDialog = (user: User) => {
 const addMap = async () => {
   await $fetch("/api/admin/map", {
     method: "POST",
-    body: { ...newMap.value, admin_id: store.getUser.id },
+    body: {
+      ...newMap.value, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -759,7 +784,9 @@ const addMap = async () => {
 const updateMap = async (mapId: number, name: string, startLat: number, startLng: number, startZoom: number, country: string, showTransit: boolean) => {
   await $fetch("/api/admin/map", {
     method: "PUT",
-    body: { id: mapId, name, start_lat: startLat, start_lng: startLng, start_zoom: startZoom, country, show_transit: showTransit, admin_id: store.getUser.id },
+    body: {
+      id: mapId, name, start_lat: startLat, start_lng: startLng, start_zoom: startZoom, country, show_transit: showTransit, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -770,7 +797,9 @@ const updateMap = async (mapId: number, name: string, startLat: number, startLng
 const deleteMap = async (mapId: number) => {
   await $fetch("/api/admin/map", {
     method: "DELETE",
-    body: { id: mapId, admin_id: store.getUser.id },
+    body: {
+      id: mapId, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -799,7 +828,7 @@ const validateIcon = async (iconName: string, iconId?: number) => {
 
   let el: HTMLElement | null = null
 
-  if (iconId !== undefined) {
+  if (iconId !== undefined && editIconRefs[iconId] !== undefined) {
     el = editIconRefs[iconId]
   } else {
     el = testIcon.value instanceof HTMLElement
@@ -838,7 +867,9 @@ const validateIcon = async (iconName: string, iconId?: number) => {
 const updateIcon = async (iconId: number, name: string, color: string, icon: string) => {
   await $fetch("/api/admin/icon", {
     method: "PUT",
-    body: { id: iconId, name, color, icon, admin_id: store.getUser.id },
+    body: {
+      id: iconId, name, color, icon, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -861,7 +892,9 @@ const addIcon = async () => {
 
   await $fetch("/api/admin/icon", {
     method: "POST",
-    body: { ...newIcon.value, admin_id: store.getUser.id },
+    body: {
+      ...newIcon.value, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -877,7 +910,9 @@ const deleteIcon = async () => {
 
   await $fetch("/api/admin/icon", {
     method: "DELETE",
-    body: { id: iconToDelete.value, admin_id: store.getUser.id },
+    body: {
+      id: iconToDelete.value, admin_id: store.getUser.id,
+    },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
     },
@@ -895,7 +930,9 @@ const downloadBackup = async (format: "csv" | "json" | "sql" | "sqlite") => {
   try {
     exporting.value = true
     const response = await $fetch("/api/admin/dbExport", {
-      params: { format, admin_id: store.getUser.id },
+      params: {
+        format, admin_id: store.getUser.id,
+      },
       headers: { Authorization: `Bearer ${store.getUser.token}` },
     })
 
@@ -906,7 +943,8 @@ const downloadBackup = async (format: "csv" | "json" | "sql" | "sqlite") => {
     for (let i = 0; i < len; i++) {
       bytes[i] = binaryString.charCodeAt(i)
     }
-    const blob = new Blob([ bytes ])
+
+    const blob = new Blob([bytes])
 
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement("a")

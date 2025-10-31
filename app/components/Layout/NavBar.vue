@@ -1,6 +1,6 @@
 <template>
   <v-app-bar
-    class="px-8"
+    class="px-8 force-ssr"
     color="secondary"
     elevation="6"
     floating
@@ -79,6 +79,7 @@
         </v-btn>
       </template>
       <v-list
+        class="small-list"
         @mouseleave="i18nSwitch = false"
         @mouseover="i18nSwitch = true"
       >
@@ -92,7 +93,6 @@
       </v-list>
     </v-menu>
     <v-btn
-      id="animateTheme"
       :icon="iconTheme"
       @click="toggleTheme"
     />
@@ -100,36 +100,34 @@
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from "#imports"
-import { useMainStore } from "~/stores/main"
-import { computed, ref, watch } from "vue"
-import { useDisplay, useTheme } from "vuetify"
-
 const router = useRouter()
 const store = useMainStore()
-const vuetifyTheme = useTheme()
 
-const { t, locales, setLocale } = useI18n()
+const { toggleTheme } = useCustomTheme()
+const { smAndUp } = useVDisplay()
+const {
+  t,
+  locales,
+  setLocale,
+} = useI18n()
+
 const i18nSwitch = ref(false)
 const userLocale = computed(() => store.getI18n)
 
 const accountIcon = ref("mdi-login")
-const accountText = computed(() => (store.isUserEmpty ? t("navbar.connect") : t("navbar.disconnect")))
+const accountText = computed(() => (store.isUserEmpty
+  ? t("navbar.connect")
+  : t("navbar.disconnect")))
 const connected = computed(() => !store.isUserEmpty)
-const theme = ref(store.getTheme)
-const iconTheme = computed(() => (vuetifyTheme.name.value === "light" ? "mdi-weather-night" : "mdi-weather-sunny"))
-
-const { smAndUp } = useDisplay()
+const iconTheme = computed(() => (store.getTheme === "light"
+  ? "mdi-weather-night"
+  : "mdi-weather-sunny"))
 
 watch(connected, (value) => {
-  accountIcon.value = value ? "mdi-logout" : "mdi-login"
+  accountIcon.value = value
+    ? "mdi-logout"
+    : "mdi-login"
 })
-
-function toggleTheme() {
-  theme.value = theme.value === "dark" ? "light" : "dark"
-  store.setTheme(theme.value)
-  vuetifyTheme.global.name.value = theme.value
-}
 
 const switchLocale = (newLocale: "fr" | "en") => {
   setLocale(newLocale)
@@ -151,21 +149,26 @@ function handleConnect() {
   if (connected.value) {
     store.logout()
   }
+
   router.push("/")
 }
 </script>
 
 <style scoped>
-#animateTheme:focus {
-  animation: spin 0.5s ease-in-out 0s 1;
+.force-ssr {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateY(0px);
+  width: 100%;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.small-list :deep(.v-list-item__content) {
+  min-width: 0px !important;
+}
+
+.small-list :deep(.v-list-item--density-compact:not(.v-list-item--nav).v-list-item--one-line) {
+  padding-inline-end: 0px !important;
+  padding-inline-start: 16px !important;
 }
 </style>

@@ -27,7 +27,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useDisplay } from "vuetify"
-
-const { smAndUp, width } = useDisplay()
+const {
+  smAndUp,
+  width,
+} = useVDisplay()
 </script>

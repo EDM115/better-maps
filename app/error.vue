@@ -37,11 +37,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue"
+const router = useRouter()
 
 onMounted(() => {
-  const router = useRouter()
-
   router.push("/")
 })
 </script>

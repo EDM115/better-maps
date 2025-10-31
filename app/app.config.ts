@@ -1,5 +1,5 @@
 export default defineAppConfig({
   theme: {
-    default: "dark",
+    "default": "dark",
   },
 })

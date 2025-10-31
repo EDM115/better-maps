@@ -17,13 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useMainStore } from "~/stores/main"
-import { nextTick, onMounted } from "vue"
-import { useDisplay } from "vuetify"
-
 const store = useMainStore()
 const router = useRouter()
-const { smAndUp } = useDisplay()
+
+const { smAndUp } = useVDisplay()
 
 onMounted(async () => {
   await nextTick()

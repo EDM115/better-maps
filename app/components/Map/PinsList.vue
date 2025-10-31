@@ -106,29 +106,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
-import { useDisplay, useTheme } from "vuetify"
-import type { ComponentPublicInstance } from "vue"
+import {
+  getIconColor,
+  type Pin,
+  type Icon,
+} from "./consts"
 
-import { getIconColor, type Pin, type Icon } from "./consts"
+const { smAndUp } = useVDisplay()
+const theme = useVTheme()
 
-const { smAndUp } = useDisplay()
-const theme = useTheme()
-
-const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
+const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
 const activePanel = ref(0)
 
 const emit = defineEmits<{
-  (e: "edit", pin: Pin): void
-  (e: "delete", pin: Pin): void
-  (e: "toggle-visibility", pin: Pin): void
+  (e: "edit", pin: Pin): void;
+  (e: "delete", pin: Pin): void;
+  (e: "toggle-visibility", pin: Pin): void;
 }>()
 
 defineProps<{
-  pins: Pin[]
-  editMode?: boolean
-  selectedPinId?: number | null
-  icons: Icon[]
+  pins: Pin[];
+  editMode?: boolean;
+  selectedPinId?: number | null;
+  icons: Icon[];
 }>()
 
 const showDialog = ref(false)
@@ -139,7 +139,12 @@ const selectedItem = ref<ComponentPublicInstance | null>(null)
 watch(() => selectedItem.value, (el) => {
   if (el && activePanel.value === 0) {
     setTimeout(() => {
-      el.$el?.scrollIntoView({ behavior: "smooth", block: smAndUp.value ? "center" : "nearest" })
+      el.$el?.scrollIntoView({
+        behavior: "smooth",
+        block: smAndUp.value
+          ? "center"
+          : "nearest",
+      })
     }, 100)
   }
 })
@@ -154,6 +159,7 @@ const confirmDelete = () => {
     emit("delete", pinToDelete.value)
     pinToDelete.value = null
   }
+
   showDialog.value = false
 }
 

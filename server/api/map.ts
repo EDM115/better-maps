@@ -1,14 +1,18 @@
-import db from "./db"
+import db from "@@/server/api/db"
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
-    throw createError({ status: 405, message: "Method not allowed" })
+    throw createError({
+      status: 405, message: "Method not allowed",
+    })
   }
 
-  const { user_id } = await getQuery(event) as { user_id: number }
+  const { user_id } = getQuery(event)
 
   if (!user_id) {
-    throw createError({ status: 400, message: "User ID is required" })
+    throw createError({
+      status: 400, message: "User ID is required",
+    })
   }
 
   const map = db.prepare(`
@@ -16,15 +20,16 @@ export default defineEventHandler(async (event) => {
     WHERE id IN (
       SELECT map_id FROM User WHERE id = ?
     )
-  `).get(user_id) as {
-    id: number
-    name: string
-    start_lat: number
-    start_lng: number
-    start_zoom: number
-    country: string
-    show_transit: boolean
-  } | undefined
+  `)
+    .get(user_id) as {
+      id: number;
+      name: string;
+      start_lat: number;
+      start_lng: number;
+      start_zoom: number;
+      country: string;
+      show_transit: boolean;
+    } | undefined
 
   if (!map) {
     throw createError({

@@ -1,21 +1,9 @@
 {
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -42,31 +30,27 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "gremlins.showInProblemPane": true,
-  "html-css-class-completion.enableEmmetSupport": true,
   "importCost.fontStyle": "italic",
   "importCost.largePackageDarkColor": "#FF5555",
   "importCost.largePackageLightColor": "#FF5555",
   "importCost.mediumPackageLightColor": "#50FA7B",
   "importCost.smallPackageDarkColor": "#50FA7B",
   "importCost.smallPackageLightColor": "#50FA7B",
-  "nuxtr.defaultPackageManager": "pnpm",
-  "nuxtr.piniaFiles.defaultTemplate": "setup",
-  "nuxtr.vueFiles.style.alwaysScoped": true,
-  "nuxtr.vueFiles.style.defaultLanguage": "scss",
   "oxc.enable": true,
-  "prettier.semi": false,
-  "prettier.singleAttributePerLine": true,
-  "prettier.trailingComma": "none",
-  "prettier.vueIndentScriptAndStyle": true,
+  "oxc.typeAware": true,
+  "oxc.unusedDisableDirectives": "warn",
+  "search.exclude": {
+    "**/*.svg": true,
+    "pnpm-lock.yaml": true
+  },
   "styled-colors.decoration_type": "background",
+  "typescript.tsdk": "node_modules\\typescript\\lib",
   "vue.autoInsert.dotValue": true,
-  "vue.complete.casing.props": "autoCamel",
-  "vue.format.script.initialIndent": true,
-  "vue.format.style.initialIndent": true,
+  "vue.editor.focusMode": true,
   "vue.inlayHints.destructuredProps": true,
   "vue.inlayHints.inlineHandlerLeading": true,
   "vue.inlayHints.missingProps": true,
   "vue.inlayHints.optionsWrapper": true,
   "vue.inlayHints.vBindShorthand": true,
-  "yaml.keyOrdering": false
+  "vue.suggest.propNameCasing": "preferCamelCase"
 }

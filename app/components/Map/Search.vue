@@ -85,68 +85,74 @@
 </template>
 
 <script setup lang="ts">
-import { refDebounced } from "@vueuse/core"
-import { ref, watch } from "vue"
-
-import { getIconColor, type Icon } from "./consts"
+import {
+  getIconColor,
+  type Icon,
+} from "./consts"
 
 interface Props {
-  map?: google.maps.Map
-  center?: { lat: number; lng: number }
-  country?: string
-  icons: Icon[]
+  map?: google.maps.Map;
+  center?: {
+    lat: number; lng: number;
+  };
+  country?: string;
+  icons: Icon[];
 }
 
-interface Place {
-  name: string
-  formatted_address: string
-  place_id: string
+interface PlaceItem {
+  name: string;
+  formatted_address: string;
+  place_id: string;
   geometry: {
     location: {
-      lat: ()=> number
-      lng: ()=> number
-    }
-  }
+      lat: ()=> number;
+      lng: ()=> number;
+    };
+  };
 }
 
 interface PlaceDetails {
-  name: string
-  description: string
-  formatted_address: string
-  icon: number
-  color: string
+  name: string;
+  description: string;
+  formatted_address: string;
+  icon: number;
+  color: string;
   position: {
-    lat: number
-    lng: number
-  }
-  favorite: boolean
+    lat: number;
+    lng: number;
+  };
+  favorite: boolean;
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  (e: "add-marker", details: PlaceDetails): void
-  (e: "update-marker", details: PlaceDetails): void
+  (e: "add-marker", details: PlaceDetails): void;
+  (e: "update-marker", details: PlaceDetails): void;
 }>()
 const config = useRuntimeConfig()
 
 const loading = ref(false)
 const editMode = ref(false)
 const editingPin = ref<PlaceDetails | null>(null)
-const searchResults = ref<Place[]>([])
-const selectedPlace = ref<Place | null>(null)
-const placeService = ref<google.maps.places.PlacesService>()
-const autocompleteService = ref<google.maps.places.AutocompleteService>()
+const searchResults = ref<PlaceItem[]>([])
+const selectedPlace = ref<PlaceItem | null>(null)
 const searchQuery = ref("")
 const searchDebounced = refDebounced(searchQuery, 500, { maxWait: 1500 })
 const didSearch = ref(false)
+
+let sessionToken: google.maps.places.AutocompleteSessionToken | null = null
 
 const placeDetails = ref<PlaceDetails>({
   name: "",
   description: "",
   formatted_address: "",
-  icon: props.icons.length > 0 ? props.icons[0].id : -1,
+  icon: props.icons.length > 0
+    ? props.icons[0]?.id ?? 0
+    : -1,
   color: "",
-  position: { lat: 0, lng: 0 },
+  position: {
+    lat: 0, lng: 0,
+  },
   favorite: false,
 })
 
@@ -156,11 +162,17 @@ function resetPlace() {
     name: "",
     description: "",
     formatted_address: "",
-    icon: props.icons.length > 0 ? props.icons[0].id : -1,
+    icon: props.icons.length > 0
+      ? props.icons[0]?.id ?? 0
+      : -1,
     color: "",
-    position: { lat: 0, lng: 0 },
+    position: {
+      lat: 0, lng: 0,
+    },
     favorite: false,
   }
+
+  sessionToken = null
 }
 
 const addPin = () => {
@@ -168,9 +180,7 @@ const addPin = () => {
     return
   }
 
-  const pinData = placeDetails.value
-
-  emit("add-marker", pinData)
+  emit("add-marker", placeDetails.value)
   resetPlace()
   searchResults.value = []
 }
@@ -215,48 +225,91 @@ const startEditing = (pin: PlaceDetails) => {
   }
 }
 
-const handleSearch = async (search: string) => {
-  if (!autocompleteService.value || !search) {
+async function handleSearch(search: string) {
+  if (!search) {
     return
   }
 
   didSearch.value = false
-  const request: google.maps.places.AutocompletionRequest = {
-    input: search,
-    locationBias: props.map?.getBounds() || undefined,
-    componentRestrictions: { country: props.country ?? config.public.country },
+  loading.value = true
+
+  const {
+    AutocompleteSuggestion, AutocompleteSessionToken,
+  }
+    = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary
+
+  if (!sessionToken) {
+    sessionToken = new AutocompleteSessionToken()
   }
 
-  autocompleteService.value?.getPlacePredictions(request, async (predictions, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-      const results = predictions.map((prediction) => ({
-        name: prediction.structured_formatting.main_text || prediction.description,
-        formatted_address: prediction.structured_formatting.secondary_text || "",
-        place_id: prediction.place_id,
+  const region
+    = (props.country || config.public.country || "").toString()
+      .toUpperCase()
+  const request: google.maps.places.AutocompleteRequest = {
+    input: search,
+    locationBias: props.map?.getBounds(),
+    includedRegionCodes: region
+      ? [region]
+      : undefined,
+    sessionToken,
+  }
+
+  try {
+    const { suggestions }
+      = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request)
+
+    const results: PlaceItem[] = suggestions.map((s) => {
+      const p = s.placePrediction
+      const main
+        = p?.mainText?.text || p?.text?.text || ""
+      const secondary = p?.secondaryText?.text || ""
+
+      return {
+        name: main,
+        formatted_address: secondary,
+        place_id: p?.placeId || "",
         geometry: {
           location: {
-            lat: (): number => 0,
-            lng: (): number => 0,
+            lat: () => 0,
+            lng: () => 0,
           },
         },
-      }))
+      }
+    })
 
-      results.forEach((result) => {
-        placeService.value?.getDetails({ placeId: result.place_id }, (detail, detailStatus) => {
-          if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && detail.geometry) {
-            result.geometry.location.lat = () => detail.geometry?.location?.lat() ?? 0
-            result.geometry.location.lng = () => detail.geometry?.location?.lng() ?? 0
-          }
-        })
+    await Promise.all(results.map(async (r, i) => {
+      const pred = suggestions[i]?.placePrediction
+
+      if (!pred) {
+        return
+      }
+
+      const place = pred.toPlace()
+
+      await place.fetchFields({
+        fields: [ "location", "displayName", "formattedAddress" ],
       })
+      const loc = place.location
+      const lat: number = loc?.lat() ?? 0
+      const lng: number = loc?.lng() ?? 0
 
-      searchResults.value = results
-    } else {
-      searchResults.value = []
-    }
+      if (typeof lat === "number" && typeof lng === "number") {
+        r.geometry.location.lat = () => lat
+        r.geometry.location.lng = () => lng
+      }
 
+      r.name = place.displayName ?? r.name
+      r.formatted_address = place.formattedAddress ?? r.formatted_address
+    }))
+
+    searchResults.value = results
+  } catch (err) {
+    console.error(err)
+    searchResults.value = []
+  } finally {
     didSearch.value = true
-  })
+    loading.value = false
+  }
 }
 
 watch(searchQuery, (search) => {
@@ -283,15 +336,14 @@ watch(selectedPlace, (place) => {
         lng: place.geometry.location.lng(),
       },
     }
+
+    sessionToken = null
   }
 })
 
-watch(() => props.map, (newMap) => {
-  if (newMap) {
-    placeService.value = new google.maps.places.PlacesService(newMap)
-    autocompleteService.value = new google.maps.places.AutocompleteService()
-  }
-}, { immediate: true })
+onMounted(async () => {
+  await google.maps.importLibrary("places")
+})
 
 defineExpose({
   startEditing,

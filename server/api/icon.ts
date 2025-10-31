@@ -1,18 +1,21 @@
-import db from "./db"
+import db from "@@/server/api/db"
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
-    throw createError({ status: 405, message: "Method not allowed" })
+    throw createError({
+      status: 405, message: "Method not allowed",
+    })
   }
 
   const icons = db.prepare(`
     SELECT * FROM Icon
-  `).all() as {
-    id: number
-    name: string
-    color: string
-    icon: string
-  }[] | undefined
+  `)
+    .all() as {
+      id: number;
+      name: string;
+      color: string;
+      icon: string;
+    }[] | undefined
 
   if (!icons) {
     throw createError({

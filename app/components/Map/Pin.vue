@@ -9,17 +9,19 @@
       }"
       @click="() => handlePinClick(pin)"
     >
-      <div
-        v-if="pin.visible"
-        :class="pin.favorite ? 'pin-content pin-favorite' : 'pin-content'"
-        :style="{ backgroundColor: darkBackgroundColor }"
-      >
-        <v-icon
-          :icon="props.icons.find(icon => icon.id === pin.icon)?.icon || 'mdi-dots-horizontal'"
-          :color="getIconColor(pin.icon, props.icons)"
-          size="large"
-        />
-      </div>
+      <template #content>
+        <div
+          v-if="pin.visible"
+          :class="pin.favorite ? 'pin-content pin-favorite' : 'pin-content'"
+          :style="{ backgroundColor: darkBackgroundColor }"
+        >
+          <v-icon
+            :icon="props.icons.find(icon => icon.id === pin.icon)?.icon || 'mdi-dots-horizontal'"
+            :color="getIconColor(pin.icon, props.icons)"
+            size="large"
+          />
+        </div>
+      </template>
     </AdvancedMarker>
 
     <InfoWindow
@@ -47,36 +49,41 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "#imports"
-import { useMainStore } from "~/stores/main"
-import { onMounted, ref, watch, computed } from "vue"
-import { AdvancedMarker, InfoWindow } from "vue3-google-map"
-import { useTheme } from "vuetify"
+import {
+  AdvancedMarker,
+  InfoWindow,
+} from "vue3-google-map"
 
-import { getIconColor, type Pin, type Icon } from "./consts"
+import {
+  getIconColor,
+  type Pin,
+  type Icon,
+} from "./consts"
 
 interface Props {
-  map?: google.maps.Map
-  center?: { lat: number; lng: number }
-  mapId?: number
-  icons: Icon[]
+  map?: google.maps.Map;
+  center?: {
+    lat: number; lng: number;
+  };
+  mapId?: number;
+  icons: Icon[];
 }
 
 type ApiPointResponse = {
-  id: number
-  name: string
-  description: string
-  address: string
-  lat: number
-  lng: number
-  color: string
-  icon: number
-  visible: boolean
-  favorite: boolean
+  id: number;
+  name: string;
+  description: string;
+  address: string;
+  lat: number;
+  lng: number;
+  color: string;
+  icon: number;
+  visible: boolean;
+  favorite: boolean;
 }
 
 const store = useMainStore()
-const theme = useTheme()
+const theme = useVTheme()
 const { t } = useI18n()
 
 const dummyPin: Pin = {
@@ -86,7 +93,9 @@ const dummyPin: Pin = {
   formatted_address: "",
   icon: -1,
   color: "#F8F8F2",
-  position: { lat: 0, lng: 0 },
+  position: {
+    lat: 0, lng: 0,
+  },
   visible: true,
   favorite: false,
 }
@@ -98,20 +107,21 @@ const filteredPins = computed(() => [
   dummyPin,
 ])
 
-const darkBackgroundColor = ref(theme.computedThemes.value.dark.colors.background)
+const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
 
 const selectedPin = ref<Pin | null>(null)
 const showInfoWindow = ref(false)
 const pixelOffset = ref<google.maps.Size | null>(null)
 
 const emit = defineEmits<{
-  (e: "pin-selected", pinId: number | null): void
+  (e: "pin-selected", pinId: number | null): void;
 }>()
 
 const handlePinClick = (pin: Pin) => {
   if (pin.id === -1) {
     return
   }
+
   pixelOffset.value = new google.maps.Size(0, -34)
   selectedPin.value = pin
   showInfoWindow.value = true
@@ -153,7 +163,11 @@ const addPin = async (pin: Pin) => {
     })
 
     if ("id" in response.body) {
-      pins.value = [ ...pins.value, { ...pin, id: (response.body as { id: number }).id, visible: true, favorite: pin.favorite }]
+      pins.value = [
+        ...pins.value, {
+          ...pin, id: (response.body as { id: number }).id, visible: true, favorite: pin.favorite,
+        },
+      ]
     }
   } catch (error) {
     console.error("Failed to add pin :", error)
@@ -232,7 +246,9 @@ const togglePinVisibility = async (pin: Pin) => {
     const index = pins.value.findIndex((p) => p.id === pin.id)
 
     if (index !== -1) {
-      pins.value[index] = { ...pin, visible: !pin.visible }
+      pins.value[index] = {
+        ...pin, visible: !pin.visible,
+      }
     }
   } catch (error) {
     console.error("Failed to update pin visibility :", error)
