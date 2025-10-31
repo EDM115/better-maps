@@ -35,9 +35,7 @@ RUN mkdir -p db && \
     pnpm seed && \
     rm -fr init
 
-RUN pnpm build && \
-    rm -fr node_modules && \
-    pnpm store prune
+RUN pnpm build
 
 ###
 
@@ -82,5 +80,4 @@ VOLUME ["/app/db"]
 
 EXPOSE ${PORT}
 
-ENTRYPOINT ["dotenvx", "--"]
-CMD ["node", "/app/.output/server/index.mjs"]
+CMD ["dotenvx", "--", "node", "/app/.output/server/index.mjs"]
