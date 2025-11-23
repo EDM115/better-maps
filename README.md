@@ -180,13 +180,16 @@ And add new ones, with on-the-fly icon preview and validation :
 | map_id      | int    | Foreign Key, Not Null      |
 | visible     | bool   | Not Null, default true     |
 | favorite    | bool   | Not Null, default false    |
+| sort_order  | int    | Not Null, default 0        |
 
 ### Icon
-| Column | Type   | Extra                      |
-| :----- | :----- | :------------------------- |
-| id     | int    | Primary Key, Autoincrement |
-| name   | string | Not Null                   |
-| color  | string | Not Null                   |
-| icon   | string | Not Null                   |
+| Column     | Type   | Extra                      |
+| :--------- | :----- | :------------------------- |
+| id         | int    | Primary Key, Autoincrement |
+| name       | string | Not Null                   |
+| color      | string | Not Null                   |
+| icon       | string | Not Null                   |
+| visible    | bool   | Not Null, default true     |
+| sort_order | int    | Not Null, default 0        |
 
 </details>

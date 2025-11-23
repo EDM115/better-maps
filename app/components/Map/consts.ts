@@ -14,10 +14,12 @@ export interface Pin {
 }
 
 export type Icon = {
-  id: number;
-  name: string;
-  color: string;
-  icon: string;
+  id: number
+  name: string
+  color: string
+  icon: string
+  visible?: boolean
+  sort_order?: number
 }
 
 export const getIconColor = (icon: number, icons: Icon[]) => {

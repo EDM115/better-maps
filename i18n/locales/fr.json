@@ -16,7 +16,9 @@
       "edit-icon": "Modifier l'icône",
       "icon": "Icône",
       "name": "Nom",
-      "title": "Gestion des icônes"
+      "title": "Gestion des icônes",
+      "sort-order": "Ordre de tri",
+      "visible": "Visible"
     },
     "maps": {
       "add-map": "Ajouter une carte",

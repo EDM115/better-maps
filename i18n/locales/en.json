@@ -16,7 +16,9 @@
       "edit-icon": "Edit the icon",
       "icon": "Icon",
       "name": "Name",
-      "title": "Icon management"
+      "sort-order": "Sort order",
+      "title": "Icon management",
+      "visible": "Visible"
     },
     "maps": {
       "add-map": "Add a map",

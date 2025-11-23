@@ -365,6 +365,27 @@
                     mode="hex"
                   />
                 </v-col>
+                <v-col cols="12">
+                  <v-row>
+                    <v-col cols="6">
+                      <v-switch
+                        v-model="icon.visible"
+                        :label="$t('admin.icons.visible')"
+                        hide-details
+                        color="primary"
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model.number="icon.sort_order"
+                        type="number"
+                        density="compact"
+                        :label="$t('admin.icons.sort-order')"
+                        hide-details
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
               </v-row>
             </v-container>
             <template #append>
@@ -598,6 +619,8 @@ type Icon = {
   name: string;
   color: string;
   icon: string;
+  visible?: boolean;
+  sort_order?: number;
 }
 
 const config = useRuntimeConfig()
@@ -642,7 +665,7 @@ const newMap = ref({
   name: "", start_lat: 0, start_lng: 0, start_zoom: 2, country: "", show_transit: false,
 })
 const newIcon = ref({
-  name: "", color: "#FF0000", icon: "",
+  name: "", color: "#FF0000", icon: "", visible: true, sort_order: 0,
 })
 const isValidNewIcon = ref(false)
 const isValidEditIcons = reactive<Record<number, boolean>>({})
@@ -667,7 +690,7 @@ const resetNewMap = () => {
 
 const resetNewIcon = () => {
   const resetValue = {
-    name: "", color: "#FF0000", icon: "",
+    name: "", color: "#FF0000", icon: "", visible: true, sort_order: 0,
   }
 
   newIcon.value = resetValue
@@ -863,11 +886,11 @@ const validateIcon = async (iconName: string, iconId?: number) => {
   }
 }
 
-const updateIcon = async (iconId: number, name: string, color: string, icon: string) => {
+const updateIcon = async (iconId: number, name: string, color: string, icon: string, visible: boolean | undefined, sortOrder: number | undefined) => {
   await $fetch("/api/admin/icon", {
     method: "PUT",
     body: {
-      id: iconId, name, color, icon, admin_id: store.getUser.id,
+      id: iconId, name, color, icon, visible, sort_order: sortOrder, admin_id: store.getUser.id,
     },
     headers: {
       Authorization: `Bearer ${store.getUser.token}`,
@@ -880,7 +903,8 @@ const validateAndUpdateIcon = async (iconId: number, name: string, color: string
   validateIcon(icon)
 
   if (isValidEditIcons[iconId]) {
-    await updateIcon(iconId, name, color, icon)
+		const current = icons.value.find((i) => i.id === iconId)
+		await updateIcon(iconId, name, color, icon, current?.visible ?? true, current?.sort_order ?? 0)
   }
 }
 

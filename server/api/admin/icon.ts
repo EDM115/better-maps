@@ -12,25 +12,34 @@ export default defineEventHandler(async (event) => {
       // oxlint-disable-next-line no-unsafe-type-assertion
       const icons = db.prepare(`
         SELECT * FROM Icon
+        ORDER BY sort_order ASC, id ASC
       `)
         .all() as {
         id: number;
         name: string;
         color: string;
         icon: string;
+        visible: number;
+        sort_order: number;
       }[]
+
+      const normalizedIcons = icons.map((icon) => ({
+        ...icon,
+        visible: Boolean(icon.visible),
+        sort_order: icon.sort_order ?? 0,
+      }))
 
       return {
         status: 200,
         body: {
           success: "Icons retrieved",
-          icons,
+          icons: normalizedIcons,
         },
       }
     }
     case "POST": {
       const {
-        name, color, icon,
+        name, color, icon, visible, sort_order,
       } = await readBody(event)
 
       if (!name || !color || !icon) {
@@ -39,11 +48,14 @@ export default defineEventHandler(async (event) => {
         })
       }
 
+      const dbVisible = visible === false ? 0 : 1
+      const dbSortOrder = typeof sort_order === "number" ? sort_order : 0
+
       const newIcon = db.prepare(`
-        INSERT INTO Icon (name, color, icon)
-        VALUES (?, ?, ?)
+        INSERT INTO Icon (name, color, icon, visible, sort_order)
+        VALUES (?, ?, ?, ?, ?)
       `)
-        .run(name, color, icon)
+        .run(name, color, icon, dbVisible, dbSortOrder)
 
       return {
         status: 201,
@@ -55,7 +67,7 @@ export default defineEventHandler(async (event) => {
     }
     case "PUT": {
       const {
-        id, name, color, icon,
+        id, name, color, icon, visible, sort_order,
       } = await readBody(event)
 
       if (!id || !name || !color || !icon) {
@@ -64,12 +76,15 @@ export default defineEventHandler(async (event) => {
         })
       }
 
+      const dbVisible = visible === false ? 0 : 1
+      const dbSortOrder = typeof sort_order === "number" ? sort_order : 0
+
       db.prepare(`
         UPDATE Icon
-        SET name = ?, color = ?, icon = ?
+        SET name = ?, color = ?, icon = ?, visible = ?, sort_order = ?
         WHERE id = ?
       `)
-        .run(name, color, icon, id)
+        .run(name, color, icon, dbVisible, dbSortOrder, id)
 
       return {
         status: 200,

@@ -58,6 +58,7 @@ function initDatabase() {
       map_id INTEGER NOT NULL,
       visible INTEGER NOT NULL DEFAULT 1,
       favorite INTEGER NOT NULL DEFAULT 0,
+      sort_order INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (map_id) REFERENCES Map(id),
       FOREIGN KEY (icon) REFERENCES Icon(id)
     );
@@ -69,7 +70,9 @@ function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       color TEXT NOT NULL,
-      icon TEXT NOT NULL
+      icon TEXT NOT NULL,
+      visible INTEGER NOT NULL DEFAULT 1,
+      sort_order INTEGER NOT NULL DEFAULT 0
     );
   `)
     .run()
@@ -136,7 +139,7 @@ async function seedUsers(db: Database.Database) {
 async function seedIcons(db: Database.Database) {
   const raw = process.env.SEED_ICONS || "[]"
   let icons: Array<{
-    name: string; color: string; icon: string;
+    name: string; color: string; icon: string; visible?: boolean; sort_order?: number;
   }>
 
   try {
@@ -147,14 +150,17 @@ async function seedIcons(db: Database.Database) {
   }
 
   const insert = db.prepare(`
-    INSERT OR IGNORE INTO Icon (name, color, icon)
-    VALUES (?, ?, ?)
+    INSERT OR IGNORE INTO Icon (name, color, icon, visible, sort_order)
+    VALUES (?, ?, ?, ?, ?)
   `)
 
   await Promise.all(icons.map(async ({
-    name, color, icon,
+    name, color, icon, visible, sort_order,
   }) => {
-    insert.run(name, color, icon)
+    const dbVisible = visible === false ? 0 : 1
+    const dbSortOrder = typeof sort_order === "number" ? sort_order : 0
+
+    insert.run(name, color, icon, dbVisible, dbSortOrder)
     console.log(`Seeded icon : ${name}`)
   }))
 

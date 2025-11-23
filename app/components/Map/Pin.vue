@@ -80,6 +80,7 @@ type ApiPointResponse = {
   icon: number;
   visible: boolean;
   favorite: boolean;
+  sort_order: number;
 }
 
 const store = useMainStore()
@@ -102,10 +103,39 @@ const dummyPin: Pin = {
 
 const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
-const filteredPins = computed(() => [
-  ...pins.value.filter((p) => p.visible),
-  dummyPin,
-])
+const filteredPins = computed(() => {
+  const ordered = [...pins.value]
+    .filter((p) => {
+		if (!p.visible) {
+			return false
+		}
+
+		const icon = props.icons.find((i) => i.id === p.icon)
+		if (icon && icon.visible === false) {
+			return false
+		}
+
+		return true
+	})
+    .toSorted((a, b) => {
+      const iconA = props.icons.find((i) => i.id === a.icon)
+      const iconB = props.icons.find((i) => i.id === b.icon)
+
+      const orderA = typeof iconA?.sort_order === "number" ? iconA.sort_order : 0
+      const orderB = typeof iconB?.sort_order === "number" ? iconB.sort_order : 0
+
+      if (orderA !== orderB) {
+        return orderA - orderB
+      }
+
+      return 0
+    })
+
+  return [
+    ...ordered,
+    dummyPin,
+  ]
+})
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
 
@@ -159,6 +189,7 @@ const addPin = async (pin: Pin) => {
         map_id: Number(props.mapId),
         visible: true,
         favorite: pin.favorite,
+        sort_order: pins.value.length,
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,
@@ -168,7 +199,10 @@ const addPin = async (pin: Pin) => {
     if ("id" in response.body) {
       pins.value = [
         ...pins.value, {
-          ...pin, id: (response.body as { id: number }).id, visible: true, favorite: pin.favorite,
+          ...pin,
+          id: (response.body as { id: number }).id,
+          visible: true,
+          favorite: pin.favorite,
         },
       ]
     }
@@ -208,6 +242,7 @@ const editPin = async (pin: Pin) => {
         map_id: Number(props.mapId),
         visible: pin.visible,
         favorite: pin.favorite,
+        sort_order: pins.value.findIndex((p) => p.id === pin.id),
       },
       headers: {
         Authorization: `Bearer ${store.getUser.token}`,

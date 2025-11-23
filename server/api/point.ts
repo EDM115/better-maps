@@ -56,6 +56,7 @@ export default defineEventHandler(async (event) => {
         const points = db.prepare(`
           SELECT * FROM Point
           WHERE map_id = ?
+          ORDER BY sort_order ASC, id ASC
         `)
           .all(map_id) as {
           id: number;
@@ -65,10 +66,11 @@ export default defineEventHandler(async (event) => {
           lat: number;
           lng: number;
           color: string;
-          icon: number;
+            icon: number;
           map_id: number;
           visible: boolean;
           favorite: boolean;
+            sort_order: number;
         }[]
 
         points.forEach((point) => {
@@ -86,7 +88,7 @@ export default defineEventHandler(async (event) => {
       }
     } case "POST": {
       const {
-        name, description, address, lat, lng, color, icon, map_id, visible, favorite,
+        name, description, address, lat, lng, color, icon, map_id, visible, favorite, sort_order,
       } = await readBody(event)
 
       if (!name || !address || !lat || !lng || !icon || !map_id) {
@@ -101,10 +103,11 @@ export default defineEventHandler(async (event) => {
       const dbFavorite = favorite
         ? 1
         : 0
+      const dbSortOrder = typeof sort_order === "number" ? sort_order : 0
 
       const newPoint = db.prepare(`
-        INSERT INTO Point (name, description, address, lat, lng, color, icon, map_id, visible, favorite)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Point (name, description, address, lat, lng, color, icon, map_id, visible, favorite, sort_order)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
         .run(
           name,
@@ -117,6 +120,7 @@ export default defineEventHandler(async (event) => {
           map_id,
           dbVisible,
           dbFavorite,
+          dbSortOrder,
         )
 
       return {
@@ -128,7 +132,7 @@ export default defineEventHandler(async (event) => {
       }
     } case "PUT": {
       const {
-        id, name, description, address, lat, lng, color, icon, visible, favorite,
+        id, name, description, address, lat, lng, color, icon, visible, favorite, sort_order,
       } = await readBody(event)
 
       if (!id || !name || !address || !lat || !lng || !icon) {
@@ -143,10 +147,11 @@ export default defineEventHandler(async (event) => {
       const dbFavorite = favorite
         ? 1
         : 0
+      const dbSortOrder = typeof sort_order === "number" ? sort_order : 0
 
       db.prepare(`
         UPDATE Point
-        SET name = ?, description = ?, address = ?, lat = ?, lng = ?, color = ?, icon = ?, visible = ?, favorite = ?
+        SET name = ?, description = ?, address = ?, lat = ?, lng = ?, color = ?, icon = ?, visible = ?, favorite = ?, sort_order = ?
         WHERE id = ?
       `)
         .run(
@@ -159,6 +164,7 @@ export default defineEventHandler(async (event) => {
           icon,
           dbVisible,
           dbFavorite,
+          dbSortOrder,
           id,
         )
 

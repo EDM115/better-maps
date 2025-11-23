@@ -10,12 +10,15 @@ export default defineEventHandler(async (event) => {
   // oxlint-disable-next-line no-unsafe-type-assertion
   const icons = db.prepare(`
     SELECT * FROM Icon
+    ORDER BY sort_order ASC, id ASC
   `)
     .all() as {
       id: number;
       name: string;
       color: string;
       icon: string;
+      visible: number;
+      sort_order: number;
     }[] | undefined
 
   if (!icons) {
@@ -25,11 +28,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const normalizedIcons = icons.map((icon) => ({
+    ...icon,
+    visible: Boolean(icon.visible),
+    sort_order: icon.sort_order ?? 0,
+  }))
+
   return {
     status: 200,
     body: {
       success: "Icons retrieved",
-      icons,
+      icons: normalizedIcons,
     },
   }
 })

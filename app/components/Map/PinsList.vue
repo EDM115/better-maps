@@ -16,7 +16,7 @@
         >
           <v-list-item
             v-for="(pin, index) in pins"
-            :key="index"
+            :key="pin.id ?? index"
             :ref="(el) => { if (selectedPinId === pin.id && el instanceof Object) selectedItem = el as ComponentPublicInstance }"
             :title="pin.name"
             :subtitle="pin.formatted_address"
@@ -50,6 +50,24 @@
             </div>
             <template #append>
               <v-col>
+                <v-row class="mb-1">
+                  <v-btn
+                    icon="mdi-chevron-up"
+                    color="secondary"
+                    size="small"
+                    variant="text"
+                    :disabled="editMode || index === 0"
+                    @click="() => emit('reorder', { pin, newIndex: index - 1 })"
+                  />
+                  <v-btn
+                    icon="mdi-chevron-down"
+                    color="secondary"
+                    size="small"
+                    variant="text"
+                    :disabled="editMode || index === pins.length - 1"
+                    @click="() => emit('reorder', { pin, newIndex: index + 1 })"
+                  />
+                </v-row>
                 <v-row>
                   <v-btn
                     icon="mdi-pencil"
@@ -122,6 +140,7 @@ const emit = defineEmits<{
   (e: "edit", pin: Pin): void;
   (e: "delete", pin: Pin): void;
   (e: "toggle-visibility", pin: Pin): void;
+  (e: "reorder", payload: { pin: Pin; newIndex: number }): void;
 }>()
 
 defineProps<{

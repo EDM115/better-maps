@@ -45,6 +45,7 @@
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
+          @reorder="onReorderPin"
         />
         <MapOptions
           v-if="mapRef?.map"
@@ -89,6 +90,7 @@
             @edit="(pin) => mapSearchRef?.startEditing(pin)"
             @delete="(pin) => mapPinRef?.deletePin(pin)"
             @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
+            @reorder="onReorderPin"
           />
         </v-list-item>
         <v-list-item>
@@ -173,6 +175,31 @@ const mapCountry = ref(props.initialMap.country)
 const mapShowTransit = ref(props.initialMap.show_transit)
 const selectedPin = ref<number | null>(null)
 const icons = ref<Icon[]>([...props.initialIcons])
+
+const onReorderPin = (payload: { pin: { id: number }; newIndex: number }) => {
+  if (!mapPinRef.value?.pins || typeof mapPinRef.value.editPin !== "function") {
+    return
+  }
+
+  const arr = mapPinRef.value.pins as { id: number }[]
+  const currentIndex = arr.findIndex((p) => p.id === payload.pin.id)
+  if (currentIndex === -1 || payload.newIndex < 0 || payload.newIndex >= arr.length) {
+    return
+  }
+
+  const reordered = [...arr]
+  const [moved] = reordered.splice(currentIndex, 1)
+  reordered.splice(payload.newIndex, 0, moved!)
+
+  mapPinRef.value.pins = reordered
+
+  // Persist new ordering: edit each pin so sort_order matches its index
+  reordered.forEach((pin) => {
+    mapPinRef.value.editPin({
+      ...pin,
+    })
+  })
+}
 
 watch(drawer, (val) => {
   translateX.value = val
