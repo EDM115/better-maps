@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
     FROM User
     WHERE username = ?
   `)
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const user = stmt.get(username) as {
     id: number; username: string; password: string; role: string; map_id: number;
   } | undefined

@@ -80,7 +80,6 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: { compilerOptions: {
       allowArbitraryExtensions: true,
-      checkJs: false,
       disableSizeLimit: true,
       emitDecoratorMetadata: true,
       experimentalDecorators: true,
@@ -96,13 +95,21 @@ export default defineNuxtConfig({
     standalone: false,
   } },
   fonts: {
+    defaults: {
+      preload: true,
+      subsets: ["latin"],
+      weights: ["300 700"],
+    },
+    devtools: false,
     processCSSVariables: true,
     provider: "google",
   },
   i18n: {
     baseUrl: "/",
+    // oxlint-disable-next-line no-unsafe-type-assertion
     defaultLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
     detectBrowserLanguage: {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       fallbackLocale: process.env.DEFAULT_UI_LANG as "en" | "fr" | undefined,
       useCookie: false,
     },

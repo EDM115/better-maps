@@ -12,10 +12,10 @@
       >
         <NuxtImg
           src="/images/logo.webp"
-          :width="smAndUp ? '500px' : Math.floor(width * 0.7) + 'px'"
-          :height="smAndUp ? '500px' : Math.floor(width * 0.7) + 'px'"
+          sizes="500px sm:70svw lg:500px"
           alt="Better Maps"
           :draggable="false"
+          :placeholder="[150, 150, 50, 5]"
           preload
         />
       </v-col>
@@ -27,8 +27,5 @@
 </template>
 
 <script lang="ts" setup>
-const {
-  smAndUp,
-  width,
-} = useVDisplay()
+const { smAndUp } = useVDisplay()
 </script>

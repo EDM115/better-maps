@@ -135,7 +135,7 @@ interface MapRef {
 }
 
 type Props = {
-  setHasLoaded?: (loaded: boolean)=> void;
+  setHasLoaded?: (loaded: boolean) => void;
 }
 
 const props = defineProps<Props>()

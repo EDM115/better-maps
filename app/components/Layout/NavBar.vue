@@ -17,6 +17,8 @@
           :draggable="false"
           height="40px"
           width="40px"
+          sizes="40px"
+          :placeholder="[10, 10, 50, 5]"
           preload
         />
       </NuxtLink>

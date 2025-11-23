@@ -1,23 +1,15 @@
 lockfileIncludeTarballUrl: true
 
 onlyBuiltDependencies:
-  - "@parcel/watcher"
+  - '@parcel/watcher'
   - better-sqlite3
   - esbuild
   - sharp
   - unrs-resolver
 
-overrides:
-  "@vue/devtools-api": ^8.0.3
-  "@vue/devtools-core": ^8.0.3
-  "@vue/devtools-kit": ^8.0.3
-  "@vue/devtools-shared": ^8.0.3
-  magicast: ^0.5.0
-  sharp: 0.34.4
-
 publicHoistPattern:
-  - "*vuetify*"
+  - '*vuetify*'
 
 resolutionMode: highest
 
-savePrefix: ""
+savePrefix: ''

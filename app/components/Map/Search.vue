@@ -105,8 +105,8 @@ interface PlaceItem {
   place_id: string;
   geometry: {
     location: {
-      lat: ()=> number;
-      lng: ()=> number;
+      lat: () => number;
+      lng: () => number;
     };
   };
 }

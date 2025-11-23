@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
       const { get_all_users } = getQuery(event)
 
       if (get_all_users) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const maps = db.prepare(`
           SELECT * FROM Map
         `)
@@ -29,6 +30,7 @@ export default defineEventHandler(async (event) => {
           map.show_transit = Boolean(map.show_transit)
         })
 
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const users = db.prepare(`
           SELECT id, username, map_id FROM User
         `)
@@ -60,6 +62,7 @@ export default defineEventHandler(async (event) => {
           },
         }
       } else {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const maps = db.prepare(`
           SELECT * FROM Map
         `)
@@ -145,6 +148,7 @@ export default defineEventHandler(async (event) => {
         })
       }
 
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const mapCount = db.prepare(`
         SELECT COUNT(*) as count FROM Map
       `)

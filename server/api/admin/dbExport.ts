@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
       await fs.unlink(outputPath)
 
       return {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         table, data: JSON.parse(content) as unknown[],
       }
     }))

@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
       } = getQuery(event)
 
       if (point_id) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const point = db.prepare(`
           SELECT * FROM Point
           WHERE id = ?
@@ -51,6 +52,7 @@ export default defineEventHandler(async (event) => {
           },
         }
       } else {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const points = db.prepare(`
           SELECT * FROM Point
           WHERE map_id = ?

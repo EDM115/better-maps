@@ -112,6 +112,7 @@ async function seedUsers(db: Database.Database) {
     users = []
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const map = db.prepare("SELECT id FROM Map")
     .get() as { id: number }
 

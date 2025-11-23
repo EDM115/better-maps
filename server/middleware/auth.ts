@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     const [ , token ] = authHeader.split(" ")
 
     try {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const payload = jwt.verify(token, process.env.JWT_SECRET ?? "secret") as { id: number }
 
       event.context.auth = { userId: payload.id }

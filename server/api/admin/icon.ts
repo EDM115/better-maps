@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
 
   switch (event.method) {
     case "GET": {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const icons = db.prepare(`
         SELECT * FROM Icon
       `)

@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const map = db.prepare(`
     SELECT * FROM Map
     WHERE id IN (

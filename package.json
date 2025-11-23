@@ -6,81 +6,71 @@
   },
   "dependencies": {
     "@mdi/font": "~7.4.47",
-    "@nuxt/fonts": "~0.11.4",
-    "@nuxt/image": "~1.11.0",
-    "@nuxtjs/i18n": "~10.1.2",
-    "@pinia/nuxt": "~0.11.2",
+    "@nuxt/fonts": "~0.12.1",
+    "@nuxt/image": "~2.0.0",
+    "@nuxtjs/i18n": "~10.2.1",
+    "@pinia/nuxt": "~0.11.3",
     "@vueuse/core": "~14.0.0",
     "@vueuse/nuxt": "~14.0.0",
-    "bcryptjs": "~3.0.2",
-    "better-sqlite3": "~12.4.1",
+    "bcryptjs": "~3.0.3",
+    "better-sqlite3": "~12.4.6",
     "jsonwebtoken": "~9.0.2",
-    "nuxt": "~4.2.0",
+    "nuxt": "~4.2.1",
     "nuxt-svgo": "~4.2.6",
-    "pinia": "~3.0.3",
-    "vue3-google-map": "~0.25.0",
-    "vue": "~3.5.22",
+    "pinia": "~3.0.4",
+    "vue3-google-map": "~0.25.1",
+    "vue": "~3.5.24",
     "vuetify-nuxt-module": "~0.18.8"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "~1.51.0",
+    "@dotenvx/dotenvx": "~1.51.1",
     "@nuxt/eslint": "~1.10.0",
-    "@stylistic/eslint-plugin": "~5.5.0",
+    "@stylistic/eslint-plugin": "~5.6.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/google.maps": "^3.58.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "latest",
-    "@typescript-eslint/parser": "~8.46.2",
+    "@typescript-eslint/parser": "~8.47.0",
     "country-flag-emoji-polyfill": "~0.1.8",
-    "edm115-lint": "~0.1.3",
-    "eslint": "~9.38.0",
-    "eslint-plugin-vue": "~10.5.1",
-    "globals": "~16.4.0",
+    "edm115-lint": "~0.1.5",
+    "eslint": "~9.39.1",
+    "eslint-plugin-vue": "~10.6.0",
+    "globals": "~16.5.0",
     "jiti": "~2.6.1",
     "lightningcss": "~1.30.2",
     "npm-run-all2": "~8.0.4",
-    "oxlint": "~1.25.0",
-    "oxlint-tsgolint": "~0.4.0",
-    "sass-embedded": "~1.93.2",
+    "oxlint": "~1.29.0",
+    "oxlint-tsgolint": "~0.8.1",
+    "sass-embedded": "~1.93.3",
     "sass-loader": "~16.0.6",
     "typescript": "~5.9.3",
     "vue-eslint-parser": "~10.2.0",
-    "vue-tsc": "~3.1.2"
+    "vue-tsc": "~3.1.5"
   },
   "license": "MIT",
   "name": "better-maps",
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.23.0",
   "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EDM115/better-maps.git"
   },
   "scripts": {
-    "analyze": "dotenvx run -- nuxt analyze",
     "build": "dotenvx run -- nuxt build",
-
     "cleanup": "nuxt cleanup",
-
-    "dev": "nuxt dev --no-clear --no-fork",
-
+    "dev": "nuxt dev --no-clear",
     "lint": "run-p lint:oxlint lint:eslint",
     "lint:fix": "run-s lint:fix:oxlint lint:fix:eslint",
-
     "lint:eslint": "eslint --cache --cache-location .eslintcache --concurrency=auto .",
     "lint:fix:eslint": "eslint --concurrency=auto --fix .",
-
     "lint:oxlint": "oxlint --type-aware .",
     "lint:fix:oxlint": "oxlint --fix --type-aware .",
-
     "format": "eslint -c eslint.stylistic.config.ts --concurrency=auto --fix .",
-
     "preview": "dotenvx run -- nuxt preview --port 88",
     "start": "dotenvx run -- node .output/server/index.mjs",
-
     "seed": "dotenvx run -- node --experimental-strip-types init/seed_db.ts",
-
     "typecheck": "nuxt typecheck"
   },
   "type": "module",
-  "version": "1.5.0"
+  "version": "1.6.0"
 }
