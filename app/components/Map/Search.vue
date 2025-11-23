@@ -342,6 +342,10 @@ watch(selectedPlace, (place) => {
 })
 
 onMounted(async () => {
+  if (typeof window === "undefined") {
+    return
+  }
+
   await google.maps.importLibrary("places")
 })
 

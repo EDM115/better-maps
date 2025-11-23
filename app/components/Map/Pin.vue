@@ -122,7 +122,10 @@ const handlePinClick = (pin: Pin) => {
     return
   }
 
-  pixelOffset.value = new google.maps.Size(0, -34)
+  if (typeof window !== "undefined" && typeof (window as unknown as { google?: unknown }).google !== "undefined") {
+    pixelOffset.value = new google.maps.Size(0, -34)
+  }
+
   selectedPin.value = pin
   showInfoWindow.value = true
   emit("pin-selected", pin.id)
@@ -308,7 +311,10 @@ watch(() => props.mapId, (newMapId) => {
 onMounted(() => {
   if (props.mapId) {
     fetchPins()
-    pixelOffset.value = new google.maps.Size(0, -34)
+
+    if (typeof window !== "undefined" && typeof (window as unknown as { google?: unknown }).google !== "undefined") {
+      pixelOffset.value = new google.maps.Size(0, -34)
+    }
   }
 })
 </script>

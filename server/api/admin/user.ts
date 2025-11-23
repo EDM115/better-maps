@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
       const { user_id } = getQuery(event)
 
       if (user_id) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const user = db.prepare(`
           SELECT * FROM User
           WHERE id = ?
@@ -42,6 +43,7 @@ export default defineEventHandler(async (event) => {
           },
         }
       } else {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const users = db.prepare(`
           SELECT * FROM User
         `)

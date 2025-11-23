@@ -1,33 +1,53 @@
 <template>
   <div>
     <v-skeleton-loader
-      v-if="!hasLoaded"
+      v-if="pending || !data"
       type="image"
       class="h-100"
       style="background-color: rgb(var(--v-background-color));"
     />
     <MapDisplay
-      v-show="hasLoaded"
+      v-else
       class="h-100 pa-4"
-      :set-has-loaded="setHasLoaded"
+      :initial-map="data.map"
+      :initial-icons="data.icons"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 const store = useMainStore()
-const router = useRouter()
-const hasLoaded = ref(false)
 
-const setHasLoaded = (loaded: boolean) => {
-  hasLoaded.value = loaded
+if (store.isUserEmpty) {
+  await navigateTo("/", { redirectCode: 302 })
 }
 
-onMounted(async () => {
-  await nextTick()
+const {
+  data, pending,
+} = await useAsyncData("map-page-data", async () => {
+  const token = store.getUser?.token
+  const userId = store.getUser?.id
 
-  if (store.isUserEmpty) {
-    router.push("/")
+  if (!token || !userId) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Unauthorized",
+    })
+  }
+
+  const [ mapResponse, iconsResponse ] = await Promise.all([
+    $fetch("/api/map", {
+      headers: { Authorization: `Bearer ${token}` },
+      query: { user_id: userId },
+    }),
+    $fetch("/api/icon", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+  ])
+
+  return {
+    map: mapResponse.body.map,
+    icons: iconsResponse.body.icons,
   }
 })
 </script>

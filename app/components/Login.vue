@@ -124,7 +124,10 @@ async function login(event: typeof state) {
   try {
     const result = await $fetch("/api/login", {
       method: "POST",
-      body: JSON.stringify(event),
+      body: {
+        username: event.username,
+        password: event.password,
+      },
     })
 
     store.setUser(result.body.user)

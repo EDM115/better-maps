@@ -3,7 +3,7 @@
     <v-col cols="8">
       <v-card>
         <GoogleMap
-          v-if="hasApiKey"
+          v-if="isClient"
           ref="mapRef"
           :api-key="GOOGLE_MAPS_API_KEY ?? ''"
           :map-id="mapId"
@@ -12,22 +12,25 @@
           style="width: 100%; height: 85vh"
           @map-loaded="mapRef = $event"
         >
-          <MapPin
-            ref="mapPinRef"
-            :map="mapRef?.map"
-            :center="center"
-            :map-id="Number(mapId)"
-            :icons="icons"
-            @pin-selected="(pinId) => selectedPin = pinId"
-          />
+          <template v-if="mapRef?.map">
+            <MapPin
+              ref="mapPinRef"
+              :map="mapRef.map"
+              :center="center"
+              :map-id="Number(mapId)"
+              :icons="icons"
+              @pin-selected="(pinId) => selectedPin = pinId"
+            />
+          </template>
         </GoogleMap>
       </v-card>
     </v-col>
     <v-col cols="4">
       <v-card class="pa-4">
         <MapSearch
+          v-if="mapRef?.map"
           ref="mapSearchRef"
-          :map="mapRef?.map"
+          :map="mapRef.map"
           :center="center"
           :country="mapCountry"
           :icons="icons"
@@ -44,7 +47,8 @@
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
         />
         <MapOptions
-          :map="mapRef?.map"
+          v-if="mapRef?.map"
+          :map="mapRef.map"
           :show="mapShowTransit"
         />
       </v-card>
@@ -66,8 +70,9 @@
       <v-list>
         <v-list-item>
           <MapSearch
+            v-if="mapRef?.map"
             ref="mapSearchRef"
-            :map="mapRef?.map"
+            :map="mapRef.map"
             :center="center"
             :country="mapCountry"
             :icons="icons"
@@ -88,7 +93,8 @@
         </v-list-item>
         <v-list-item>
           <MapOptions
-            :map="mapRef?.map"
+            v-if="mapRef?.map"
+            :map="mapRef.map"
             :show="mapShowTransit"
           />
         </v-list-item>
@@ -97,7 +103,7 @@
 
     <v-card class="flex-grow-1">
       <GoogleMap
-        v-if="hasApiKey"
+        v-if="isClient"
         ref="mapRef"
         :api-key="GOOGLE_MAPS_API_KEY ?? ''"
         :map-id="mapId"
@@ -106,14 +112,16 @@
         style="width: 100%; height: 90vh"
         @map-loaded="mapRef = $event"
       >
-        <MapPin
-          ref="mapPinRef"
-          :map="mapRef?.map"
-          :center="center"
-          :map-id="Number(mapId)"
-          :icons="icons"
-          @pin-selected="(pinId) => selectedPin = pinId"
-        />
+        <template v-if="mapRef?.map">
+          <MapPin
+            ref="mapPinRef"
+            :map="mapRef.map"
+            :center="center"
+            :map-id="Number(mapId)"
+            :icons="icons"
+            @pin-selected="(pinId) => selectedPin = pinId"
+          />
+        </template>
       </GoogleMap>
       <v-btn
         icon="mdi-menu"
@@ -135,12 +143,19 @@ interface MapRef {
 }
 
 type Props = {
-  setHasLoaded?: (loaded: boolean) => void;
+  initialMap: {
+    id: number;
+    start_lat: number;
+    start_lng: number;
+    start_zoom: number;
+    country: string;
+    show_transit: boolean;
+  };
+  initialIcons: Icon[];
 }
 
 const props = defineProps<Props>()
 
-const store = useMainStore()
 const { smAndUp } = useVDisplay()
 
 const drawer = ref(false)
@@ -148,16 +163,16 @@ const mapRef = ref<MapRef>()
 const mapPinRef = ref()
 const mapSearchRef = ref()
 const center = ref({
-  lat: 0,
-  lng: 0,
+  lat: props.initialMap.start_lat,
+  lng: props.initialMap.start_lng,
 })
-const zoom = ref(0)
-const mapId = ref(String(0))
+const zoom = ref(props.initialMap.start_zoom)
+const mapId = ref(String(props.initialMap.id))
 const translateX = ref("80vw")
-const mapCountry = ref("")
-const mapShowTransit = ref(false)
+const mapCountry = ref(props.initialMap.country)
+const mapShowTransit = ref(props.initialMap.show_transit)
 const selectedPin = ref<number | null>(null)
-const icons = ref<Icon[]>([])
+const icons = ref<Icon[]>([...props.initialIcons])
 
 watch(drawer, (val) => {
   translateX.value = val
@@ -165,65 +180,15 @@ watch(drawer, (val) => {
     : "80vw"
 })
 
-const user = computed(() => store.getUser)
-
-const hasApiKey = ref(false)
+const isClient = ref(false)
 const GOOGLE_MAPS_API_KEY = ref<string | null>(null)
 
-const fetchGoogleMapsApiKey = async (token: string) => {
-  const response = await $fetch("/api/googleMaps", {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-
-  GOOGLE_MAPS_API_KEY.value = response.body.apiKey
-  hasApiKey.value = true
+if (import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+  GOOGLE_MAPS_API_KEY.value = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 }
-
-const fetchMapData = async (userId: number | null) => {
-  const response = await $fetch("/api/map", {
-    headers: { Authorization: `Bearer ${user.value.token}` },
-    query: { user_id: userId },
-  })
-
-  mapId.value = String(response.body.map.id)
-  center.value = {
-    lat: response.body.map.start_lat, lng: response.body.map.start_lng,
-  }
-  zoom.value = response.body.map.start_zoom
-  mapCountry.value = response.body.map.country
-  mapShowTransit.value = response.body.map.show_transit
-}
-
-const fetchIcons = async () => {
-  const response = await $fetch("/api/icon", {
-    headers: { Authorization: `Bearer ${user.value.token}` },
-  })
-
-  icons.value = response.body.icons
-}
-
-watch(
-  () => user.value,
-  async (newUser) => {
-    if (newUser && newUser.token) {
-      await fetchGoogleMapsApiKey(newUser.token)
-      await fetchMapData(newUser.id)
-      await fetchIcons()
-    }
-  },
-  { immediate: true },
-)
 
 onMounted(async () => {
-  if (!store.isUserEmpty) {
-    await fetchGoogleMapsApiKey(store.getUser.token ?? "")
-    await fetchMapData(store.getUser.id ?? null)
-    await fetchIcons()
-  }
-
-  if (props.setHasLoaded) {
-    props.setHasLoaded(true)
-  }
+  isClient.value = true
 })
 </script>
 

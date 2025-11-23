@@ -603,13 +603,25 @@ type Icon = {
 const config = useRuntimeConfig()
 const store = useMainStore()
 
-const users = ref<User[]>([])
-const maps = ref<Map[]>([])
-const icons = ref<Icon[]>([])
+type Props = {
+  initialUsers?: User[];
+  initialMaps?: Map[];
+  initialIcons?: Icon[];
+  initialMapUsers?: Record<number, {
+    id: number;
+    name: string;
+  }[]>;
+}
+
+const props = defineProps<Props>()
+
+const users = ref<User[]>(props.initialUsers ?? [])
+const maps = ref<Map[]>(props.initialMaps ?? [])
+const icons = ref<Icon[]>(props.initialIcons ?? [])
 const mapUsers = ref<Record<number, {
   id: number;
   name: string;
-}[]>>({})
+}[]>>(props.initialMapUsers ?? {})
 const exporting = ref(false)
 
 const showDeleteDialog = ref(false)
@@ -661,42 +673,25 @@ const resetNewIcon = () => {
   newIcon.value = resetValue
 }
 
-const updateMapUsersMap = async () => {
-  const mapUsersData = await $fetch("/api/admin/map", {
-    params: {
-      admin_id: store.getUser.id, get_all_users: true,
-    },
-    headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
-    },
-  })
-
-  if ("getAllUsers" in mapUsersData.body) {
-    mapUsers.value = mapUsersData.body.getAllUsers
-  } else {
-    mapUsers.value = {}
-  }
-}
-
 const fetchData = async () => {
-  const [ usersData, mapsData, iconsData ] = await Promise.all([
+  const [ usersData, mapsData, iconsData, mapUsersData ] = await Promise.all([
     $fetch("/api/admin/user", {
       params: { admin_id: store.getUser.id },
-      headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
-      },
+      headers: { Authorization: `Bearer ${store.getUser.token}` },
     }),
     $fetch("/api/admin/map", {
       params: { admin_id: store.getUser.id },
-      headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
-      },
+      headers: { Authorization: `Bearer ${store.getUser.token}` },
     }),
     $fetch("/api/admin/icon", {
       params: { admin_id: store.getUser.id },
-      headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+      headers: { Authorization: `Bearer ${store.getUser.token}` },
+    }),
+    $fetch("/api/admin/map", {
+      params: {
+        admin_id: store.getUser.id, get_all_users: true,
       },
+      headers: { Authorization: `Bearer ${store.getUser.token}` },
     }),
   ])
 
@@ -718,7 +713,11 @@ const fetchData = async () => {
     icons.value = []
   }
 
-  await updateMapUsersMap()
+  if ("getAllUsers" in mapUsersData.body) {
+    mapUsers.value = mapUsersData.body.getAllUsers
+  } else {
+    mapUsers.value = {}
+  }
 }
 
 const addUser = async () => {
@@ -961,8 +960,6 @@ const downloadBackup = async (format: "csv" | "json" | "sql" | "sqlite") => {
 }
 
 onMounted(async () => {
-  await fetchData()
-
   icons.value.forEach((icon) => {
     isValidEditIcons[icon.id] = true
   })

@@ -94,6 +94,7 @@ SEED_USERS='[{"username": "admin", "password": "admin", "role": "admin"}, {"user
 SEED_ICONS='[{"name": "Home", "color": "#50FA7B", "icon": "mdi-home-outline"}, {"name": "Groceries", "color": "#8BE9FD", "icon": "mdi-cart-outline"}, {"name": "Schools", "color": "#FF79C6", "icon": "mdi-book-open-variant-outline"}, {"name": "Work", "color": "#BD93F9", "icon": "mdi-bag-personal-outline"}, {"name": "Food", "color": "#F1FA8C", "icon": "mdi-food-outline"}]'
 SEED=true
 GOOGLE_MAPS_API_KEY=Abc-Def123
+VITE_GOOGLE_MAPS_API_KEY=Abc-Def123
 STARTING_POINT=48.8566,2.3522,3
 COUNTRY=fr
 DEFAULT_UI_LANG=en

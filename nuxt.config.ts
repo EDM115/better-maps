@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/styles/main.scss"],
   runtimeConfig: {
+    "googleMapsApiKey": process.env.GOOGLE_MAPS_API_KEY,
     "public": {
       country: process.env.COUNTRY,
       startingPoint: process.env.STARTING_POINT,

@@ -5,13 +5,20 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY ?? ""
+  const config = useRuntimeConfig()
+  const GOOGLE_MAPS_API_KEY = config.googleMapsApiKey
+
+  if (!GOOGLE_MAPS_API_KEY) {
+    throw createError({
+      status: 500,
+      message: "Google Maps API key is not configured on the server",
+    })
+  }
 
   return {
     status: 200,
     body: {
-      success: "Google Maps API key retrieved",
-      apiKey: GOOGLE_MAPS_API_KEY,
+      success: "Google Maps backend is configured",
     },
   }
 })
