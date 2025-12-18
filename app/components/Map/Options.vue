@@ -20,11 +20,9 @@ interface Props {
   show: boolean;
 }
 
-
 const props = defineProps<Props>()
 const showTransit = ref(props.show)
 const transitLayer = ref<google.maps.TransitLayer | null>(null)
-
 
 watch(showTransit, (show) => {
   if (props.map) {

@@ -28,7 +28,6 @@
 
 <script lang="ts" setup>
 const { smAndUp } = useVDisplay()
-
 const store = useMainStore()
 
 onMounted(async () => {

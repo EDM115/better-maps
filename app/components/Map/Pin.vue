@@ -63,7 +63,8 @@ import {
 interface Props {
   map?: google.maps.Map;
   center?: {
-    lat: number; lng: number;
+    lat: number;
+    lng: number;
   };
   mapId?: number;
   icons: Icon[];
@@ -86,6 +87,8 @@ const store = useMainStore()
 const theme = useVTheme()
 const { t } = useI18n()
 
+const props = defineProps<Props>()
+
 const dummyPin: Pin = {
   id: -1,
   name: t("map.pin.dummy-pin"),
@@ -100,7 +103,6 @@ const dummyPin: Pin = {
   favorite: false,
 }
 
-const props = defineProps<Props>()
 const pins = ref<Pin[]>([])
 const filteredPins = computed(() => [
   ...pins.value.filter((p) => p.visible),
@@ -161,7 +163,7 @@ const addPin = async (pin: Pin) => {
         favorite: pin.favorite,
       },
       headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+        Authorization: `Bearer ${store.getUser?.token}`,
       },
     })
 
@@ -183,7 +185,7 @@ const deletePin = async (pin: Pin) => {
       method: "DELETE",
       body: { id: pin.id },
       headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+        Authorization: `Bearer ${store.getUser?.token}`,
       },
     })
     pins.value = pins.value.filter((p) => p.id !== pin.id)
@@ -210,7 +212,7 @@ const editPin = async (pin: Pin) => {
         favorite: pin.favorite,
       },
       headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+        Authorization: `Bearer ${store.getUser?.token}`,
       },
     })
 
@@ -242,7 +244,7 @@ const togglePinVisibility = async (pin: Pin) => {
         favorite: pin.favorite,
       },
       headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+        Authorization: `Bearer ${store.getUser?.token}`,
       },
     })
 
@@ -274,7 +276,7 @@ const fetchPins = async () => {
   try {
     const response = await $fetch("/api/point", {
       headers: {
-        Authorization: `Bearer ${store.getUser.token}`,
+        Authorization: `Bearer ${store.getUser?.token}`,
       },
       query: { map_id: props.mapId },
     })

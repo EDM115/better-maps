@@ -112,17 +112,8 @@ import {
   type Icon,
 } from "./consts"
 
-const { smAndUp } = useVDisplay()
 const theme = useVTheme()
-
-const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
-const activePanel = ref(0)
-
-const emit = defineEmits<{
-  (e: "edit", pin: Pin): void;
-  (e: "delete", pin: Pin): void;
-  (e: "toggle-visibility", pin: Pin): void;
-}>()
+const { smAndUp } = useVDisplay()
 
 defineProps<{
   pins: Pin[];
@@ -131,9 +122,12 @@ defineProps<{
   icons: Icon[];
 }>()
 
+const emit = defineEmits<(e: "edit" | "delete" | "toggle-visibility", pin: Pin) => void>()
+
+const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
+const activePanel = ref(0)
 const showDialog = ref(false)
 const pinToDelete = ref<Pin | null>(null)
-
 const selectedItem = ref<ComponentPublicInstance | null>(null)
 
 watch(() => selectedItem.value, (el) => {

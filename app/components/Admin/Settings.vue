@@ -600,9 +600,6 @@ type Icon = {
   icon: string;
 }
 
-const config = useRuntimeConfig()
-const store = useMainStore()
-
 type Props = {
   initialUsers?: User[];
   initialMaps?: Map[];
@@ -612,6 +609,9 @@ type Props = {
     name: string;
   }[]>;
 }
+
+const config = useRuntimeConfig()
+const store = useMainStore()
 
 const props = defineProps<Props>()
 

@@ -14,6 +14,7 @@ export function useCustomTheme() {
   }
 
   return {
-    changeTheme, toggleTheme,
+    changeTheme,
+    toggleTheme,
   }
 }

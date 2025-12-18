@@ -100,7 +100,9 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      const dbShowTransit = show_transit ? 1 : 0
+      const dbShowTransit = show_transit
+        ? 1
+        : 0
 
       const newMap = db.prepare(`
         INSERT INTO Map (name, start_lat, start_lng, start_zoom, country, show_transit)
@@ -127,7 +129,9 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      const dbShowTransit = show_transit ? 1 : 0
+      const dbShowTransit = show_transit
+        ? 1
+        : 0
 
       db.prepare(`
         UPDATE Map

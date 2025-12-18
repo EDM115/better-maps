@@ -48,7 +48,6 @@ type AdminIcon = {
 }
 
 const store = useMainStore()
-
 const { smAndUp } = useVDisplay()
 
 const { data } = await useAsyncData<{

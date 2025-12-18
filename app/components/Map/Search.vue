@@ -93,7 +93,8 @@ import {
 interface Props {
   map?: google.maps.Map;
   center?: {
-    lat: number; lng: number;
+    lat: number;
+    lng: number;
   };
   country?: string;
   icons: Icon[];
@@ -124,12 +125,11 @@ interface PlaceDetails {
   favorite: boolean;
 }
 
-const props = defineProps<Props>()
-const emit = defineEmits<{
-  (e: "add-marker", details: PlaceDetails): void;
-  (e: "update-marker", details: PlaceDetails): void;
-}>()
 const config = useRuntimeConfig()
+
+const props = defineProps<Props>()
+
+const emit = defineEmits<(e: "add-marker" | "update-marker", details: PlaceDetails) => void>()
 
 const loading = ref(false)
 const editMode = ref(false)
@@ -234,7 +234,8 @@ async function handleSearch(search: string) {
   loading.value = true
 
   const {
-    AutocompleteSuggestion, AutocompleteSessionToken,
+    AutocompleteSuggestion,
+    AutocompleteSessionToken,
   }
     = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary
 
