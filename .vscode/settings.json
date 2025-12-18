@@ -21,7 +21,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "nuxt.config.*": "app.config.*, error.vue, tsconfig.json, .env, .nuxtignore",
-    "Dockerfile": ".dockerignore",
+    "Dockerfile": ".dockerignore, .node-version",
     "eslint.config.ts": ".oxlintrc.json, .eslintcache, eslint.*.config.ts",
     "package.json": "package-lock.json, pnpm*",
     "README.md": "LICENSE, .gitignore, renovate.json",

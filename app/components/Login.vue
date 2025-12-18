@@ -81,7 +81,6 @@ type ErrorType = {
   };
 } | string
 
-const router = useRouter()
 const store = useMainStore()
 
 const errorMessage = ref("")
@@ -131,7 +130,7 @@ async function login(event: typeof state) {
     })
 
     store.setUser(result.body.user)
-    router.push("/map")
+    await navigateTo("/map", { redirectCode: 302 })
   } catch (error) {
     handleError(error as ErrorType)
   }
@@ -142,14 +141,6 @@ async function submit() {
 
   clear()
 }
-
-onMounted(async () => {
-  await nextTick()
-
-  if (!store.isUserEmpty) {
-    router.push("/map")
-  }
-})
 </script>
 
 <style scoped>

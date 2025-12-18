@@ -28,4 +28,12 @@
 
 <script lang="ts" setup>
 const { smAndUp } = useVDisplay()
+
+const store = useMainStore()
+
+onMounted(async () => {
+  if (store.getUser !== null) {
+    await navigateTo("/map", { redirectCode: 302 })
+  }
+})
 </script>

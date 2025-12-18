@@ -8,7 +8,7 @@
   >
     <template #prepend>
       <NuxtLink
-        to="/"
+        :to="store.getUser ? '/map' : '/'"
         class="flex items-center"
       >
         <NuxtImg
@@ -25,7 +25,7 @@
     </template>
     <v-app-bar-title v-if="smAndUp">
       <NuxtLink
-        to="/"
+        :to="store.getUser ? '/map' : '/'"
         class="text-h6"
       >
         Better Maps
@@ -34,7 +34,7 @@
         to="/admin"
       >
         <v-btn
-          v-if="store.getUser.role === 'admin'"
+          v-if="store.getUser?.role === 'admin'"
           icon="mdi-shield-account-outline"
           :variant="router.currentRoute.value.path === '/admin' ? 'outlined' : 'text'"
         />
@@ -45,7 +45,7 @@
         to="/admin"
       >
         <v-btn
-          v-if="store.getUser.role === 'admin'"
+          v-if="store.getUser?.role === 'admin'"
           icon="mdi-shield-account-outline"
           :variant="router.currentRoute.value.path === '/admin' ? 'outlined' : 'text'"
         />
@@ -117,10 +117,10 @@ const i18nSwitch = ref(false)
 const userLocale = computed(() => store.getI18n)
 
 const accountIcon = ref("mdi-login")
-const accountText = computed(() => (store.isUserEmpty
-  ? t("navbar.connect")
-  : t("navbar.disconnect")))
-const connected = computed(() => !store.isUserEmpty)
+const connected = computed(() => store.getUser !== null)
+const accountText = computed(() => (connected.value
+  ? t("navbar.disconnect")
+  : t("navbar.connect")))
 const iconTheme = computed(() => (store.getTheme === "light"
   ? "mdi-weather-night"
   : "mdi-weather-sunny"))

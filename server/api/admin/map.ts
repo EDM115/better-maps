@@ -94,17 +94,19 @@ export default defineEventHandler(async (event) => {
         name, start_lat, start_lng, start_zoom, country, show_transit,
       } = await readBody(event)
 
-      if (!name || !start_lat || !start_lng || !start_zoom || !country || !show_transit) {
+      if (!name || !start_lat || !start_lng || !start_zoom || !country) {
         throw createError({
           status: 400, message: "Missing required fields",
         })
       }
 
+      const dbShowTransit = show_transit ? 1 : 0
+
       const newMap = db.prepare(`
         INSERT INTO Map (name, start_lat, start_lng, start_zoom, country, show_transit)
         VALUES (?, ?, ?, ?, ?, ?)
       `)
-        .run(name, start_lat, start_lng, start_zoom, country, show_transit)
+        .run(name, start_lat, start_lng, start_zoom, country, dbShowTransit)
 
       return {
         status: 201,
@@ -119,18 +121,20 @@ export default defineEventHandler(async (event) => {
         id, name, start_lat, start_lng, start_zoom, country, show_transit,
       } = await readBody(event)
 
-      if (!id || !name || !start_lat || !start_lng || !start_zoom || !country || !show_transit) {
+      if (!id || !name || !start_lat || !start_lng || !start_zoom || !country) {
         throw createError({
           status: 400, message: "Missing required fields",
         })
       }
+
+      const dbShowTransit = show_transit ? 1 : 0
 
       db.prepare(`
         UPDATE Map
         SET name = ?, start_lat = ?, start_lng = ?, start_zoom = ?, country = ?, show_transit = ?
         WHERE id = ?
       `)
-        .run(name, start_lat, start_lng, start_zoom, country, show_transit, id)
+        .run(name, start_lat, start_lng, start_zoom, country, dbShowTransit, id)
 
       return {
         status: 200,

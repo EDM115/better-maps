@@ -4,126 +4,118 @@ function ssrSafe() {
     && typeof localStorage !== "undefined"
 }
 
-export const useMainStore = defineStore("main", {
-  state: () => ({
-    i18n: "fr" as "fr" | "en",
-    theme: "dark" as "dark" | "light",
-    user: {
-      id: null as number | null,
-      username: null as string | null,
-      token: null as string | null,
-      role: null as string | null,
-      map_id: null as number | null,
-    },
-  }),
-  getters: {
-    getI18n(state): "fr" | "en" {
-      return state.i18n
-    },
-    getTheme(state): "dark" | "light" {
-      return state.theme
-    },
-    getUser(state): {
-      id: number | null; username: string | null; token: string | null; role: string | null; map_id: number | null;
-    } {
-      return state.user
-    },
-    isUserEmpty(state): boolean {
-      return state.user.id === null
-        && state.user.username === null
-        && state.user.token === null
-        && state.user.role === null
-        && state.user.map_id === null
-    },
-  },
-  actions: {
-    initI18n() {
-      if (!ssrSafe()) {
-        return
-      }
+export const useMainStore = defineStore("main", () => {
+  type User = {
+    id: number,
+    username: string,
+    token: string,
+    role: string,
+    map_id: number,
+  } | null
 
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      const storedI18n = localStorage.getItem("i18n") as "fr" | "en" | null
+  const i18n = ref<"fr" | "en">("fr")
+  const theme = ref<"dark" | "light">("dark")
+  const user = ref<User>(null)
 
-      if (storedI18n) {
-        this.i18n = storedI18n
-      } else {
-        this.i18n = "fr"
-      }
-    },
-    initTheme() {
-      if (!ssrSafe()) {
-        return
-      }
+  const getI18n = computed(() => i18n.value)
+  const getTheme = computed(() => theme.value)
+  const getUser = computed(() => user.value)
 
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      let storedTheme = localStorage.getItem("theme") as "dark" | "light" | null
+  function initI18n() {
+    if (!ssrSafe()) {
+      return
+    }
 
-      if (storedTheme) {
-        this.setTheme(storedTheme)
-      }
-    },
-    initUser() {
-      if (!ssrSafe()) {
-        return
-      }
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const storedI18n = localStorage.getItem("i18n") as "fr" | "en" | null
 
-      const storedUser = localStorage.getItem("user")
+    setI18n(storedI18n ?? "fr")
+  }
 
-      if (storedUser && storedUser.length > 0) {
-        try {
-          this.setUser(JSON.parse(decodeURI(storedUser)))
-        } catch (e) {
-          console.error("Error parsing user cookie :", e)
-        }
-      }
-    },
-    setI18n(i18n: "fr" | "en") {
-      if (!ssrSafe()) {
-        return
-      }
+  function initTheme() {
+    if (!ssrSafe()) {
+      return
+    }
 
-      this.i18n = i18n
-      localStorage.setItem("i18n", i18n)
-    },
-    setTheme(theme: "dark" | "light") {
-      if (!ssrSafe()) {
-        return
-      }
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const storedTheme = localStorage.getItem("theme") as "dark" | "light" | null
 
-      this.theme = theme
-      localStorage.setItem("theme", theme)
-    },
-    setUser(user: {
-      id: number | null; username: string | null; token: string | null; role: string | null; map_id: number | null;
-    }) {
-      if (!ssrSafe()) {
-        return
-      }
+    if (storedTheme) {
+      setTheme(storedTheme)
+    }
+  }
 
-      this.user = user
-      localStorage.setItem("user", encodeURI(JSON.stringify(user)))
-    },
-    logout() {
-      if (!ssrSafe()) {
-        return
-      }
+  function initUser() {
+    if (!ssrSafe()) {
+      return
+    }
 
-      this.user = {
-        id: null,
-        username: null,
-        token: null,
-        role: null,
-        map_id: null,
+    const storedUser = localStorage.getItem("user")
+
+    if (storedUser && storedUser.length > 0) {
+      try {
+        setUser(JSON.parse(decodeURI(storedUser)))
+      } catch (e) {
+        console.error("Error parsing user data :", e)
       }
-      localStorage.removeItem("user")
-    },
-    initStore() {
-      this.initI18n()
-      this.initTheme()
-      this.initUser()
-    },
-  },
+    }
+  }
+
+  function setI18n(i18nParam: "fr" | "en") {
+    if (!ssrSafe()) {
+      return
+    }
+
+    i18n.value = i18nParam
+    localStorage.setItem("i18n", i18n.value)
+  }
+
+  function setTheme(themeParam: "dark" | "light") {
+    if (!ssrSafe()) {
+      return
+    }
+
+    theme.value = themeParam
+    localStorage.setItem("theme", theme.value)
+  }
+
+  function setUser(userParam: User) {
+    if (!ssrSafe()) {
+      return
+    }
+
+    user.value = userParam
+    localStorage.setItem("user", encodeURI(JSON.stringify(user.value)))
+  }
+
+  function logout() {
+    if (!ssrSafe()) {
+      return
+    }
+
+    user.value = null
+    localStorage.removeItem("user")
+  }
+
+  function initStore() {
+    initI18n()
+    initTheme()
+    initUser()
+  }
+
+  return {
+    i18n,
+    theme,
+    user,
+    getI18n,
+    getTheme,
+    getUser,
+    setI18n,
+    setTheme,
+    setUser,
+    logout,
+    initStore,
+  }
 })
 
 export default useMainStore

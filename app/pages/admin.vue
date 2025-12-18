@@ -51,10 +51,6 @@ const store = useMainStore()
 
 const { smAndUp } = useVDisplay()
 
-if (store.isUserEmpty || (!store.isUserEmpty && store.getUser.role !== "admin")) {
-  await navigateTo("/", { redirectCode: 302 })
-}
-
 const { data } = await useAsyncData<{
   users: User[];
   maps: AdminMap[];
@@ -109,6 +105,12 @@ const { data } = await useAsyncData<{
     maps: mapsData.body.maps ?? [],
     icons: iconsData.body.icons ?? [],
     mapUsers: mapUsersData.body.getAllUsers ?? {},
+  }
+})
+
+onMounted(async () => {
+  if (store.getUser === null || store.getUser.role !== "admin") {
+    await navigateTo("/", { redirectCode: 403 })
   }
 })
 </script>

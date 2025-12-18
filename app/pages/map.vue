@@ -18,10 +18,6 @@
 <script setup lang="ts">
 const store = useMainStore()
 
-if (store.isUserEmpty) {
-  await navigateTo("/", { redirectCode: 302 })
-}
-
 const {
   data, pending,
 } = await useAsyncData("map-page-data", async () => {
@@ -48,6 +44,12 @@ const {
   return {
     map: mapResponse.body.map,
     icons: iconsResponse.body.icons,
+  }
+})
+
+onMounted(async () => {
+  if (store.getUser === null) {
+    await navigateTo("/", { redirectCode: 401 })
   }
 })
 </script>

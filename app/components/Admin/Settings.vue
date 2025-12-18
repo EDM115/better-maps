@@ -20,7 +20,7 @@
                 <v-col cols="12">
                   <v-select
                     v-model="user.role"
-                    :disabled="user.id === store.getUser.id"
+                    :disabled="user.id === store.getUser?.id"
                     :items="['user', 'admin']"
                     density="compact"
                     :label="$t('admin.users.role')"
@@ -48,7 +48,7 @@
                   @click="updateUser(user.id, user.role, user.map_id)"
                 />
                 <v-btn
-                  :disabled="user.id === store.getUser.id"
+                  :disabled="user.id === store.getUser?.id"
                   icon="mdi-delete"
                   color="error"
                   variant="text"
@@ -676,22 +676,22 @@ const resetNewIcon = () => {
 const fetchData = async () => {
   const [ usersData, mapsData, iconsData, mapUsersData ] = await Promise.all([
     $fetch("/api/admin/user", {
-      params: { admin_id: store.getUser.id },
-      headers: { Authorization: `Bearer ${store.getUser.token}` },
+      params: { admin_id: store.getUser?.id },
+      headers: { Authorization: `Bearer ${store.getUser?.token}` },
     }),
     $fetch("/api/admin/map", {
-      params: { admin_id: store.getUser.id },
-      headers: { Authorization: `Bearer ${store.getUser.token}` },
+      params: { admin_id: store.getUser?.id },
+      headers: { Authorization: `Bearer ${store.getUser?.token}` },
     }),
     $fetch("/api/admin/icon", {
-      params: { admin_id: store.getUser.id },
-      headers: { Authorization: `Bearer ${store.getUser.token}` },
+      params: { admin_id: store.getUser?.id },
+      headers: { Authorization: `Bearer ${store.getUser?.token}` },
     }),
     $fetch("/api/admin/map", {
       params: {
-        admin_id: store.getUser.id, get_all_users: true,
+        admin_id: store.getUser?.id, get_all_users: true,
       },
-      headers: { Authorization: `Bearer ${store.getUser.token}` },
+      headers: { Authorization: `Bearer ${store.getUser?.token}` },
     }),
   ])
 
@@ -724,10 +724,10 @@ const addUser = async () => {
   await $fetch("/api/admin/user", {
     method: "POST",
     body: {
-      ...newUser.value, admin_id: store.getUser.id,
+      ...newUser.value, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   resetNewUser()
@@ -738,10 +738,10 @@ const updateUser = async (userId: number, role: string, mapId: number) => {
   await $fetch("/api/admin/user", {
     method: "PUT",
     body: {
-      id: userId, role, map_id: mapId, admin_id: store.getUser.id,
+      id: userId, role, map_id: mapId, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   await fetchData()
@@ -751,10 +751,10 @@ const deleteUser = async (userId: number) => {
   await $fetch("/api/admin/user", {
     method: "DELETE",
     body: {
-      id: userId, admin_id: store.getUser.id,
+      id: userId, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   showDeleteDialog.value = false
@@ -770,10 +770,10 @@ const addMap = async () => {
   await $fetch("/api/admin/map", {
     method: "POST",
     body: {
-      ...newMap.value, admin_id: store.getUser.id,
+      ...newMap.value, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   resetNewMap()
@@ -784,10 +784,10 @@ const updateMap = async (mapId: number, name: string, startLat: number, startLng
   await $fetch("/api/admin/map", {
     method: "PUT",
     body: {
-      id: mapId, name, start_lat: startLat, start_lng: startLng, start_zoom: startZoom, country, show_transit: showTransit, admin_id: store.getUser.id,
+      id: mapId, name, start_lat: startLat, start_lng: startLng, start_zoom: startZoom, country, show_transit: showTransit, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   await fetchData()
@@ -797,10 +797,10 @@ const deleteMap = async (mapId: number) => {
   await $fetch("/api/admin/map", {
     method: "DELETE",
     body: {
-      id: mapId, admin_id: store.getUser.id,
+      id: mapId, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   showMapDeleteDialog.value = false
@@ -867,10 +867,10 @@ const updateIcon = async (iconId: number, name: string, color: string, icon: str
   await $fetch("/api/admin/icon", {
     method: "PUT",
     body: {
-      id: iconId, name, color, icon, admin_id: store.getUser.id,
+      id: iconId, name, color, icon, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   await fetchData()
@@ -892,10 +892,10 @@ const addIcon = async () => {
   await $fetch("/api/admin/icon", {
     method: "POST",
     body: {
-      ...newIcon.value, admin_id: store.getUser.id,
+      ...newIcon.value, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   resetNewIcon()
@@ -910,10 +910,10 @@ const deleteIcon = async () => {
   await $fetch("/api/admin/icon", {
     method: "DELETE",
     body: {
-      id: iconToDelete.value, admin_id: store.getUser.id,
+      id: iconToDelete.value, admin_id: store.getUser?.id,
     },
     headers: {
-      Authorization: `Bearer ${store.getUser.token}`,
+      Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   showIconDeleteDialog.value = false
@@ -930,9 +930,9 @@ const downloadBackup = async (format: "csv" | "json" | "sql" | "sqlite") => {
     exporting.value = true
     const response = await $fetch("/api/admin/dbExport", {
       params: {
-        format, admin_id: store.getUser.id,
+        format, admin_id: store.getUser?.id,
       },
-      headers: { Authorization: `Bearer ${store.getUser.token}` },
+      headers: { Authorization: `Bearer ${store.getUser?.token}` },
     })
 
     const binaryString = atob(response.body)

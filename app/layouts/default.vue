@@ -1,5 +1,5 @@
 <template>
-  <v-app :theme="dark">
+  <v-app :theme="theme">
     <NuxtRouteAnnouncer />
     <LayoutNavBar />
     <v-main>
@@ -19,7 +19,7 @@ const {
 const store = useMainStore()
 const { changeTheme } = useCustomTheme()
 
-const dark = ref(store.getTheme)
+const theme = computed(() => store.getTheme)
 
 useHead({
   title: t("main.title"),
@@ -53,14 +53,6 @@ useSeoMeta({
   ogUrl: "https://maps.edm115.dev",
   ogLocale: "fr_FR",
 })
-
-watch(
-  () => store.getTheme,
-  (newTheme) => {
-    dark.value = newTheme
-  },
-)
-
 
 onMounted(() => {
   if (localStorage.getItem("theme") === "light") {
