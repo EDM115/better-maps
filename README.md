@@ -25,19 +25,17 @@ Simply enter your username and password.
 > [!NOTE]  
 > If you saved your credentials in your browser (especially Chrome), they might not appear as filled, while they are.  
 > You can make sure of this by clicking somewhere on the screen.
-  
+
 You will then land in the main screen (the map) :
 ![Map screen](./docs/landing.png)
 
 To add a new point, go in the search bar and type the name of the place you want to add :
 ![Search bar](./docs/search.png)
-> [!TIP]  
-> If results don't appear, it's probably because there's a small problem in the search (try to untype/retype a character).
-  
+
 You can either search for a specific place, or just enter an address.  
 > [!TIP]  
 > The results are losely filtered by the visible area of the map, so if you don't find what you're looking for, try to move the map a bit.
-  
+
 Once done, you'll have access to the fields to fill in :
 ![Add pin](./docs/add_pin.png)
 Here, you can edit the name, displayed address, description (if you want), the icon type (defined by the instance admin) and if the pin is favorite or not (will have an outline around its icon).
@@ -63,7 +61,6 @@ Transit lines can be toggled on to display the public transportation lines in th
 > Actual transit lines like in the screenshot will only appear on big enough cities.  
 > This mode will also prioritize the display of bus stops, metro stations and more at higher zoom levels. Don't hesitate to zoom in to see more details.  
 > Disabling the transit lines will display again more details like shops, restaurants, monuments, ...
-  
 
 To hide a pin from the map without deleting it, you can click on its icon in the pins list :
 ![Hide pin](./docs/hide_pin.png)

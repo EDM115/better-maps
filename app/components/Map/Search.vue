@@ -10,7 +10,7 @@
     return-object
     clearable
     hide-no-data
-    @blur="loading = false"
+    :no-filter="true"
   >
     <template #item="{ props: itemProps, item }">
       <v-list-item
@@ -138,8 +138,9 @@ const searchResults = ref<PlaceItem[]>([])
 const selectedPlace = ref<PlaceItem | null>(null)
 const searchQuery = ref("")
 const searchDebounced = refDebounced(searchQuery, 500, { maxWait: 1500 })
-const didSearch = ref(false)
+const pendingSearch = ref(false)
 
+let currentSearchId = 0
 let sessionToken: google.maps.places.AutocompleteSessionToken | null = null
 
 const placeDetails = ref<PlaceDetails>({
@@ -226,11 +227,14 @@ const startEditing = (pin: PlaceDetails) => {
 }
 
 async function handleSearch(search: string) {
-  if (!search) {
+  const searchId = ++currentSearchId
+
+  if (!search || search.trim().length === 0) {
+    loading.value = false
+
     return
   }
 
-  didSearch.value = false
   loading.value = true
 
   const {
@@ -238,6 +242,10 @@ async function handleSearch(search: string) {
     AutocompleteSessionToken,
   }
     = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary
+
+  if (searchId !== currentSearchId) {
+    return
+  }
 
   if (!sessionToken) {
     sessionToken = new AutocompleteSessionToken()
@@ -258,6 +266,10 @@ async function handleSearch(search: string) {
   try {
     const { suggestions }
       = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request)
+
+    if (searchId !== currentSearchId) {
+      return
+    }
 
     const results: PlaceItem[] = suggestions.map((s) => {
       const p = s.placePrediction
@@ -303,27 +315,39 @@ async function handleSearch(search: string) {
       r.formatted_address = place.formattedAddress ?? r.formatted_address
     }))
 
+    if (searchId !== currentSearchId) {
+      return
+    }
+
     searchResults.value = results
   } catch (err) {
     console.error(err)
-    searchResults.value = []
+    if (searchId === currentSearchId) {
+      searchResults.value = []
+    }
   } finally {
-    didSearch.value = true
-    loading.value = false
+    if (searchId === currentSearchId) {
+      loading.value = false
+      pendingSearch.value = false
+    }
   }
 }
 
 watch(searchQuery, (search) => {
-  if (!editMode.value && search && search.length > 0 && !didSearch.value) {
+  if (!editMode.value && search && search.length > 0) {
+    pendingSearch.value = true
     loading.value = true
   } else {
+    pendingSearch.value = false
     loading.value = false
+    currentSearchId++
   }
 })
 
 watch(searchDebounced, async (search) => {
-  await handleSearch(search)
-  loading.value = false
+  if (pendingSearch.value) {
+    await handleSearch(search)
+  }
 })
 
 watch(selectedPlace, (place) => {
