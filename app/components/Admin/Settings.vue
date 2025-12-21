@@ -361,8 +361,8 @@
                 <v-col cols="12">
                   <v-color-picker
                     v-model="icon.color"
-                    hide-inputs
                     mode="hex"
+                    :modes="['hex']"
                   />
                 </v-col>
               </v-row>
@@ -422,7 +422,7 @@
                 <v-color-picker
                   v-model="newIcon.color"
                   mode="hex"
-                  hide-inputs
+                  :modes="['hex']"
                 />
               </v-col>
               <v-col
@@ -747,17 +747,22 @@ const updateUser = async (userId: number, role: string, mapId: number) => {
   await fetchData()
 }
 
-const deleteUser = async (userId: number) => {
+const deleteUser = async () => {
+  if (userToDelete.value === null) {
+    return
+  }
+
   await $fetch("/api/admin/user", {
     method: "DELETE",
     body: {
-      id: userId, admin_id: store.getUser?.id,
+      id: userToDelete.value, admin_id: store.getUser?.id,
     },
     headers: {
       Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   showDeleteDialog.value = false
+  userToDelete.value = null
   await fetchData()
 }
 
@@ -793,17 +798,22 @@ const updateMap = async (mapId: number, name: string, startLat: number, startLng
   await fetchData()
 }
 
-const deleteMap = async (mapId: number) => {
+const deleteMap = async () => {
+  if (mapToDelete.value === null) {
+    return
+  }
+
   await $fetch("/api/admin/map", {
     method: "DELETE",
     body: {
-      id: mapId, admin_id: store.getUser?.id,
+      id: mapToDelete.value, admin_id: store.getUser?.id,
     },
     headers: {
       Authorization: `Bearer ${store.getUser?.token}`,
     },
   })
   showMapDeleteDialog.value = false
+  mapToDelete.value = null
   await fetchData()
 }
 
@@ -917,6 +927,7 @@ const deleteIcon = async () => {
     },
   })
   showIconDeleteDialog.value = false
+  iconToDelete.value = null
   await fetchData()
 }
 

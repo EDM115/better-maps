@@ -39,17 +39,17 @@
     "jiti": "~2.6.1",
     "lightningcss": "~1.30.2",
     "npm-run-all2": "~8.0.4",
-    "oxlint": "~1.33.0",
-    "oxlint-tsgolint": "~0.9.1",
-    "sass-embedded": "~1.97.0",
+    "oxlint": "~1.34.0",
+    "oxlint-tsgolint": "~0.10.0",
+    "sass-embedded": "~1.97.1",
     "sass-loader": "~16.0.6",
     "typescript": "~5.9.3",
     "vue-eslint-parser": "~10.2.0",
-    "vue-tsc": "~3.1.8"
+    "vue-tsc": "~3.2.0"
   },
   "license": "MIT",
   "name": "better-maps",
-  "packageManager": "pnpm@10.26.0",
+  "packageManager": "pnpm@10.26.1",
   "private": true,
   "repository": {
     "type": "git",
