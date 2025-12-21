@@ -128,6 +128,14 @@ const handlePinClick = (pin: Pin) => {
     pixelOffset.value = new google.maps.Size(0, -34)
   }
 
+  // Toggle selection if clicking on already selected pin
+  if (selectedPin.value?.id === pin.id && showInfoWindow.value) {
+    showInfoWindow.value = false
+    selectedPin.value = null
+    emit("pin-selected", null)
+    return
+  }
+
   selectedPin.value = pin
   showInfoWindow.value = true
   emit("pin-selected", pin.id)
@@ -260,11 +268,16 @@ const togglePinVisibility = async (pin: Pin) => {
   }
 }
 
+const selectPin = (pin: Pin) => {
+  handlePinClick(pin)
+}
+
 defineExpose({
   addPin,
   deletePin,
   editPin,
   togglePinVisibility,
+  selectPin,
   pins,
 })
 

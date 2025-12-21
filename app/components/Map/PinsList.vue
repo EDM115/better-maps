@@ -24,7 +24,8 @@
               'disabled-pin': !pin.visible,
               'highlighted-pin': selectedPinId === pin.id
             }"
-            style="padding: 0.2em;"
+            style="padding: 0.2em; cursor: pointer;"
+            @click="() => emit('select', pin)"
           >
             <template #prepend>
               <div
@@ -115,14 +116,14 @@ import {
 const theme = useVTheme()
 const { smAndUp } = useVDisplay()
 
-defineProps<{
+const props = defineProps<{
   pins: Pin[];
   editMode?: boolean;
   selectedPinId?: number | null;
   icons: Icon[];
 }>()
 
-const emit = defineEmits<(e: "edit" | "delete" | "toggle-visibility", pin: Pin) => void>()
+const emit = defineEmits<(e: "edit" | "delete" | "toggle-visibility" | "select", pin: Pin) => void>()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
 const activePanel = ref(0)
@@ -130,17 +131,19 @@ const showDialog = ref(false)
 const pinToDelete = ref<Pin | null>(null)
 const selectedItem = ref<ComponentPublicInstance | null>(null)
 
-watch(() => selectedItem.value, (el) => {
-  if (el && activePanel.value === 0) {
-    setTimeout(() => {
-      el.$el?.scrollIntoView({
-        behavior: "smooth",
-        block: smAndUp.value
-          ? "center"
-          : "nearest",
-      })
-    }, 100)
-  }
+watch(() => props.selectedPinId, () => {
+  nextTick(() => {
+    if (selectedItem.value && activePanel.value === 0) {
+      setTimeout(() => {
+        selectedItem.value?.$el?.scrollIntoView({
+          behavior: "smooth",
+          block: smAndUp.value
+            ? "center"
+            : "nearest",
+        })
+      }, 100)
+    }
+  })
 })
 
 const showDeleteDialog = (pin: Pin) => {

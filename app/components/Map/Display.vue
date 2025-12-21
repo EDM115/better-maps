@@ -45,6 +45,7 @@
           @edit="(pin) => mapSearchRef?.startEditing(pin)"
           @delete="(pin) => mapPinRef?.deletePin(pin)"
           @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
+          @select="(pin) => mapPinRef?.selectPin(pin)"
         />
         <MapOptions
           v-if="mapRef?.map"
@@ -89,6 +90,7 @@
             @edit="(pin) => mapSearchRef?.startEditing(pin)"
             @delete="(pin) => mapPinRef?.deletePin(pin)"
             @toggle-visibility="(pin) => mapPinRef?.togglePinVisibility(pin)"
+            @select="(pin) => mapPinRef?.selectPin(pin)"
           />
         </v-list-item>
         <v-list-item>
