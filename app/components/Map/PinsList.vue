@@ -1,14 +1,15 @@
 <template>
   <v-expansion-panels
-    v-model="activePanel"
+    v-model="selectedPanel"
     flat
   >
-    <v-expansion-panel value="true">
+    <v-expansion-panel value="pinsList">
       <v-expansion-panel-title>
         {{ $t("map.pins-list.pins").replace("X", String(pins.length)) }}
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-list
+          ref="listRef"
           :class="{
             'scrollable-list': smAndUp,
             'px-0': smAndUp
@@ -17,7 +18,7 @@
           <v-list-item
             v-for="(pin, index) in pins"
             :key="index"
-            :ref="(el) => { if (selectedPinId === pin.id && el instanceof Object) selectedItem = el as ComponentPublicInstance }"
+            :ref="(el) => setPinItemRef(pin.id, el)"
             :title="pin.name"
             :subtitle="pin.formatted_address"
             :class="{
@@ -126,24 +127,64 @@ const props = defineProps<{
 const emit = defineEmits<(e: "edit" | "delete" | "toggle-visibility" | "select", pin: Pin) => void>()
 
 const darkBackgroundColor = ref(theme.computedThemes.value.dark?.colors.background)
-const activePanel = ref(0)
+const selectedPanel = ref<string | null>(null)
 const showDialog = ref(false)
 const pinToDelete = ref<Pin | null>(null)
-const selectedItem = ref<ComponentPublicInstance | null>(null)
+const listRef = ref<ComponentPublicInstance | null>(null)
+const pinItemRefs: Record<number, ComponentPublicInstance> = {}
 
-watch(() => props.selectedPinId, () => {
-  nextTick(() => {
-    if (selectedItem.value && activePanel.value === 0) {
+const setPinItemRef = (id: number, el: unknown) => {
+  if (el) {
+    pinItemRefs[id] = el as ComponentPublicInstance
+  }
+}
+
+const scrollToSelectedPin = () => {
+  if (props.selectedPinId === null || props.selectedPinId === undefined) {
+    return
+  }
+
+  const itemRef = pinItemRefs[props.selectedPinId]
+  if (!itemRef?.$el) {
+    return
+  }
+
+  const itemEl = itemRef.$el as HTMLElement
+  const scrollContainer = smAndUp.value
+    ? listRef.value?.$el as HTMLElement
+    : document.querySelector(".v-navigation-drawer__content") as HTMLElement
+
+  if (!scrollContainer) {
+    itemEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    })
+    return
+  }
+
+  const containerRect = scrollContainer.getBoundingClientRect()
+  const itemRect = itemEl.getBoundingClientRect()
+
+  const isFullyVisible = itemRect.top >= containerRect.top
+    && itemRect.bottom <= containerRect.bottom
+
+  if (!isFullyVisible) {
+    const scrollTop = itemEl.offsetTop - (scrollContainer.clientHeight / 2) + (itemEl.clientHeight / 2)
+    scrollContainer.scrollTo({
+      top: scrollTop,
+      behavior: "smooth",
+    })
+  }
+}
+
+watch(() => props.selectedPinId, (newId) => {
+  if (newId !== null && newId !== undefined) {
+    nextTick(() => {
       setTimeout(() => {
-        selectedItem.value?.$el?.scrollIntoView({
-          behavior: "smooth",
-          block: smAndUp.value
-            ? "center"
-            : "nearest",
-        })
+        scrollToSelectedPin()
       }, 100)
-    }
-  })
+    })
+  }
 })
 
 const showDeleteDialog = (pin: Pin) => {
@@ -163,6 +204,10 @@ const confirmDelete = () => {
 const togglePinVisibility = (pin: Pin) => {
   emit("toggle-visibility", pin)
 }
+
+onMounted(() => {
+  selectedPanel.value = "pinsList"
+})
 </script>
 
 <style scoped>
